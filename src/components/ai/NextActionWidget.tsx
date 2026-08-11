@@ -34,21 +34,21 @@ export function NextActionWidget() {
 
   if (isLoading) {
     return (
-      <Card className="p-4 bg-gradient-to-r from-emerald-900 to-emerald-950 text-white border-none shadow-md">
-        <div className="text-xs text-emerald-200">AI Evaluating Priorities...</div>
+      <Card className="p-4 bg-[#315c4a] text-white border-none shadow-md">
+        <div className="text-xs text-[#a8bdaf]">AI Evaluating Priorities...</div>
       </Card>
     )
   }
 
   if (!nextTask) {
     return (
-      <Card className="p-5 bg-gradient-to-r from-emerald-900 to-emerald-950 text-white border-none shadow-md flex items-center justify-between">
+      <Card className="p-5 bg-[#315c4a] text-white border-none shadow-md flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-emerald-800/80 rounded-xl text-emerald-300">
+          <div className="p-2.5 bg-[#26352e] rounded-xl text-[#a8bdaf]">
             <Sparkles size={22} />
           </div>
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">AI Priority Engine</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#a8bdaf]">AI Priority Engine</span>
             <h3 className="text-sm font-semibold">All clear! No pending tasks remaining today.</h3>
           </div>
         </div>
@@ -57,7 +57,7 @@ export function NextActionWidget() {
   }
 
   return (
-    <Card className="p-5 bg-gradient-to-r from-emerald-900 via-emerald-850 to-emerald-950 text-white border-none shadow-lg relative overflow-hidden">
+    <Card className="p-5 bg-[#315c4a] text-white border-none shadow-md relative overflow-hidden">
       <div className="absolute right-0 top-0 translate-x-4 -translate-y-4 opacity-10 pointer-events-none">
         <Sparkles size={160} />
       </div>
@@ -65,11 +65,11 @@ export function NextActionWidget() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
         <div className="space-y-1.5 flex-1">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-700/80 text-emerald-100 flex items-center gap-1">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-[#26352e] text-[#a8bdaf] flex items-center gap-1">
               <Zap size={10} /> #1 Next Action Right Now
             </span>
             {nextTask.priority === 'critical' && (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-red-500/80 text-white">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-red-600 text-white">
                 Critical Deadline
               </span>
             )}
@@ -77,7 +77,7 @@ export function NextActionWidget() {
 
           <h3 className="text-lg font-bold tracking-tight text-white">{nextTask.title}</h3>
 
-          <div className="flex items-center gap-4 text-xs text-emerald-200 pt-0.5">
+          <div className="flex items-center gap-4 text-xs text-[#a8bdaf] pt-0.5">
             {nextTask.estimated_minutes && (
               <span className="flex items-center gap-1">
                 <Clock size={12} /> {nextTask.estimated_minutes} mins estimated
@@ -91,8 +91,8 @@ export function NextActionWidget() {
 
         <Button
           onClick={handleComplete}
-          className="bg-white text-emerald-900 hover:bg-emerald-50 border-none font-bold text-xs shadow-md whitespace-nowrap"
-          icon={<CheckCircle size={16} className="text-emerald-700" />}
+          className="bg-white text-[#315c4a] hover:bg-[#f3f7f3] border-none font-bold text-xs shadow-xs whitespace-nowrap"
+          icon={<CheckCircle size={16} className="text-[#315c4a]" />}
         >
           Mark Complete
         </Button>
