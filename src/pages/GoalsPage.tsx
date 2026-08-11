@@ -51,12 +51,12 @@ export function GoalsPage() {
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
+    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Goals & Projects</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <h1 className="text-2xl font-extrabold text-[#26352e] dark:text-[#f3f7f3] tracking-tight">What You're Building</h1>
+          <p className="text-sm text-[#718078] dark:text-[#a8bdaf]">
             {goals.length} Goals · {projects.length} Projects
           </p>
         </div>
@@ -75,23 +75,23 @@ export function GoalsPage() {
       </div>
 
       {/* Mode Tabs */}
-      <div className="flex border-b border-gray-200 dark:border-gray-800">
+      <div className="flex border-b border-[#dce5de] dark:border-[#26352e]">
         <button
           onClick={() => setActiveTab('goals')}
-          className={`pb-3 px-4 font-semibold text-sm transition-colors border-b-2 ${
+          className={`pb-3 px-4 font-bold text-sm transition-colors border-b-2 ${
             activeTab === 'goals'
-              ? 'border-emerald-700 text-emerald-700 dark:text-emerald-400 dark:border-emerald-500'
-              : 'border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-200'
+              ? 'border-[#315c4a] text-[#315c4a] dark:text-[#f3f7f3]'
+              : 'border-transparent text-[#718078] hover:text-[#26352e]'
           }`}
         >
-          Goals ({goals.length})
+          Identity Goals ({goals.length})
         </button>
         <button
           onClick={() => setActiveTab('projects')}
-          className={`pb-3 px-4 font-semibold text-sm transition-colors border-b-2 ${
+          className={`pb-3 px-4 font-bold text-sm transition-colors border-b-2 ${
             activeTab === 'projects'
-              ? 'border-emerald-700 text-emerald-700 dark:text-emerald-400 dark:border-emerald-500'
-              : 'border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-200'
+              ? 'border-[#315c4a] text-[#315c4a] dark:text-[#f3f7f3]'
+              : 'border-transparent text-[#718078] hover:text-[#26352e]'
           }`}
         >
           Projects ({projects.length})
@@ -99,7 +99,7 @@ export function GoalsPage() {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12 text-gray-500 text-sm">Loading data...</div>
+        <div className="text-center py-12 text-[#718078] text-sm">Loading data...</div>
       ) : activeTab === 'goals' ? (
         /* Goals View */
         goals.length > 0 ? (
@@ -110,27 +110,27 @@ export function GoalsPage() {
               const percent = Math.min(100, Math.round((current / target) * 100))
 
               return (
-                <Card key={goal.id} className="p-5 hover:border-emerald-500/50 transition-colors">
+                <Card key={goal.id} className="p-5 hover:border-[#315c4a] transition-all">
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="font-semibold text-base text-gray-900 dark:text-gray-100">
+                      <h3 className="font-bold text-base text-[#26352e] dark:text-[#f3f7f3]">
                         {goal.title}
                       </h3>
                       {goal.description && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">
+                        <p className="text-xs text-[#718078] dark:text-[#a8bdaf] mt-0.5 line-clamp-2">
                           {goal.description}
                         </p>
                       )}
                     </div>
-                    <span className="px-2 py-0.5 rounded-full text-xs font-semibold uppercase bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[#e8f0ea] dark:bg-[#26352e] text-[#315c4a] dark:text-[#f3f7f3]">
                       {goal.priority}
                     </span>
                   </div>
 
                   <div className="space-y-1.5 mt-4">
-                    <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                    <div className="flex justify-between text-xs text-[#718078] dark:text-[#a8bdaf]">
                       <span>Progress</span>
-                      <span>
+                      <span className="font-bold text-[#315c4a]">
                         {current} / {target} {goal.unit ?? ''} ({percent}%)
                       </span>
                     </div>
@@ -141,13 +141,13 @@ export function GoalsPage() {
             })}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center text-center py-16 px-4 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/80 dark:border-gray-800">
-            <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 rounded-2xl flex items-center justify-center mb-4">
+          <div className="flex flex-col items-center justify-center text-center py-16 px-4 bg-white dark:bg-[#1c2722] rounded-2xl border border-[#dce5de] dark:border-[#26352e]">
+            <div className="w-16 h-16 bg-[#e8f0ea] dark:bg-[#26352e] text-[#315c4a] dark:text-[#f3f7f3] rounded-2xl flex items-center justify-center mb-4">
               <Target size={32} />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">No goals set</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6">
-              Set clear long-term goals to connect with your projects and daily tasks.
+            <h3 className="text-lg font-bold text-[#26352e] dark:text-[#f3f7f3] mb-1">No identity goals set</h3>
+            <p className="text-sm text-[#718078] dark:text-[#a8bdaf] max-w-sm mb-6">
+              Define clear long-term goals to connect with your projects and daily focus.
             </p>
             <Button onClick={() => handleOpenGoalModal()} icon={<Plus size={18} />}>
               New Goal
@@ -159,19 +159,19 @@ export function GoalsPage() {
         projects.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {projects.map((project: Project) => (
-              <Card key={project.id} className="p-5 hover:border-emerald-500/50 transition-colors">
+              <Card key={project.id} className="p-5 hover:border-[#315c4a] transition-all">
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <h3 className="font-semibold text-base text-gray-900 dark:text-gray-100">
+                    <h3 className="font-bold text-base text-[#26352e] dark:text-[#f3f7f3]">
                       {project.title}
                     </h3>
                     {project.description && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">
+                      <p className="text-xs text-[#718078] dark:text-[#a8bdaf] mt-0.5 line-clamp-2">
                         {project.description}
                       </p>
                     )}
                   </div>
-                  <span className="px-2 py-0.5 rounded-full text-xs font-semibold uppercase bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[#e8f0ea] dark:bg-[#26352e] text-[#315c4a] dark:text-[#f3f7f3]">
                     {project.status}
                   </span>
                 </div>
@@ -179,15 +179,15 @@ export function GoalsPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center text-center py-16 px-4 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/80 dark:border-gray-800">
-            <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 rounded-2xl flex items-center justify-center mb-4">
+          <div className="flex flex-col items-center justify-center text-center py-16 px-4 bg-white dark:bg-[#1c2722] rounded-2xl border border-[#dce5de] dark:border-[#26352e]">
+            <div className="w-16 h-16 bg-[#e8f0ea] dark:bg-[#26352e] text-[#315c4a] dark:text-[#f3f7f3] rounded-2xl flex items-center justify-center mb-4">
               <FolderKanban size={32} />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
+            <h3 className="text-lg font-bold text-[#26352e] dark:text-[#f3f7f3] mb-1">
               No projects created
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6">
-              Create a project to group your related tasks and track overall completion.
+            <p className="text-sm text-[#718078] dark:text-[#a8bdaf] max-w-sm mb-6">
+              Create a project to group related priorities and track overall progress.
             </p>
             <Button onClick={() => handleOpenProjectModal()} icon={<Plus size={18} />}>
               New Project

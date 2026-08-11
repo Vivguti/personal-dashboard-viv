@@ -68,13 +68,13 @@ export function FinancePage() {
   ] as const
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
+    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Finance & Wealth</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Accounts, income logging, expense budgets, and net worth
+          <h1 className="text-2xl font-extrabold text-[#26352e] dark:text-[#f3f7f3] tracking-tight">Your Money</h1>
+          <p className="text-sm text-[#718078] dark:text-[#a8bdaf]">
+            Accounts, income logging, expense budgets, and savings progress
           </p>
         </div>
 
@@ -101,16 +101,16 @@ export function FinancePage() {
       </div>
 
       {/* Tabs */}
-      <div className="w-full overflow-x-auto pb-2 scrollbar-hide">
+      <div className="w-full overflow-x-auto pb-2 no-scrollbar">
         <div className="flex gap-2 min-w-max">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabId)}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeTab === tab.id
-                  ? 'bg-emerald-800 text-white shadow-sm'
-                  : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  ? 'bg-[#315c4a] text-white shadow-xs'
+                  : 'bg-white dark:bg-[#1c2722] text-[#718078] dark:text-[#a8bdaf] hover:bg-[#e8f0ea] border border-[#dce5de] dark:border-[#26352e]'
               }`}
             >
               {tab.label}

@@ -101,17 +101,17 @@ export function HealthPage() {
   ] as const
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
+    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Health & Recovery</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Daily logs, workouts, macros, sleep & supplements
+          <h1 className="text-2xl font-extrabold text-[#26352e] dark:text-[#f3f7f3] tracking-tight">Your Wellness</h1>
+          <p className="text-sm text-[#718078] dark:text-[#a8bdaf]">
+            Hydration, nutrition, movement, recovery, and daily habits
           </p>
         </div>
 
-        <div>
+        <div className="flex gap-2">
           {activeTab === 'hydration' && (
             <Button onClick={() => setIsHydrationModalOpen(true)} icon={<Plus size={18} />}>Log Water</Button>
           )}
@@ -128,25 +128,24 @@ export function HealthPage() {
             <Button onClick={() => setIsSupplementModalOpen(true)} icon={<Plus size={18} />}>Add Supplement</Button>
           )}
           {activeTab === 'habits' && (
-            <Button onClick={() => setIsHabitModalOpen(true)} icon={<Plus size={18} />}>Create Habit</Button>
+            <Button onClick={() => setIsHabitModalOpen(true)} icon={<Plus size={18} />}>Add Habit</Button>
           )}
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="w-full overflow-x-auto pb-2 scrollbar-hide">
+      {/* Tabs Navigation */}
+      <div className="w-full overflow-x-auto pb-2 no-scrollbar">
         <div className="flex gap-2 min-w-max">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabId)}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeTab === tab.id
-                  ? 'bg-emerald-800 text-white shadow-sm'
-                  : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  ? 'bg-[#315c4a] text-white shadow-xs'
+                  : 'bg-white dark:bg-[#1c2722] text-[#718078] dark:text-[#a8bdaf] hover:bg-[#e8f0ea] border border-[#dce5de] dark:border-[#26352e]'
               }`}
             >
-              <tab.icon size={16} />
               {tab.label}
             </button>
           ))}

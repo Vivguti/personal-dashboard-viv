@@ -22,7 +22,7 @@ export function TasksPage() {
       setIsLoading(true)
       const fetchedTasks = await getTasks()
       setTasks(fetchedTasks)
-      setWorkloadSummary(computeWorkloadSummary('Overall Tasks', fetchedTasks, []))
+      setWorkloadSummary(computeWorkloadSummary('Your Priorities', fetchedTasks, []))
     } catch (err) {
       console.error('Failed to load tasks:', err)
     } finally {
@@ -39,7 +39,7 @@ export function TasksPage() {
     const updated = await toggleTaskComplete(task.id, !isCompleted)
     if (updated) {
       setTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)))
-      setWorkloadSummary(computeWorkloadSummary('Overall Tasks', tasks.map((t) => (t.id === updated.id ? updated : t)), []))
+      setWorkloadSummary(computeWorkloadSummary('Your Priorities', tasks.map((t) => (t.id === updated.id ? updated : t)), []))
     }
   }
 
@@ -74,18 +74,18 @@ export function TasksPage() {
   })
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
+    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Tasks</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {tasks.length} total tasks · {tasks.filter(t => t.status === 'completed').length} completed
+          <h1 className="text-2xl font-extrabold text-[#26352e] dark:text-[#f3f7f3] tracking-tight">Your Priorities</h1>
+          <p className="text-sm text-[#718078] dark:text-[#a8bdaf]">
+            {tasks.length} total priorities · {tasks.filter(t => t.status === 'completed').length} completed
           </p>
         </div>
 
         <Button onClick={handleCreateNew} icon={<Plus size={18} />}>
-          New Task
+          New Priority
         </Button>
       </div>
 
@@ -105,10 +105,10 @@ export function TasksPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 activeTab === tab.id
-                  ? 'bg-emerald-700 text-white dark:bg-emerald-600'
-                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  ? 'bg-[#315c4a] text-white shadow-xs'
+                  : 'bg-white dark:bg-[#1c2722] text-[#718078] dark:text-[#a8bdaf] hover:bg-[#e8f0ea] border border-[#dce5de] dark:border-[#26352e]'
               }`}
             >
               {tab.label}
@@ -119,17 +119,17 @@ export function TasksPage() {
         <div className="relative">
           <input
             type="text"
-            placeholder="Search tasks..."
+            placeholder="Search priorities..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full sm:w-64 px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+            className="w-full sm:w-64 px-3 py-1.5 text-xs rounded-xl border border-[#dce5de] dark:border-[#26352e] bg-white dark:bg-[#121b17] text-[#26352e] dark:text-[#f3f7f3] focus:outline-none focus:ring-2 focus:ring-[#315c4a]"
           />
         </div>
       </div>
 
       {/* Task List / Empty State */}
       {isLoading ? (
-        <div className="text-center py-12 text-gray-500 text-sm">Loading tasks...</div>
+        <div className="text-center py-12 text-[#718078] text-sm">Loading priorities...</div>
       ) : filteredTasks.length > 0 ? (
         <div className="space-y-3">
           {filteredTasks.map((task) => (
@@ -143,20 +143,20 @@ export function TasksPage() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center text-center py-16 px-4 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/80 dark:border-gray-800">
-          <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 rounded-2xl flex items-center justify-center mb-4">
+        <div className="flex flex-col items-center justify-center text-center py-16 px-4 bg-white dark:bg-[#1c2722] rounded-2xl border border-[#dce5de] dark:border-[#26352e]">
+          <div className="w-16 h-16 bg-[#e8f0ea] dark:bg-[#26352e] text-[#315c4a] dark:text-[#f3f7f3] rounded-2xl flex items-center justify-center mb-4">
             <CheckSquare size={32} />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
-            No tasks found
+          <h3 className="text-lg font-bold text-[#26352e] dark:text-[#f3f7f3] mb-1">
+            No priorities found
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6">
+          <p className="text-sm text-[#718078] dark:text-[#a8bdaf] max-w-sm mb-6">
             {searchQuery || activeTab !== 'all'
-              ? 'No tasks match your current filters.'
-              : 'Add your first task to start managing your daily workload.'}
+              ? 'No priorities match your current filters.'
+              : 'Add your first priority to start managing your daily workload.'}
           </p>
           <Button onClick={handleCreateNew} icon={<Plus size={18} />}>
-            Create Task
+            Create Priority
           </Button>
         </div>
       )}
