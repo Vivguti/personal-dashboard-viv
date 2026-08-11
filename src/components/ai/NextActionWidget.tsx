@@ -34,22 +34,22 @@ export function NextActionWidget() {
 
   if (isLoading) {
     return (
-      <Card className="p-4 bg-[#315c4a] text-white border-none shadow-md">
-        <div className="text-xs text-[#a8bdaf]">AI Evaluating Priorities...</div>
+      <Card className="p-4 bg-[#d6c7ad] text-[#2e2f22] border border-[#b7c3a1]">
+        <div className="text-xs text-[#8c947d]">AI Evaluating Priorities...</div>
       </Card>
     )
   }
 
   if (!nextTask) {
     return (
-      <Card className="p-5 bg-[#315c4a] text-white border-none shadow-md flex items-center justify-between">
+      <Card className="p-5 bg-[#d6c7ad] text-[#2e2f22] border border-[#b7c3a1] flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-[#26352e] rounded-xl text-[#a8bdaf]">
+          <div className="p-2.5 bg-[#2e2f22] rounded-xl text-[#f5e8d0]">
             <Sparkles size={22} />
           </div>
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#a8bdaf]">AI Priority Engine</span>
-            <h3 className="text-sm font-semibold">All clear! No pending tasks remaining today.</h3>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#5e6544]">AI Priority Engine</span>
+            <h3 className="text-sm font-bold">All clear! No pending tasks remaining today.</h3>
           </div>
         </div>
       </Card>
@@ -57,27 +57,23 @@ export function NextActionWidget() {
   }
 
   return (
-    <Card className="p-5 bg-[#315c4a] text-white border-none shadow-md relative overflow-hidden">
-      <div className="absolute right-0 top-0 translate-x-4 -translate-y-4 opacity-10 pointer-events-none">
-        <Sparkles size={160} />
-      </div>
-
+    <Card className="p-5 bg-[#d6c7ad] text-[#2e2f22] border border-[#b7c3a1] relative overflow-hidden">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
         <div className="space-y-1.5 flex-1">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-[#26352e] text-[#a8bdaf] flex items-center gap-1">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#2e2f22] text-[#f5e8d0] flex items-center gap-1">
               <Zap size={10} /> #1 Next Action Right Now
             </span>
             {nextTask.priority === 'critical' && (
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-red-600 text-white">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[#a85d48] text-white">
                 Critical Deadline
               </span>
             )}
           </div>
 
-          <h3 className="text-lg font-bold tracking-tight text-white">{nextTask.title}</h3>
+          <h3 className="text-lg font-black tracking-tight text-[#2e2f22]">{nextTask.title}</h3>
 
-          <div className="flex items-center gap-4 text-xs text-[#a8bdaf] pt-0.5">
+          <div className="flex items-center gap-4 text-xs text-[#5e6544] font-bold pt-0.5">
             {nextTask.estimated_minutes && (
               <span className="flex items-center gap-1">
                 <Clock size={12} /> {nextTask.estimated_minutes} mins estimated
@@ -91,8 +87,8 @@ export function NextActionWidget() {
 
         <Button
           onClick={handleComplete}
-          className="bg-white text-[#315c4a] hover:bg-[#f3f7f3] border-none font-bold text-xs shadow-xs whitespace-nowrap"
-          icon={<CheckCircle size={16} className="text-[#315c4a]" />}
+          className="bg-[#2e2f22] text-[#f5e8d0] hover:bg-[#5e6544] border-none font-bold text-xs shadow-xs whitespace-nowrap"
+          icon={<CheckCircle size={16} className="text-[#f5e8d0]" />}
         >
           Mark Complete
         </Button>

@@ -130,7 +130,7 @@ export function QuickAddButton({
       <div className="hidden md:block fixed bottom-8 right-8 z-40">
         <button
           onClick={handleOpen}
-          className="flex items-center justify-center w-14 h-14 bg-[#5e6544] hover:bg-[#2e2f22] text-[#faf8f3] rounded-full shadow-lg transition-all transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5e6544]"
+          className="flex items-center justify-center w-14 h-14 bg-[#d6c7ad] hover:bg-[#b7c3a1] text-[#2e2f22] rounded-full shadow-lg border border-[#b7c3a1] transition-all transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d6c7ad]"
           aria-label="Quick Add"
         >
           <Plus className="w-8 h-8" />

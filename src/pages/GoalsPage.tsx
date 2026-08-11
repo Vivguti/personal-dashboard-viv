@@ -75,23 +75,23 @@ export function GoalsPage() {
       </div>
 
       {/* Mode Tabs */}
-      <div className="flex border-b border-[#dce5de] dark:border-[#26352e]">
+      <div className="flex border-b border-[#d6c7ad]">
         <button
           onClick={() => setActiveTab('goals')}
-          className={`pb-3 px-4 font-bold text-sm transition-colors border-b-2 ${
+          className={`pb-3 px-4 font-extrabold text-sm transition-colors border-b-2 ${
             activeTab === 'goals'
-              ? 'border-[#315c4a] text-[#315c4a] dark:text-[#f3f7f3]'
-              : 'border-transparent text-[#718078] hover:text-[#26352e]'
+              ? 'border-[#d6c7ad] text-[#2e2f22] dark:text-[#f5e8d0]'
+              : 'border-transparent text-[#8c947d] hover:text-[#2e2f22]'
           }`}
         >
           Identity Goals ({goals.length})
         </button>
         <button
           onClick={() => setActiveTab('projects')}
-          className={`pb-3 px-4 font-bold text-sm transition-colors border-b-2 ${
+          className={`pb-3 px-4 font-extrabold text-sm transition-colors border-b-2 ${
             activeTab === 'projects'
-              ? 'border-[#315c4a] text-[#315c4a] dark:text-[#f3f7f3]'
-              : 'border-transparent text-[#718078] hover:text-[#26352e]'
+              ? 'border-[#d6c7ad] text-[#2e2f22] dark:text-[#f5e8d0]'
+              : 'border-transparent text-[#8c947d] hover:text-[#2e2f22]'
           }`}
         >
           Projects ({projects.length})
