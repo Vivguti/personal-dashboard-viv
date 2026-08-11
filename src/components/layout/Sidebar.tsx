@@ -1,18 +1,18 @@
-import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  CheckSquare, 
-  CalendarDays, 
-  Target, 
-  Heart, 
-  Wallet, 
-  Briefcase, 
-  Settings 
-} from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { NavLink } from 'react-router-dom'
+import {
+  LayoutDashboard,
+  CheckSquare,
+  CalendarDays,
+  Target,
+  Heart,
+  Wallet,
+  Briefcase,
+  Settings,
+} from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
 
 export function Sidebar() {
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   const navItems = [
     { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -22,20 +22,21 @@ export function Sidebar() {
     { path: '/health', label: 'Health', icon: Heart },
     { path: '/finance', label: 'Finance', icon: Wallet },
     { path: '/business', label: 'Business', icon: Briefcase },
-  ];
+  ]
 
   return (
-    <aside className="hidden md:flex flex-col w-60 fixed left-0 top-16 bottom-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 z-30">
+    <aside className="hidden md:flex flex-col w-60 fixed left-0 top-16 bottom-0 bg-white dark:bg-gray-900 border-r border-gray-200/80 dark:border-gray-800 z-30">
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
         {navItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
-            className={({ isActive }) => 
-              `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors min-h-[44px]
-              ${isActive 
-                ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400' 
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors min-h-[44px]
+              ${
+                isActive
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/60'
               }`
             }
           >
@@ -43,15 +44,16 @@ export function Sidebar() {
             {item.label}
           </NavLink>
         ))}
-        
-        <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-800">
+
+        <div className="pt-4 mt-4 border-t border-gray-200/80 dark:border-gray-800">
           <NavLink
             to="/settings"
-            className={({ isActive }) => 
-              `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors min-h-[44px]
-              ${isActive 
-                ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400' 
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors min-h-[44px]
+              ${
+                isActive
+                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/60'
               }`
             }
           >
@@ -61,20 +63,20 @@ export function Sidebar() {
         </div>
       </nav>
 
-      <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+      <div className="p-4 border-t border-gray-200/80 dark:border-gray-800">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center flex-shrink-0">
-            <span className="text-indigo-700 dark:text-indigo-300 font-semibold text-xs">
+          <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center flex-shrink-0">
+            <span className="text-emerald-800 dark:text-emerald-300 font-bold text-xs">
               {user?.email ? user.email.charAt(0).toUpperCase() : '?'}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+            <p className="text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
               {user?.email || 'User'}
             </p>
           </div>
         </div>
       </div>
     </aside>
-  );
-};
+  )
+}

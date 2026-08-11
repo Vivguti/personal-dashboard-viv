@@ -17,6 +17,26 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      task_dependencies: {
+        Row: {
+          id: string
+          user_id: string
+          task_id: string
+          prerequisite_task_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          task_id: string
+          prerequisite_task_id: string
+          created_at?: string
+        }
+        Update: {
+          task_id?: string
+          prerequisite_task_id?: string
+        }
+      }
       profiles: {
         Row: {
           id: string
@@ -90,6 +110,47 @@ export interface Database {
           icon?: string | null
           sort_order?: number
           active?: boolean
+        }
+      }
+      projects: {
+        Row: {
+          id: string
+          user_id: string
+          goal_id: string | null
+          title: string
+          description: string | null
+          life_area_id: string | null
+          status: 'planning' | 'active' | 'on_hold' | 'completed' | 'cancelled'
+          priority: 'low' | 'medium' | 'high' | 'critical'
+          deadline: string | null
+          estimated_minutes: number | null
+          completed_minutes: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          goal_id?: string | null
+          title: string
+          description?: string | null
+          life_area_id?: string | null
+          status?: 'planning' | 'active' | 'on_hold' | 'completed' | 'cancelled'
+          priority?: 'low' | 'medium' | 'high' | 'critical'
+          deadline?: string | null
+          estimated_minutes?: number | null
+          completed_minutes?: number
+        }
+        Update: {
+          goal_id?: string | null
+          title?: string
+          description?: string | null
+          life_area_id?: string | null
+          status?: 'planning' | 'active' | 'on_hold' | 'completed' | 'cancelled'
+          priority?: 'low' | 'medium' | 'high' | 'critical'
+          deadline?: string | null
+          estimated_minutes?: number | null
+          completed_minutes?: number
         }
       }
       goals: {
@@ -500,6 +561,7 @@ export type UpdateTables<T extends keyof Database['public']['Tables']> =
 // ── Commonly used row types ──
 export type Profile = Tables<'profiles'>
 export type Task = Tables<'tasks'>
+export type Project = Tables<'projects'>
 export type Goal = Tables<'goals'>
 export type CalendarEvent = Tables<'calendar_events'>
 export type HydrationLog = Tables<'hydration_logs'>
@@ -509,3 +571,4 @@ export type Supplement = Tables<'supplements'>
 export type Account = Tables<'accounts'>
 export type Income = Tables<'income'>
 export type Expense = Tables<'expenses'>
+export type TaskDependency = Tables<'task_dependencies'>

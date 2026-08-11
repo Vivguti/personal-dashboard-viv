@@ -19,7 +19,32 @@ export type {
   Account,
   Income,
   Expense,
+  Project,
+  TaskDependency,
 } from './database.types'
+
+// ── Workload & Capacity Models ──
+
+export type CapacityStatus = 'Balanced' | 'Busy' | 'Near Capacity' | 'Overloaded'
+
+export interface WorkloadSummary {
+  periodLabel: string
+  totalEstimatedMinutes: number
+  totalActualMinutes: number
+  completedMinutes: number
+  remainingMinutes: number
+  overdueMinutes: number
+  scheduledMinutes: number
+  availableCapacityMinutes: number
+  remainingCapacityMinutes: number
+  percentageCapacityUsed: number
+  capacityStatus: CapacityStatus
+  energyBreakdown: {
+    low: number // minutes
+    medium: number // minutes
+    high: number // minutes
+  }
+}
 
 // ── Priority & Status Enums ──
 
