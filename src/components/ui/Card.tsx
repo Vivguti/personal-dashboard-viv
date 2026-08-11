@@ -35,20 +35,20 @@ export function Card({
 
   return (
     <div
-      className={`bg-white dark:bg-[#1c2722] rounded-2xl subtle-shadow border border-[#dce5de] dark:border-[#2b3c33] overflow-hidden ${hoverClasses} ${className}`}
+      className={`bg-white dark:bg-[#23241a] rounded-2xl subtle-shadow border border-[#d6c7ad] dark:border-[#5e6544]/40 overflow-hidden ${hoverClasses} ${className}`}
     >
       {hasHeader && (
-        <div className="flex items-start justify-between px-5 pt-5 pb-3 border-b border-[#f3f7f3] dark:border-[#26352e]">
+        <div className="flex items-start justify-between px-5 pt-5 pb-3 border-b border-[#f5e8d0] dark:border-[#5e6544]/30">
           <div className="flex items-center gap-3">
-            {icon && <div className="text-[#315c4a] dark:text-[#a8bdaf] flex-shrink-0">{icon}</div>}
+            {icon && <div className="text-[#5e6544] dark:text-[#b7c3a1] flex-shrink-0">{icon}</div>}
             <div>
               {title && (
-                <h3 className="font-bold text-[#26352e] dark:text-[#f3f7f3] text-base leading-tight">
+                <h3 className="font-bold text-[#2e2f22] dark:text-[#faf8f3] text-base leading-tight">
                   {title}
                 </h3>
               )}
               {subtitle && (
-                <p className="text-xs text-[#718078] dark:text-[#a8bdaf] mt-0.5">{subtitle}</p>
+                <p className="text-xs text-[#8c947d] dark:text-[#b7c3a1] mt-0.5">{subtitle}</p>
               )}
             </div>
           </div>

@@ -7,13 +7,13 @@ export interface BottomNavProps {
 
 export function BottomNav({ onQuickAddClick }: BottomNavProps) {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 glass border-t border-[#dce5de] dark:border-[#26352e] pb-safe">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 glass border-t border-[#d6c7ad] dark:border-[#5e6544]/40 pb-safe">
       <div className="flex items-center justify-around h-16 px-2">
         <NavLink
           to="/"
           className={({ isActive }) =>
             `flex flex-col items-center justify-center w-14 h-full space-y-1 transition-colors
-            ${isActive ? 'text-[#315c4a] dark:text-[#f3f7f3] font-bold' : 'text-[#718078] dark:text-[#a8bdaf]'}`
+            ${isActive ? 'text-[#5e6544] dark:text-[#faf8f3] font-bold' : 'text-[#8c947d] dark:text-[#b7c3a1]'}`
           }
         >
           <LayoutDashboard className="w-5 h-5" />
@@ -24,7 +24,7 @@ export function BottomNav({ onQuickAddClick }: BottomNavProps) {
           to="/calendar"
           className={({ isActive }) =>
             `flex flex-col items-center justify-center w-14 h-full space-y-1 transition-colors
-            ${isActive ? 'text-[#315c4a] dark:text-[#f3f7f3] font-bold' : 'text-[#718078] dark:text-[#a8bdaf]'}`
+            ${isActive ? 'text-[#5e6544] dark:text-[#faf8f3] font-bold' : 'text-[#8c947d] dark:text-[#b7c3a1]'}`
           }
         >
           <CalendarDays className="w-5 h-5" />
@@ -34,7 +34,7 @@ export function BottomNav({ onQuickAddClick }: BottomNavProps) {
         <div className="relative w-14 h-full flex items-center justify-center">
           <button
             onClick={onQuickAddClick}
-            className="absolute -top-4 flex items-center justify-center w-13 h-13 bg-[#315c4a] hover:bg-[#26352e] text-white rounded-full shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#315c4a]"
+            className="absolute -top-4 flex items-center justify-center w-13 h-13 bg-[#5e6544] hover:bg-[#2e2f22] text-[#faf8f3] rounded-full shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5e6544]"
             aria-label="Quick Add"
           >
             <Plus className="w-7 h-7" />
@@ -45,7 +45,7 @@ export function BottomNav({ onQuickAddClick }: BottomNavProps) {
           to="/tasks"
           className={({ isActive }) =>
             `flex flex-col items-center justify-center w-14 h-full space-y-1 transition-colors
-            ${isActive ? 'text-[#315c4a] dark:text-[#f3f7f3] font-bold' : 'text-[#718078] dark:text-[#a8bdaf]'}`
+            ${isActive ? 'text-[#5e6544] dark:text-[#faf8f3] font-bold' : 'text-[#8c947d] dark:text-[#b7c3a1]'}`
           }
         >
           <CheckSquare className="w-5 h-5" />
@@ -56,7 +56,7 @@ export function BottomNav({ onQuickAddClick }: BottomNavProps) {
           to="/health"
           className={({ isActive }) =>
             `flex flex-col items-center justify-center w-14 h-full space-y-1 transition-colors
-            ${isActive ? 'text-[#315c4a] dark:text-[#f3f7f3] font-bold' : 'text-[#718078] dark:text-[#a8bdaf]'}`
+            ${isActive ? 'text-[#5e6544] dark:text-[#faf8f3] font-bold' : 'text-[#8c947d] dark:text-[#b7c3a1]'}`
           }
         >
           <Heart className="w-5 h-5" />

@@ -80,25 +80,25 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 p-4">
-      <div className="w-full max-w-md bg-white/10 dark:bg-gray-900/50 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20 dark:border-gray-700">
+    <div className="min-h-screen flex items-center justify-center bg-[#faf8f3] dark:bg-[#2e2f22] p-4">
+      <div className="w-full max-w-md bg-white dark:bg-[#23241a] rounded-2xl p-8 shadow-xl border border-[#d6c7ad] dark:border-[#5e6544]/40">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-emerald-700 text-white font-black text-lg rounded-xl mb-3 shadow-md">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-[#5e6544] text-[#faf8f3] font-black text-lg rounded-xl mb-3 shadow-xs">
             OS
           </div>
-          <h1 className="text-3xl font-bold text-white mb-1">Personal OS</h1>
-          <p className="text-emerald-200 text-sm">Your life, productivity & health organized.</p>
+          <h1 className="text-3xl font-black text-[#2e2f22] dark:text-[#faf8f3] mb-1">Personal OS</h1>
+          <p className="text-[#8c947d] text-sm">Your life, priorities & wellness organized.</p>
         </div>
 
-        <div className="flex mb-6 bg-black/20 rounded-lg p-1">
+        <div className="flex mb-6 bg-[#f5e8d0] dark:bg-[#2e2f22] rounded-xl p-1 border border-[#d6c7ad]">
           <button
-            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${isLogin ? 'bg-emerald-700 text-white' : 'text-gray-300 hover:text-white'}`}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${isLogin ? 'bg-[#5e6544] text-[#faf8f3]' : 'text-[#8c947d] hover:text-[#2e2f22]'}`}
             onClick={() => setIsLogin(true)}
           >
             Login
           </button>
           <button
-            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${!isLogin ? 'bg-emerald-700 text-white' : 'text-gray-300 hover:text-white'}`}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${!isLogin ? 'bg-[#5e6544] text-[#faf8f3]' : 'text-[#8c947d] hover:text-[#2e2f22]'}`}
             onClick={() => setIsLogin(false)}
           >
             Sign Up
@@ -177,11 +177,11 @@ export function AuthPage() {
           </form>
         )}
 
-        <div className="mt-6 pt-6 border-t border-white/10 text-center">
+        <div className="mt-6 pt-6 border-t border-[#d6c7ad] dark:border-[#5e6544]/40 text-center">
           <button
             onClick={handleDemoAccess}
             type="button"
-            className="w-full py-3 px-4 rounded-xl bg-emerald-700/80 hover:bg-emerald-700 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 px-4 rounded-xl bg-[#5e6544] hover:bg-[#2e2f22] text-[#faf8f3] font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>⚡</span> Explore App in Demo Mode
           </button>

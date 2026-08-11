@@ -110,18 +110,18 @@ export function QuickAddButton({
   }
 
   const options = [
-    { id: 'task', label: 'Task', icon: CheckSquare, color: 'text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40' },
-    { id: 'event', label: 'Event', icon: CalendarPlus, color: 'text-blue-600 bg-blue-50 dark:bg-blue-950/40' },
-    { id: 'workout', label: 'Workout', icon: Dumbbell, color: 'text-orange-600 bg-orange-50 dark:bg-orange-950/40' },
-    { id: 'meal', label: 'Meal', icon: UtensilsCrossed, color: 'text-green-600 bg-green-50 dark:bg-green-950/40' },
-    { id: 'water', label: 'Water', icon: Droplets, color: 'text-cyan-600 bg-cyan-50 dark:bg-cyan-950/40' },
-    { id: 'sleep', label: 'Sleep', icon: Moon, color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40' },
-    { id: 'supplement', label: 'Supplement', icon: Pill, color: 'text-teal-600 bg-teal-50 dark:bg-teal-950/40' },
-    { id: 'habit', label: 'Habit', icon: Repeat, color: 'text-purple-600 bg-purple-50 dark:bg-purple-950/40' },
-    { id: 'income', label: 'Income', icon: DollarSign, color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40' },
-    { id: 'expense', label: 'Expense', icon: CreditCard, color: 'text-red-600 bg-red-50 dark:bg-red-950/40' },
-    { id: 'project', label: 'Project', icon: FolderKanban, color: 'text-sky-600 bg-sky-50 dark:bg-sky-950/40' },
-    { id: 'goal', label: 'Goal', icon: Target, color: 'text-rose-600 bg-rose-50 dark:bg-rose-950/40' },
+    { id: 'task', label: 'Priority', icon: CheckSquare, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'event', label: 'Schedule', icon: CalendarPlus, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'workout', label: 'Movement', icon: Dumbbell, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'meal', label: 'Nutrition', icon: UtensilsCrossed, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'water', label: 'Water', icon: Droplets, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'sleep', label: 'Sleep', icon: Moon, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'supplement', label: 'Supplement', icon: Pill, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'habit', label: 'Habit', icon: Repeat, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'income', label: 'Income', icon: DollarSign, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'expense', label: 'Expense', icon: CreditCard, color: 'text-[#a85d48] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'project', label: 'Project', icon: FolderKanban, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
+    { id: 'goal', label: 'Goal', icon: Target, color: 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22]' },
   ]
 
   return (
@@ -130,7 +130,7 @@ export function QuickAddButton({
       <div className="hidden md:block fixed bottom-8 right-8 z-40">
         <button
           onClick={handleOpen}
-          className="flex items-center justify-center w-14 h-14 bg-emerald-700 hover:bg-emerald-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600 dark:focus:ring-offset-gray-900"
+          className="flex items-center justify-center w-14 h-14 bg-[#5e6544] hover:bg-[#2e2f22] text-[#faf8f3] rounded-full shadow-lg transition-all transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5e6544]"
           aria-label="Quick Add"
         >
           <Plus className="w-8 h-8" />

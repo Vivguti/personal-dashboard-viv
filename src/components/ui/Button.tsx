@@ -25,12 +25,12 @@ export function Button({
 
   const variantClasses = {
     primary:
-      'bg-[#315c4a] text-white hover:bg-[#26352e] focus:ring-[#315c4a] shadow-sm hover:shadow',
+      'bg-[#5e6544] text-[#faf8f3] hover:bg-[#2e2f22] focus:ring-[#5e6544] shadow-xs',
     secondary:
-      'bg-[#e8f0ea] text-[#315c4a] hover:bg-[#c4d4ca] focus:ring-[#315c4a] dark:bg-[#26352e] dark:text-[#e8f0ea] dark:hover:bg-[#315c4a]',
+      'bg-[#f5e8d0] text-[#2e2f22] hover:bg-[#d6c7ad] focus:ring-[#5e6544] border border-[#d6c7ad] dark:bg-[#2e2f22] dark:text-[#f5e8d0] dark:border-[#5e6544]',
     ghost:
-      'bg-transparent text-[#315c4a] hover:bg-[#e8f0ea] focus:ring-[#315c4a] dark:text-[#a8bdaf] dark:hover:bg-[#26352e]',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+      'bg-transparent text-[#5e6544] hover:bg-[#f5e8d0] focus:ring-[#5e6544] dark:text-[#b7c3a1] dark:hover:bg-[#23241a]',
+    danger: 'bg-[#a85d48] text-white hover:bg-[#8c4735] focus:ring-[#a85d48]',
   }
 
   const sizeClasses = {

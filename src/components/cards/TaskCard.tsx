@@ -22,9 +22,9 @@ export function TaskCard({ task, onToggleComplete, onEdit, onDelete }: TaskCardP
 
   const getEnergyColor = (energy: string) => {
     switch (energy) {
-      case 'high': return 'text-amber-600 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-300'
-      case 'low': return 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300'
-      default: return 'text-blue-600 bg-blue-50 dark:bg-blue-950/40 dark:text-blue-300'
+      case 'high': return 'text-[#a85d48] bg-[#f5e8d0] dark:bg-[#2e2f22] dark:text-[#f5e8d0]'
+      case 'low': return 'text-[#5e6544] bg-[#f5e8d0] dark:bg-[#2e2f22] dark:text-[#b7c3a1]'
+      default: return 'text-[#8c947d] bg-[#f5e8d0] dark:bg-[#2e2f22] dark:text-[#b7c3a1]'
     }
   }
 
@@ -32,8 +32,8 @@ export function TaskCard({ task, onToggleComplete, onEdit, onDelete }: TaskCardP
     <div
       className={`p-4 rounded-xl border transition-all duration-200 ${
         isCompleted
-          ? 'bg-gray-50/80 dark:bg-gray-900/40 border-gray-200 dark:border-gray-800 opacity-75'
-          : 'bg-white dark:bg-gray-900 border-gray-200/90 dark:border-gray-800 shadow-sm hover:border-emerald-500/50'
+          ? 'bg-[#faf8f3]/60 dark:bg-[#23241a]/40 border-[#d6c7ad] dark:border-[#5e6544]/30 opacity-75'
+          : 'bg-white dark:bg-[#23241a] border-[#d6c7ad] dark:border-[#5e6544]/40 shadow-xs hover:border-[#5e6544]'
       }`}
     >
       <div className="flex items-start gap-3">

@@ -119,72 +119,72 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/40 backdrop-blur-sm flex justify-end">
-      <div className="w-full max-w-md bg-[#fbfaf6] dark:bg-[#121b17] h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-200 border-l border-[#dce5de] dark:border-[#26352e]">
-        {/* Drawer Header */}
-        <div className="p-4 md:p-5 bg-[#315c4a] text-white flex items-center justify-between">
+      <div className="w-full max-w-md bg-[#faf8f3] dark:bg-[#2e2f22] h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-200 border-l border-[#d6c7ad] dark:border-[#5e6544]/40">
+        {/* Drawer Header (Solid Bark Surface, NO GRADIENTS) */}
+        <div className="p-4 md:p-5 bg-[#5e6544] text-[#faf8f3] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-[#26352e] rounded-xl text-[#a8bdaf]">
+            <div className="p-2 bg-[#2e2f22] rounded-xl text-[#b7c3a1]">
               <Sparkles size={20} />
             </div>
             <div>
-              <h2 className="font-extrabold text-base tracking-tight">AI Chief of Staff</h2>
-              <p className="text-xs text-[#a8bdaf]">Calm & Empathetic Life Assistant</p>
+              <h2 className="font-black text-base tracking-tight">AI Chief of Staff</h2>
+              <p className="text-xs text-[#d6c7ad]">Calm & Empathetic Life Assistant</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-[#a8bdaf] hover:bg-[#26352e] transition-colors"
+            className="p-2 rounded-xl text-[#d6c7ad] hover:bg-[#2e2f22] transition-colors"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* Query & Action Shortcuts */}
-        <div className="p-4 border-b border-[#dce5de] dark:border-[#26352e] bg-[#f3f7f3] dark:bg-[#1c2722] space-y-2">
-          <span className="text-[11px] font-bold text-[#718078] uppercase tracking-wider">
+        <div className="p-4 border-b border-[#d6c7ad] dark:border-[#5e6544]/40 bg-[#f5e8d0]/60 dark:bg-[#23241a] space-y-2">
+          <span className="text-[11px] font-bold text-[#8c947d] uppercase tracking-wider">
             What's on your mind?
           </span>
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={handleOverwhelmedTriage}
-              className="p-2.5 rounded-xl border border-[#dce5de] dark:border-[#315c4a] bg-white dark:bg-[#121b17] hover:border-[#315c4a] transition-all text-left flex items-center gap-2 text-xs font-bold text-[#315c4a] dark:text-[#f3f7f3]"
+              className="p-2.5 rounded-xl border border-[#d6c7ad] dark:border-[#5e6544] bg-white dark:bg-[#2e2f22] hover:border-[#5e6544] transition-all text-left flex items-center gap-2 text-xs font-bold text-[#5e6544] dark:text-[#faf8f3]"
             >
-              <HeartHandshake size={16} className="text-[#315c4a]" /> I'm Overwhelmed
+              <HeartHandshake size={16} className="text-[#5e6544]" /> I'm Overwhelmed
             </button>
 
             <button
               onClick={handleNextAction}
-              className="p-2.5 rounded-xl border border-[#dce5de] dark:border-[#315c4a] bg-white dark:bg-[#121b17] hover:border-[#315c4a] transition-all text-left flex items-center gap-2 text-xs font-bold text-[#26352e] dark:text-[#f3f7f3]"
+              className="p-2.5 rounded-xl border border-[#d6c7ad] dark:border-[#5e6544] bg-white dark:bg-[#2e2f22] hover:border-[#5e6544] transition-all text-left flex items-center gap-2 text-xs font-bold text-[#2e2f22] dark:text-[#faf8f3]"
             >
-              <Zap size={16} className="text-[#315c4a]" /> Next Action
+              <Zap size={16} className="text-[#5e6544]" /> Next Action
             </button>
 
             <button
               onClick={handleAnalyzeSchedule}
-              className="p-2.5 rounded-xl border border-[#dce5de] dark:border-[#315c4a] bg-white dark:bg-[#121b17] hover:border-[#315c4a] transition-all text-left flex items-center gap-2 text-xs font-bold text-[#26352e] dark:text-[#f3f7f3]"
+              className="p-2.5 rounded-xl border border-[#d6c7ad] dark:border-[#5e6544] bg-white dark:bg-[#2e2f22] hover:border-[#5e6544] transition-all text-left flex items-center gap-2 text-xs font-bold text-[#2e2f22] dark:text-[#faf8f3]"
             >
-              <Calendar size={16} className="text-blue-600" /> Today's Schedule
+              <Calendar size={16} className="text-[#5e6544]" /> Today's Schedule
             </button>
 
             <button
               onClick={handleCheckWorkload}
-              className="p-2.5 rounded-xl border border-[#dce5de] dark:border-[#315c4a] bg-white dark:bg-[#121b17] hover:border-[#315c4a] transition-all text-left flex items-center gap-2 text-xs font-bold text-[#26352e] dark:text-[#f3f7f3]"
+              className="p-2.5 rounded-xl border border-[#d6c7ad] dark:border-[#5e6544] bg-white dark:bg-[#2e2f22] hover:border-[#5e6544] transition-all text-left flex items-center gap-2 text-xs font-bold text-[#2e2f22] dark:text-[#faf8f3]"
             >
-              <Clock size={16} className="text-purple-600" /> Workload Check
+              <Clock size={16} className="text-[#5e6544]" /> Workload Check
             </button>
 
             <button
               onClick={handleCheckDeadlines}
-              className="p-2.5 rounded-xl border border-[#dce5de] dark:border-[#315c4a] bg-white dark:bg-[#121b17] hover:border-[#315c4a] transition-all text-left flex items-center gap-2 text-xs font-bold text-[#26352e] dark:text-[#f3f7f3]"
+              className="col-span-2 p-2.5 rounded-xl border border-[#d6c7ad] dark:border-[#5e6544] bg-white dark:bg-[#2e2f22] hover:border-[#5e6544] transition-all text-left flex items-center gap-2 text-xs font-bold text-[#2e2f22] dark:text-[#faf8f3]"
             >
-              <AlertTriangle size={16} className="text-amber-600" /> 7-Day Deadlines
+              <AlertTriangle size={16} className="text-[#a85d48]" /> 7-Day Deadlines
             </button>
           </div>
 
           <Button
             onClick={handleOptimizeSchedule}
             fullWidth
-            className="mt-2 bg-[#315c4a] hover:bg-[#26352e] text-white font-bold text-xs"
+            className="mt-2 bg-[#5e6544] hover:bg-[#2e2f22] text-[#faf8f3] font-bold text-xs"
             icon={<Sparkles size={16} />}
           >
             Auto-Optimize Today's Schedule
@@ -194,45 +194,45 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {isLoading ? (
-            <div className="py-12 text-center text-xs text-[#718078]">Processing query with AI engine...</div>
+            <div className="py-12 text-center text-xs text-[#8c947d]">Processing query with AI engine...</div>
           ) : (
             <>
               {/* RESULTS: OVERWHELMED TRIAGE */}
               {activeQuery === 'overwhelmed' && overwhelmedSummary && (
                 <div className="space-y-4 animate-fade-in">
-                  <div className="p-3.5 bg-[#e8f0ea] dark:bg-[#26352e] rounded-xl text-xs font-bold text-[#315c4a] dark:text-[#f3f7f3] flex items-center gap-2">
+                  <div className="p-3.5 bg-[#f5e8d0] dark:bg-[#23241a] rounded-xl text-xs font-bold text-[#5e6544] dark:text-[#faf8f3] flex items-center gap-2 border border-[#d6c7ad]">
                     <ShieldCheck size={18} />
                     <span>Take a deep breath. Here is your calm clarity plan for today:</span>
                   </div>
 
                   <Card className="p-4 space-y-3">
-                    <h4 className="font-extrabold text-xs text-[#315c4a] uppercase tracking-wider">
+                    <h4 className="font-black text-xs text-[#5e6544] uppercase tracking-wider">
                       1. What Matters Today
                     </h4>
                     {overwhelmedSummary.whatMatters.map((t) => (
-                      <div key={t.id} className="text-xs font-bold text-[#26352e] dark:text-[#f3f7f3]">
+                      <div key={t.id} className="text-xs font-bold text-[#2e2f22] dark:text-[#faf8f3]">
                         • {t.title}
                       </div>
                     ))}
 
-                    <h4 className="font-extrabold text-xs text-[#718078] uppercase tracking-wider pt-2">
+                    <h4 className="font-black text-xs text-[#8c947d] uppercase tracking-wider pt-2">
                       2. What Can Wait
                     </h4>
                     {overwhelmedSummary.whatCanWait.length > 0 ? (
                       overwhelmedSummary.whatCanWait.map((t) => (
-                        <div key={t.id} className="text-xs text-[#718078]">
+                        <div key={t.id} className="text-xs text-[#8c947d]">
                           • {t.title} (No deadline)
                         </div>
                       ))
                     ) : (
-                      <div className="text-xs text-[#718078]">Low priority items clear</div>
+                      <div className="text-xs text-[#8c947d]">Low priority items clear</div>
                     )}
 
-                    <h4 className="font-extrabold text-xs text-amber-700 uppercase tracking-wider pt-2">
+                    <h4 className="font-black text-xs text-[#a85d48] uppercase tracking-wider pt-2">
                       3. Recommended Action
                     </h4>
                     {overwhelmedSummary.recommendedAction && (
-                      <div className="p-2.5 bg-[#f3f7f3] dark:bg-[#121b17] rounded-lg text-xs font-bold text-[#26352e] dark:text-[#f3f7f3]">
+                      <div className="p-2.5 bg-[#f5e8d0]/60 dark:bg-[#2e2f22] rounded-lg text-xs font-bold text-[#2e2f22] dark:text-[#faf8f3] border border-[#d6c7ad]">
                         {overwhelmedSummary.recommendedAction.title}
                       </div>
                     )}
@@ -243,18 +243,18 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
               {/* RESULTS: NEXT ACTION */}
               {activeQuery === 'next_action' && (
                 <div className="space-y-3">
-                  <h3 className="font-bold text-sm text-[#26352e] dark:text-[#f3f7f3] flex items-center gap-2">
-                    <Zap size={16} className="text-[#315c4a]" /> Highest Priority Action
+                  <h3 className="font-bold text-sm text-[#2e2f22] dark:text-[#faf8f3] flex items-center gap-2">
+                    <Zap size={16} className="text-[#5e6544]" /> Highest Priority Action
                   </h3>
                   {nextAction ? (
-                    <Card className="p-4 border-l-4 border-[#315c4a] space-y-2">
-                      <h4 className="font-bold text-sm text-[#26352e] dark:text-[#f3f7f3]">{nextAction.title}</h4>
-                      <p className="text-xs text-[#718078]">
-                        Priority: <span className="font-bold uppercase text-[#315c4a]">{nextAction.priority}</span> · Energy: {nextAction.energy_required}
+                    <Card className="p-4 border-l-4 border-[#5e6544] space-y-2">
+                      <h4 className="font-bold text-sm text-[#2e2f22] dark:text-[#faf8f3]">{nextAction.title}</h4>
+                      <p className="text-xs text-[#8c947d]">
+                        Priority: <span className="font-bold uppercase text-[#5e6544]">{nextAction.priority}</span> · Energy: {nextAction.energy_required}
                       </p>
                     </Card>
                   ) : (
-                    <Card className="p-4 text-center text-xs text-[#718078]">No active priority tasks.</Card>
+                    <Card className="p-4 text-center text-xs text-[#8c947d]">No active priority tasks.</Card>
                   )}
                 </div>
               )}
@@ -262,23 +262,23 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
               {/* RESULTS: SCHEDULE */}
               {activeQuery === 'schedule' && todayData && (
                 <div className="space-y-3">
-                  <h3 className="font-bold text-sm text-[#26352e] dark:text-[#f3f7f3] flex items-center gap-2">
-                    <Calendar size={16} className="text-blue-600" /> Today's Schedule Overview
+                  <h3 className="font-bold text-sm text-[#2e2f22] dark:text-[#faf8f3] flex items-center gap-2">
+                    <Calendar size={16} className="text-[#5e6544]" /> Today's Schedule Overview
                   </h3>
                   <div className="space-y-2">
-                    <div className="text-xs font-semibold text-[#718078]">Fixed Commitments ({todayData.events.length})</div>
+                    <div className="text-xs font-bold text-[#8c947d]">Fixed Commitments ({todayData.events.length})</div>
                     {todayData.events.map((e) => (
                       <Card key={e.id} className="p-3 text-xs flex justify-between items-center">
-                        <span className="font-semibold">{e.title}</span>
-                        <span className="text-[#315c4a] font-bold">Fixed Calendar</span>
+                        <span className="font-bold">{e.title}</span>
+                        <span className="text-[#5e6544] font-bold">Fixed Calendar</span>
                       </Card>
                     ))}
 
-                    <div className="text-xs font-semibold text-[#718078] pt-2">Scheduled Tasks ({todayData.scheduledTasks.length})</div>
+                    <div className="text-xs font-bold text-[#8c947d] pt-2">Scheduled Tasks ({todayData.scheduledTasks.length})</div>
                     {todayData.scheduledTasks.map((t) => (
                       <Card key={t.id} className="p-3 text-xs flex justify-between items-center">
-                        <span className="font-semibold">{t.title}</span>
-                        <span className="text-[#718078]">{t.estimated_minutes} mins</span>
+                        <span className="font-bold">{t.title}</span>
+                        <span className="text-[#8c947d]">{t.estimated_minutes} mins</span>
                       </Card>
                     ))}
                   </div>
@@ -288,14 +288,14 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
               {/* RESULTS: WORKLOAD */}
               {activeQuery === 'workload' && forecast && (
                 <div className="space-y-3">
-                  <h3 className="font-bold text-sm text-[#26352e] dark:text-[#f3f7f3] flex items-center gap-2">
-                    <Clock size={16} className="text-purple-600" /> Workload Capacity
+                  <h3 className="font-bold text-sm text-[#2e2f22] dark:text-[#faf8f3] flex items-center gap-2">
+                    <Clock size={16} className="text-[#5e6544]" /> Workload Capacity
                   </h3>
                   <Card className="p-4 text-center space-y-2">
-                    <div className="text-2xl font-extrabold text-[#315c4a] dark:text-[#a8bdaf]">
+                    <div className="text-2xl font-black text-[#5e6544] dark:text-[#b7c3a1]">
                       {forecast.capacityStatus}
                     </div>
-                    <div className="text-xs text-[#718078]">
+                    <div className="text-xs text-[#8c947d]">
                       {forecast.scheduledMinutes} mins scheduled of {forecast.availableCapacityMinutes} mins daily capacity ({forecast.percentageCapacityUsed}%)
                     </div>
                   </Card>
@@ -305,22 +305,22 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
               {/* RESULTS: DEADLINES */}
               {activeQuery === 'deadlines' && (
                 <div className="space-y-3">
-                  <h3 className="font-bold text-sm text-[#26352e] dark:text-[#f3f7f3] flex items-center gap-2">
-                    <AlertTriangle size={16} className="text-amber-600" /> Upcoming 7-Day Deadlines
+                  <h3 className="font-bold text-sm text-[#2e2f22] dark:text-[#faf8f3] flex items-center gap-2">
+                    <AlertTriangle size={16} className="text-[#a85d48]" /> Upcoming 7-Day Deadlines
                   </h3>
                   {deadlines.length > 0 ? (
                     <div className="space-y-2">
                       {deadlines.map((t) => (
                         <Card key={t.id} className="p-3 text-xs flex justify-between items-center">
-                          <span className="font-semibold truncate">{t.title}</span>
-                          <span className="text-amber-700 font-bold">
+                          <span className="font-bold truncate">{t.title}</span>
+                          <span className="text-[#a85d48] font-bold">
                             {new Date(t.deadline!).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                           </span>
                         </Card>
                       ))}
                     </div>
                   ) : (
-                    <Card className="p-4 text-center text-xs text-[#718078]">No imminent deadlines within 7 days.</Card>
+                    <Card className="p-4 text-center text-xs text-[#8c947d]">No imminent deadlines within 7 days.</Card>
                   )}
                 </div>
               )}
