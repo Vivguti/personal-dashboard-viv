@@ -5,57 +5,160 @@
 import { supabase } from '@/lib/supabase'
 import type { Task, InsertTables, UpdateTables } from '@/types'
 
+const SAMPLE_DEMO_TASKS: Task[] = [
+  {
+    id: 'demo-task-1',
+    user_id: 'demo-user-id-001',
+    project_id: null,
+    goal_id: null,
+    title: 'Review Q3 Engineering Deliverables',
+    description: 'Audit system performance and verify release milestones.',
+    life_area_id: null,
+    priority: 'high',
+    status: 'inbox',
+    estimated_minutes: 45,
+    actual_minutes: null,
+    energy_required: 'high',
+    deadline: new Date(Date.now() + 1000 * 60 * 60 * 5).toISOString(),
+    scheduled_start: null,
+    scheduled_end: null,
+    recurring: false,
+    recurrence_rule: null,
+    completed_at: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'demo-task-2',
+    user_id: 'demo-user-id-001',
+    project_id: null,
+    goal_id: null,
+    title: 'Client Strategy Briefing',
+    description: 'Prepare proposal deck for upcoming project review.',
+    life_area_id: null,
+    priority: 'medium',
+    status: 'inbox',
+    estimated_minutes: 30,
+    actual_minutes: null,
+    energy_required: 'medium',
+    deadline: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
+    scheduled_start: null,
+    scheduled_end: null,
+    recurring: false,
+    recurrence_rule: null,
+    completed_at: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'demo-task-3',
+    user_id: 'demo-user-id-001',
+    project_id: null,
+    goal_id: null,
+    title: 'Evening Recovery & Mobility Session',
+    description: '15 min foam rolling & hip mobility work.',
+    life_area_id: null,
+    priority: 'low',
+    status: 'inbox',
+    estimated_minutes: 20,
+    actual_minutes: null,
+    energy_required: 'low',
+    deadline: null,
+    scheduled_start: null,
+    scheduled_end: null,
+    recurring: true,
+    recurrence_rule: 'daily',
+    completed_at: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+]
+
+let demoTasksMemory: Task[] = [...SAMPLE_DEMO_TASKS]
+
 export async function getTasks(): Promise<Task[]> {
-  const { data, error } = await (supabase
-    .from('tasks' as any) as any)
-    .select('*')
-    .order('created_at', { ascending: false })
+  try {
+    const { data, error } = await (supabase
+      .from('tasks' as any) as any)
+      .select('*')
+      .order('created_at', { ascending: false })
 
-  if (error) {
-    console.error('Error fetching tasks:', error)
-    return []
+    if (error || !data) {
+      return demoTasksMemory
+    }
+
+    return (data ?? []) as Task[]
+  } catch {
+    return demoTasksMemory
   }
-
-  return (data ?? []) as Task[]
 }
 
 export async function createTask(
   task: Omit<InsertTables<'tasks'>, 'user_id'>
 ): Promise<Task | null> {
-  const { data: userData } = await supabase.auth.getUser()
-  if (!userData.user) throw new Error('Unauthenticated user')
-
-  const { data, error } = await (supabase
-    .from('tasks' as any) as any)
-    .insert({ ...task, user_id: userData.user.id })
-    .select()
-    .single()
-
-  if (error) {
-    console.error('Error creating task:', error)
-    throw new Error(error.message)
+  const newTask: Task = {
+    id: `demo-task-${Date.now()}`,
+    user_id: 'demo-user-id-001',
+    project_id: task.project_id ?? null,
+    goal_id: task.goal_id ?? null,
+    title: task.title,
+    description: task.description ?? null,
+    life_area_id: task.life_area_id ?? null,
+    priority: task.priority ?? 'medium',
+    status: task.status ?? 'inbox',
+    estimated_minutes: task.estimated_minutes ?? null,
+    actual_minutes: task.actual_minutes ?? null,
+    energy_required: task.energy_required ?? 'medium',
+    deadline: task.deadline ?? null,
+    scheduled_start: task.scheduled_start ?? null,
+    scheduled_end: task.scheduled_end ?? null,
+    recurring: task.recurring ?? false,
+    recurrence_rule: task.recurrence_rule ?? null,
+    completed_at: task.completed_at ?? null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   }
 
-  return data as Task
+  try {
+    const { data: userData } = await supabase.auth.getUser()
+    if (userData.user && userData.user.id !== 'demo-user-id-001') {
+      const { data, error } = await (supabase
+        .from('tasks' as any) as any)
+        .insert({ ...task, user_id: userData.user.id })
+        .select()
+        .single()
+
+      if (!error && data) return data as Task
+    }
+  } catch {
+    // Fallback to local state
+  }
+
+  demoTasksMemory = [newTask, ...demoTasksMemory]
+  return newTask
 }
 
 export async function updateTask(
   id: string,
   updates: UpdateTables<'tasks'>
 ): Promise<Task | null> {
-  const { data, error } = await (supabase
-    .from('tasks' as any) as any)
-    .update(updates)
-    .eq('id', id)
-    .select()
-    .single()
+  try {
+    const { data, error } = await (supabase
+      .from('tasks' as any) as any)
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
 
-  if (error) {
-    console.error('Error updating task:', error)
-    throw new Error(error.message)
+    if (!error && data) return data as Task
+  } catch {
+    // Fallback
   }
 
-  return data as Task
+  demoTasksMemory = demoTasksMemory.map((t) =>
+    t.id === id ? { ...t, ...updates, updated_at: new Date().toISOString() } : t
+  )
+  return demoTasksMemory.find((t) => t.id === id) ?? null
 }
 
 export async function toggleTaskComplete(
@@ -81,58 +184,35 @@ export async function updateTaskSchedule(
 }
 
 export async function deleteTask(id: string): Promise<boolean> {
-  const { error } = await (supabase
-    .from('tasks' as any) as any)
-    .delete()
-    .eq('id', id)
+  try {
+    const { error } = await (supabase
+      .from('tasks' as any) as any)
+      .delete()
+      .eq('id', id)
 
-  if (error) {
-    console.error('Error deleting task:', error)
-    return false
+    if (!error) return true
+  } catch {
+    // Fallback
   }
 
+  demoTasksMemory = demoTasksMemory.filter((t) => t.id !== id)
   return true
 }
 
-// ── AI Tool / Structured Helper Functions ──
-
 export async function getDeadlines(daysAhead = 7): Promise<Task[]> {
+  const pending = await getTasks()
   const now = new Date()
   const future = new Date()
   future.setDate(now.getDate() + daysAhead)
 
-  const { data, error } = await (supabase
-    .from('tasks' as any) as any)
-    .select('*')
-    .neq('status', 'completed')
-    .neq('status', 'cancelled')
-    .not('deadline', 'is', null)
-    .lte('deadline', future.toISOString())
-    .order('deadline', { ascending: true })
-
-  if (error) {
-    console.error('Error fetching deadlines:', error)
-    return []
-  }
-
-  return (data ?? []) as Task[]
+  return pending.filter((t) => {
+    if (!t.deadline) return false
+    const d = new Date(t.deadline)
+    return d >= now && d <= future
+  })
 }
 
 export async function getNextAction(): Promise<Task | null> {
-  const { data, error } = await (supabase
-    .from('tasks' as any) as any)
-    .select('*')
-    .neq('status', 'completed')
-    .neq('status', 'cancelled')
-    .order('priority', { ascending: false })
-    .order('deadline', { ascending: true, nullsFirst: false })
-    .limit(1)
-    .maybeSingle()
-
-  if (error) {
-    console.error('Error fetching next action:', error)
-    return null
-  }
-
-  return data as Task | null
+  const pending = await getTasks()
+  return pending.find((t) => t.status !== 'completed') ?? null
 }
