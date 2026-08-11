@@ -5,15 +5,11 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database.types'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const fallbackUrl = 'https://demo-project.supabase.co'
+const fallbackKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbW8tcHJvamVjdCIsInJvbGUiOiJhbW9uIiwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE5MDA0OTYwMDB9.demo_key'
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Missing Supabase environment variables. ' +
-    'Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env.local file.'
-  )
-}
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || fallbackUrl
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || fallbackKey
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {

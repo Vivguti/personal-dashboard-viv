@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { useAuth } from '@/contexts/AuthContext'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-});
+})
 
 const signUpSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -19,59 +19,62 @@ const signUpSchema = z.object({
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ['confirmPassword'],
-});
+})
 
-type LoginFormValues = z.infer<typeof loginSchema>;
-type SignUpFormValues = z.infer<typeof signUpSchema>;
+type LoginFormValues = z.infer<typeof loginSchema>
+type SignUpFormValues = z.infer<typeof signUpSchema>
 
 export function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
-  const { signIn, signUp } = useAuth();
-  const [error, setError] = useState<string | null>(null);
+  const [isLogin, setIsLogin] = useState(true)
+  const { signIn, signUp, enterDemoMode } = useAuth()
+  const [error, setError] = useState<string | null>(null)
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-  });
+  })
 
   const signUpForm = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
-  });
+  })
 
   const onLoginSubmit = async (data: LoginFormValues) => {
     try {
-      setError(null);
-      await signIn(data.email, data.password);
+      setError(null)
+      await signIn(data.email, data.password)
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to sign in');
+      setError(err instanceof Error ? err.message : 'Failed to sign in')
     }
-  };
+  }
 
   const onSignUpSubmit = async (data: SignUpFormValues) => {
     try {
-      setError(null);
-      await signUp(data.email, data.password, data.displayName);
+      setError(null)
+      await signUp(data.email, data.password, data.displayName)
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to sign up');
+      setError(err instanceof Error ? err.message : 'Failed to sign up')
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-indigo-950 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 p-4">
       <div className="w-full max-w-md bg-white/10 dark:bg-gray-900/50 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20 dark:border-gray-700">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Personal OS</h1>
-          <p className="text-indigo-200">Your life, organized.</p>
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-emerald-700 text-white font-black text-lg rounded-xl mb-3 shadow-md">
+            OS
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-1">Personal OS</h1>
+          <p className="text-emerald-200 text-sm">Your life, productivity & health organized.</p>
         </div>
 
         <div className="flex mb-6 bg-black/20 rounded-lg p-1">
           <button
-            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${isLogin ? 'bg-indigo-600 text-white' : 'text-gray-300 hover:text-white'}`}
+            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${isLogin ? 'bg-emerald-700 text-white' : 'text-gray-300 hover:text-white'}`}
             onClick={() => setIsLogin(true)}
           >
             Login
           </button>
           <button
-            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${!isLogin ? 'bg-indigo-600 text-white' : 'text-gray-300 hover:text-white'}`}
+            className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${!isLogin ? 'bg-emerald-700 text-white' : 'text-gray-300 hover:text-white'}`}
             onClick={() => setIsLogin(false)}
           >
             Sign Up
@@ -102,7 +105,8 @@ export function AuthPage() {
             />
             <Button
               type="submit"
-              className="w-full mt-6"
+              fullWidth
+              className="mt-6 bg-emerald-700 hover:bg-emerald-800 text-white font-bold"
               isLoading={loginForm.formState.isSubmitting}
             >
               Login
@@ -140,14 +144,25 @@ export function AuthPage() {
             />
             <Button
               type="submit"
-              className="w-full mt-6"
+              fullWidth
+              className="mt-6 bg-emerald-700 hover:bg-emerald-800 text-white font-bold"
               isLoading={signUpForm.formState.isSubmitting}
             >
               Sign Up
             </Button>
           </form>
         )}
+
+        <div className="mt-6 pt-6 border-t border-white/10 text-center">
+          <button
+            onClick={enterDemoMode}
+            type="button"
+            className="w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all border border-white/20"
+          >
+            ⚡ Explore App in Live Demo Mode
+          </button>
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
