@@ -35,8 +35,8 @@ export function Sidebar() {
               `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px]
               ${
                 isActive
-                  ? 'bg-[#d6c7ad] dark:bg-[#5e6544]/50 text-[#2e2f22] dark:text-[#f5e8d0] shadow-xs border border-[#b7c3a1]'
-                  : 'text-[#8c947d] dark:text-[#b7c3a1] hover:bg-[#d6c7ad]/40 dark:hover:bg-[#23241a] hover:text-[#2e2f22]'
+                  ? 'bg-[#5e6544] text-[#f5e8d0] shadow-xs border border-[#5e6544]'
+                  : 'text-[#2e2f22] dark:text-[#b7c3a1] hover:bg-[#d6c7ad]/40 dark:hover:bg-[#23241a] hover:text-[#2e2f22]'
               }`
             }
           >
@@ -52,8 +52,8 @@ export function Sidebar() {
               `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px]
               ${
                 isActive
-                  ? 'bg-[#d6c7ad] dark:bg-[#5e6544]/50 text-[#2e2f22] dark:text-[#f5e8d0] shadow-xs border border-[#b7c3a1]'
-                  : 'text-[#8c947d] dark:text-[#b7c3a1] hover:bg-[#d6c7ad]/40 dark:hover:bg-[#23241a] hover:text-[#2e2f22]'
+                  ? 'bg-[#5e6544] text-[#f5e8d0] shadow-xs border border-[#5e6544]'
+                  : 'text-[#2e2f22] dark:text-[#b7c3a1] hover:bg-[#d6c7ad]/40 dark:hover:bg-[#23241a] hover:text-[#2e2f22]'
               }`
             }
           >
@@ -65,8 +65,8 @@ export function Sidebar() {
 
       <div className="p-4 border-t border-[#d6c7ad] dark:border-[#5e6544]/40">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#d6c7ad] flex items-center justify-center flex-shrink-0 border border-[#b7c3a1]">
-            <span className="text-[#2e2f22] font-black text-xs">
+          <div className="w-8 h-8 rounded-full bg-[#5e6544] text-[#f5e8d0] flex items-center justify-center flex-shrink-0 border border-[#5e6544]">
+            <span className="font-black text-xs">
               {user?.email ? user.email.charAt(0).toUpperCase() : '?'}
             </span>
           </div>

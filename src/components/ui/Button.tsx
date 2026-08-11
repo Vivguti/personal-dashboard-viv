@@ -25,11 +25,11 @@ export function Button({
 
   const variantClasses = {
     primary:
-      'bg-[#d6c7ad] text-[#2e2f22] hover:bg-[#b7c3a1] focus:ring-[#d6c7ad] shadow-xs border border-[#b7c3a1]/60',
+      'bg-[#f5e8d0] text-[#2e2f22] hover:bg-[#d6c7ad] focus:ring-[#f5e8d0] shadow-xs border border-[#d6c7ad]',
     secondary:
-      'bg-[#f5e8d0] text-[#2e2f22] hover:bg-[#d6c7ad] focus:ring-[#d6c7ad] border border-[#d6c7ad] dark:bg-[#2e2f22] dark:text-[#f5e8d0] dark:border-[#5e6544]',
+      'bg-[#5e6544] text-[#f5e8d0] hover:bg-[#2e2f22] focus:ring-[#5e6544] border border-[#5e6544] dark:bg-[#2e2f22] dark:text-[#f5e8d0]',
     ghost:
-      'bg-transparent text-[#2e2f22] hover:bg-[#f5e8d0] focus:ring-[#d6c7ad] dark:text-[#b7c3a1] dark:hover:bg-[#23241a]',
+      'bg-transparent text-[#2e2f22] hover:bg-[#d6c7ad]/40 focus:ring-[#f5e8d0] dark:text-[#b7c3a1] dark:hover:bg-[#23241a]',
     danger: 'bg-[#a85d48] text-white hover:bg-[#8c4735] focus:ring-[#a85d48]',
   }
 

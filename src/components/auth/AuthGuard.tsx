@@ -1,33 +1,26 @@
-// ============================================
-// Personal OS — Auth Guard Component
-// ============================================
-
-import { Navigate } from 'react-router-dom'
+import type { ReactNode } from 'react'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 
-interface AuthGuardProps {
-  children: React.ReactNode
+export interface AuthGuardProps {
+  children: ReactNode
 }
 
-/**
- * Protects routes from unauthenticated access.
- * Shows a loading spinner while checking auth state,
- * redirects to /auth if not authenticated.
- */
 export function AuthGuard({ children }: AuthGuardProps) {
   const { user, loading } = useAuth()
+  const location = useLocation()
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-gray-950">
+      <div className="flex h-screen items-center justify-center bg-[#f5e8d0] dark:bg-[#2e2f22]">
         <LoadingSpinner size="lg" />
       </div>
     )
   }
 
   if (!user) {
-    return <Navigate to="/auth" replace />
+    return <Navigate to="/auth" state={{ from: location }} replace />
   }
 
   return <>{children}</>

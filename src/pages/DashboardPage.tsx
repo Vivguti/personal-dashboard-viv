@@ -260,16 +260,16 @@ export function DashboardPage() {
             </div>
           </Card>
 
-          {/* 4. NEXT UP HERO ACTION (SAND SURFACE #D6C7AD, NO GREEN BACKGROUND) */}
+          {/* 4. NEXT UP HERO ACTION (BARK GREEN SURFACE #5E6544) */}
           {nextAction && (
-            <Card className="p-5 bg-[#d6c7ad] text-[#2e2f22] border border-[#b7c3a1] shadow-md relative overflow-hidden">
+            <Card className="p-5 bg-[#5e6544] text-[#f5e8d0] border-none shadow-md relative overflow-hidden">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#2e2f22] text-[#f5e8d0] inline-flex items-center gap-1">
                     <Zap size={10} /> NEXT UP
                   </span>
-                  <h3 className="text-lg font-black tracking-tight text-[#2e2f22]">{nextAction.title}</h3>
-                  <div className="flex items-center gap-3 text-xs text-[#5e6544] font-bold">
+                  <h3 className="text-lg font-black tracking-tight text-[#f5e8d0]">{nextAction.title}</h3>
+                  <div className="flex items-center gap-3 text-xs text-[#d6c7ad] font-bold">
                     {nextAction.estimated_minutes && (
                       <span className="flex items-center gap-1">
                         <Clock size={12} /> {nextAction.estimated_minutes} mins focus
@@ -283,8 +283,8 @@ export function DashboardPage() {
 
                 <Button
                   onClick={() => handleToggleTask(nextAction)}
-                  className="bg-[#2e2f22] text-[#f5e8d0] hover:bg-[#5e6544] border-none font-bold text-xs shadow-xs"
-                  icon={<CheckCircle2 size={16} className="text-[#f5e8d0]" />}
+                  className="bg-[#f5e8d0] text-[#2e2f22] hover:bg-[#d6c7ad] border-none font-bold text-xs shadow-xs"
+                  icon={<CheckCircle2 size={16} className="text-[#2e2f22]" />}
                 >
                   Start Focus
                 </Button>

@@ -17,18 +17,13 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 const THEME_STORAGE_KEY = 'personal-os-theme'
 
 function getInitialTheme(): ThemeMode {
-  // Check localStorage first
   if (typeof window !== 'undefined') {
     const stored = localStorage.getItem(THEME_STORAGE_KEY)
     if (stored === 'light' || stored === 'dark') {
       return stored
     }
-    // Fall back to system preference
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark'
-    }
   }
-  return 'dark' // Default to dark for premium feel
+  return 'light' // Default to light mode (Parchment #F5E8D0)
 }
 
 interface ThemeProviderProps {
@@ -38,7 +33,6 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<ThemeMode>(getInitialTheme)
 
-  // Apply theme class to document
   useEffect(() => {
     const root = document.documentElement
     if (theme === 'dark') {
@@ -46,10 +40,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     } else {
       root.classList.remove('dark')
     }
-    // Update meta theme-color
     const meta = document.querySelector('meta[name="theme-color"]')
     if (meta) {
-      meta.setAttribute('content', theme === 'dark' ? '#0f172a' : '#f8fafc')
+      meta.setAttribute('content', theme === 'dark' ? '#2e2f22' : '#f5e8d0')
     }
     localStorage.setItem(THEME_STORAGE_KEY, theme)
   }, [theme])
