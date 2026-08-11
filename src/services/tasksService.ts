@@ -3,40 +3,13 @@
 // ============================================
 
 import { supabase } from '@/lib/supabase'
-import type { Task, InsertTables, UpdateTables, TaskStatus } from '@/types'
+import type { Task, InsertTables, UpdateTables } from '@/types'
 
-export interface TaskFilters {
-  status?: TaskStatus
-  projectId?: string
-  goalId?: string
-  lifeAreaId?: string
-  priority?: string
-  searchQuery?: string
-}
-
-export async function getTasks(filters?: TaskFilters): Promise<Task[]> {
-  let query = (supabase.from('tasks' as any) as any).select('*')
-
-  if (filters?.status) {
-    query = query.eq('status', filters.status)
-  }
-  if (filters?.projectId) {
-    query = query.eq('project_id', filters.projectId)
-  }
-  if (filters?.goalId) {
-    query = query.eq('goal_id', filters.goalId)
-  }
-  if (filters?.lifeAreaId) {
-    query = query.eq('life_area_id', filters.lifeAreaId)
-  }
-  if (filters?.priority) {
-    query = query.eq('priority', filters.priority)
-  }
-  if (filters?.searchQuery) {
-    query = query.ilike('title', `%${filters.searchQuery}%`)
-  }
-
-  const { data, error } = await query.order('created_at', { ascending: false })
+export async function getTasks(): Promise<Task[]> {
+  const { data, error } = await (supabase
+    .from('tasks' as any) as any)
+    .select('*')
+    .order('created_at', { ascending: false })
 
   if (error) {
     console.error('Error fetching tasks:', error)
@@ -46,7 +19,9 @@ export async function getTasks(filters?: TaskFilters): Promise<Task[]> {
   return (data ?? []) as Task[]
 }
 
-export async function createTask(task: Omit<InsertTables<'tasks'>, 'user_id'>): Promise<Task | null> {
+export async function createTask(
+  task: Omit<InsertTables<'tasks'>, 'user_id'>
+): Promise<Task | null> {
   const { data: userData } = await supabase.auth.getUser()
   if (!userData.user) throw new Error('Unauthenticated user')
 
@@ -64,7 +39,10 @@ export async function createTask(task: Omit<InsertTables<'tasks'>, 'user_id'>): 
   return data as Task
 }
 
-export async function updateTask(id: string, updates: UpdateTables<'tasks'>): Promise<Task | null> {
+export async function updateTask(
+  id: string,
+  updates: UpdateTables<'tasks'>
+): Promise<Task | null> {
   const { data, error } = await (supabase
     .from('tasks' as any) as any)
     .update(updates)
@@ -80,13 +58,26 @@ export async function updateTask(id: string, updates: UpdateTables<'tasks'>): Pr
   return data as Task
 }
 
-export async function toggleTaskComplete(id: string, completed: boolean): Promise<Task | null> {
-  const updates: UpdateTables<'tasks'> = {
-    status: completed ? 'completed' : 'in_progress',
+export async function toggleTaskComplete(
+  id: string,
+  completed: boolean
+): Promise<Task | null> {
+  return updateTask(id, {
+    status: completed ? 'completed' : 'inbox',
     completed_at: completed ? new Date().toISOString() : null,
-  }
+  })
+}
 
-  return updateTask(id, updates)
+export async function updateTaskSchedule(
+  taskId: string,
+  scheduledStart: string,
+  scheduledEnd: string
+): Promise<Task | null> {
+  return updateTask(taskId, {
+    scheduled_start: scheduledStart,
+    scheduled_end: scheduledEnd,
+    status: 'planned',
+  })
 }
 
 export async function deleteTask(id: string): Promise<boolean> {

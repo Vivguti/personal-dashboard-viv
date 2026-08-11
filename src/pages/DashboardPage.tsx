@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Card } from '@/components/ui/Card'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import { WorkloadWidget } from '@/components/cards/WorkloadWidget'
+import { NextActionWidget } from '@/components/ai/NextActionWidget'
 import { CheckSquare, CalendarDays, BarChart3, Droplets, Wallet, Clock, Dumbbell } from 'lucide-react'
 import type { Task, CalendarEvent, WorkloadSummary, Workout } from '@/types'
 import { getTasks, toggleTaskComplete } from '@/services/tasksService'
@@ -95,6 +96,9 @@ export function DashboardPage() {
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">{todayDateString}</p>
       </header>
+
+      {/* AI #1 Next Action Widget */}
+      <NextActionWidget />
 
       {/* Workload Summary */}
       {workloadSummary && <WorkloadWidget summary={workloadSummary} />}
