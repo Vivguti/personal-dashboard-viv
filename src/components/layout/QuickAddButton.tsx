@@ -4,12 +4,19 @@ import { Modal } from '@/components/ui/Modal'
 import {
   CheckSquare, CalendarPlus, Dumbbell, UtensilsCrossed,
   Droplets, Pill, Repeat, DollarSign, CreditCard,
-  FolderKanban, Target, StickyNote
+  FolderKanban, Target, Moon
 } from 'lucide-react'
+
 import { TaskModal } from '@/components/forms/TaskModal'
 import { EventModal } from '@/components/forms/EventModal'
 import { ProjectModal } from '@/components/forms/ProjectModal'
 import { GoalModal } from '@/components/forms/GoalModal'
+import { HydrationModal } from '@/components/forms/HydrationModal'
+import { MealModal } from '@/components/forms/MealModal'
+import { WorkoutModal } from '@/components/forms/WorkoutModal'
+import { SleepModal } from '@/components/forms/SleepModal'
+import { SupplementModal } from '@/components/forms/SupplementModal'
+import { HabitModal } from '@/components/forms/HabitModal'
 
 export interface QuickAddButtonProps {
   externalOpen?: boolean
@@ -30,6 +37,14 @@ export function QuickAddButton({
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false)
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false)
 
+  // Health modal states
+  const [isHydrationModalOpen, setIsHydrationModalOpen] = useState(false)
+  const [isMealModalOpen, setIsMealModalOpen] = useState(false)
+  const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false)
+  const [isSleepModalOpen, setIsSleepModalOpen] = useState(false)
+  const [isSupplementModalOpen, setIsSupplementModalOpen] = useState(false)
+  const [isHabitModalOpen, setIsHabitModalOpen] = useState(false)
+
   const isOpen = externalOpen !== undefined ? externalOpen : internalOpen
 
   const handleClose = () => {
@@ -48,7 +63,6 @@ export function QuickAddButton({
     if (onSelectOption) onSelectOption(id)
     handleClose()
 
-    // Trigger forms for productivity items
     switch (id) {
       case 'task':
         setIsTaskModalOpen(true)
@@ -62,6 +76,24 @@ export function QuickAddButton({
       case 'goal':
         setIsGoalModalOpen(true)
         break
+      case 'water':
+        setIsHydrationModalOpen(true)
+        break
+      case 'meal':
+        setIsMealModalOpen(true)
+        break
+      case 'workout':
+        setIsWorkoutModalOpen(true)
+        break
+      case 'sleep':
+        setIsSleepModalOpen(true)
+        break
+      case 'supplement':
+        setIsSupplementModalOpen(true)
+        break
+      case 'habit':
+        setIsHabitModalOpen(true)
+        break
     }
   }
 
@@ -71,18 +103,18 @@ export function QuickAddButton({
     { id: 'workout', label: 'Workout', icon: Dumbbell, color: 'text-orange-600 bg-orange-50 dark:bg-orange-950/40' },
     { id: 'meal', label: 'Meal', icon: UtensilsCrossed, color: 'text-green-600 bg-green-50 dark:bg-green-950/40' },
     { id: 'water', label: 'Water', icon: Droplets, color: 'text-cyan-600 bg-cyan-50 dark:bg-cyan-950/40' },
+    { id: 'sleep', label: 'Sleep', icon: Moon, color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40' },
     { id: 'supplement', label: 'Supplement', icon: Pill, color: 'text-teal-600 bg-teal-50 dark:bg-teal-950/40' },
     { id: 'habit', label: 'Habit', icon: Repeat, color: 'text-purple-600 bg-purple-50 dark:bg-purple-950/40' },
     { id: 'income', label: 'Income', icon: DollarSign, color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40' },
     { id: 'expense', label: 'Expense', icon: CreditCard, color: 'text-red-600 bg-red-50 dark:bg-red-950/40' },
     { id: 'project', label: 'Project', icon: FolderKanban, color: 'text-sky-600 bg-sky-50 dark:bg-sky-950/40' },
     { id: 'goal', label: 'Goal', icon: Target, color: 'text-rose-600 bg-rose-50 dark:bg-rose-950/40' },
-    { id: 'note', label: 'Note', icon: StickyNote, color: 'text-amber-600 bg-amber-50 dark:bg-amber-950/40' },
   ]
 
   return (
     <>
-      {/* Desktop Floating Action Button (hidden on mobile) */}
+      {/* Desktop Floating Action Button */}
       <div className="hidden md:block fixed bottom-8 right-8 z-40">
         <button
           onClick={handleOpen}
@@ -117,6 +149,12 @@ export function QuickAddButton({
       <EventModal isOpen={isEventModalOpen} onClose={() => setIsEventModalOpen(false)} />
       <ProjectModal isOpen={isProjectModalOpen} onClose={() => setIsProjectModalOpen(false)} />
       <GoalModal isOpen={isGoalModalOpen} onClose={() => setIsGoalModalOpen(false)} />
+      <HydrationModal isOpen={isHydrationModalOpen} onClose={() => setIsHydrationModalOpen(false)} />
+      <MealModal isOpen={isMealModalOpen} onClose={() => setIsMealModalOpen(false)} />
+      <WorkoutModal isOpen={isWorkoutModalOpen} onClose={() => setIsWorkoutModalOpen(false)} />
+      <SleepModal isOpen={isSleepModalOpen} onClose={() => setIsSleepModalOpen(false)} />
+      <SupplementModal isOpen={isSupplementModalOpen} onClose={() => setIsSupplementModalOpen(false)} />
+      <HabitModal isOpen={isHabitModalOpen} onClose={() => setIsHabitModalOpen(false)} />
     </>
   )
 }

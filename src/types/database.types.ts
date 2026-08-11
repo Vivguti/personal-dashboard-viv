@@ -197,6 +197,113 @@ export interface Database {
           status?: 'active' | 'completed' | 'paused' | 'cancelled'
         }
       }
+      sleep_logs: {
+        Row: {
+          id: string
+          user_id: string
+          sleep_start: string
+          sleep_end: string
+          duration_minutes: number | null
+          sleep_quality: number | null
+          notes: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          sleep_start: string
+          sleep_end: string
+          duration_minutes?: number | null
+          sleep_quality?: number | null
+          notes?: string | null
+        }
+        Update: {
+          sleep_start?: string
+          sleep_end?: string
+          duration_minutes?: number | null
+          sleep_quality?: number | null
+          notes?: string | null
+        }
+      }
+      habits: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          category: string | null
+          frequency: 'daily' | 'weekly' | 'monthly'
+          target: number
+          reminder_time: string | null
+          active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          category?: string | null
+          frequency?: 'daily' | 'weekly' | 'monthly'
+          target?: number
+          reminder_time?: string | null
+          active?: boolean
+        }
+        Update: {
+          title?: string
+          category?: string | null
+          frequency?: 'daily' | 'weekly' | 'monthly'
+          target?: number
+          reminder_time?: string | null
+          active?: boolean
+        }
+      }
+      habit_completions: {
+        Row: {
+          id: string
+          habit_id: string
+          user_id: string
+          completed_at: string
+          value: number
+          notes: string | null
+        }
+        Insert: {
+          id?: string
+          habit_id: string
+          user_id: string
+          completed_at?: string
+          value?: number
+          notes?: string | null
+        }
+        Update: {
+          value?: number
+          notes?: string | null
+        }
+      }
+      supplement_logs: {
+        Row: {
+          id: string
+          supplement_id: string
+          user_id: string
+          scheduled_time: string | null
+          taken_time: string | null
+          status: 'scheduled' | 'taken' | 'skipped' | 'snoozed'
+          notes: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          supplement_id: string
+          user_id: string
+          scheduled_time?: string | null
+          taken_time?: string | null
+          status?: 'scheduled' | 'taken' | 'skipped' | 'snoozed'
+          notes?: string | null
+        }
+        Update: {
+          status?: 'scheduled' | 'taken' | 'skipped' | 'snoozed'
+          notes?: string | null
+        }
+      }
       tasks: {
         Row: {
           id: string

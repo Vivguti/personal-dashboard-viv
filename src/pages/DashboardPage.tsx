@@ -2,26 +2,33 @@ import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Card } from '@/components/ui/Card'
 import { ProgressBar } from '@/components/ui/ProgressBar'
-import { CheckSquare, CalendarDays, BarChart3, Droplets, Wallet, Clock } from 'lucide-react'
-import type { Task, CalendarEvent, WorkloadSummary } from '@/types'
+import { WorkloadWidget } from '@/components/cards/WorkloadWidget'
+import { CheckSquare, CalendarDays, BarChart3, Droplets, Wallet, Clock, Dumbbell } from 'lucide-react'
+import type { Task, CalendarEvent, WorkloadSummary, Workout } from '@/types'
 import { getTasks, toggleTaskComplete } from '@/services/tasksService'
 import { getCalendarEvents } from '@/services/calendarService'
 import { computeWorkloadSummary } from '@/services/workloadService'
+import { getTodayHydrationSummary } from '@/services/hydrationService'
+import { getWorkouts } from '@/services/workoutService'
 
 export function DashboardPage() {
   const { user } = useAuth()
   const [tasks, setTasks] = useState<Task[]>([])
   const [nextEvent, setNextEvent] = useState<CalendarEvent | null>(null)
   const [workloadSummary, setWorkloadSummary] = useState<WorkloadSummary | null>(null)
+  const [hydrationSummary, setHydrationSummary] = useState<{ currentTotalOz: number; targetOz: number } | null>(null)
+  const [todayWorkout, setTodayWorkout] = useState<Workout | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   const loadDashboardData = useCallback(async () => {
     try {
       setIsLoading(true)
 
-      const [allTasks, allEvents] = await Promise.all([
+      const [allTasks, allEvents, hyd, wrks] = await Promise.all([
         getTasks(),
         getCalendarEvents(),
+        getTodayHydrationSummary(),
+        getWorkouts(),
       ])
 
       setTasks(allTasks)
@@ -33,6 +40,8 @@ export function DashboardPage() {
         .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())[0]
 
       setNextEvent(upcoming ?? null)
+      setHydrationSummary(hyd)
+      setTodayWorkout(wrks[0] ?? null)
 
       // Compute workload
       setWorkloadSummary(computeWorkloadSummary("Today's Workload", allTasks, allEvents))
@@ -82,6 +91,9 @@ export function DashboardPage() {
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">{todayDateString}</p>
       </header>
+
+      {/* Workload Summary */}
+      {workloadSummary && <WorkloadWidget summary={workloadSummary} />}
 
       {/* Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -193,28 +205,29 @@ export function DashboardPage() {
           </div>
         </Card>
 
-        {/* Workload Capacity Status */}
+        {/* Training Widget */}
         <Card className="p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-100 dark:bg-emerald-950/50 rounded-lg text-emerald-700 dark:text-emerald-300">
-                <Clock size={20} />
-              </div>
-              <div>
-                <h2 className="font-semibold text-gray-900 dark:text-gray-100">Workload Capacity</h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Daily capacity check</p>
-              </div>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 bg-orange-100 dark:bg-orange-950/50 rounded-lg text-orange-700 dark:text-orange-300">
+              <Dumbbell size={20} />
+            </div>
+            <div>
+              <h2 className="font-semibold text-gray-900 dark:text-gray-100">Training</h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Workout status</p>
             </div>
           </div>
-
-          <div className="mt-2 text-center">
-            <div className="text-xl font-bold text-gray-900 dark:text-gray-100">
-              {workloadSummary?.capacityStatus ?? 'Balanced'}
+          {todayWorkout ? (
+            <div className="h-20 flex flex-col items-center justify-center text-center">
+              <div className="text-sm font-bold text-gray-900 dark:text-gray-100">{todayWorkout.title}</div>
+              <div className="text-xs text-orange-600 dark:text-orange-400 uppercase font-semibold mt-1">
+                {todayWorkout.workout_type} · {todayWorkout.completed ? 'Completed' : 'Logged'}
+              </div>
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              {workloadSummary?.percentageCapacityUsed ?? 0}% capacity allocated
+          ) : (
+            <div className="h-20 flex items-center justify-center text-xs text-gray-400">
+              No workout logged today
             </div>
-          </div>
+          )}
         </Card>
 
         {/* Health Hydration Widget */}
@@ -229,8 +242,12 @@ export function DashboardPage() {
             </div>
           </div>
           <div className="h-20 flex flex-col items-center justify-center">
-            <div className="text-2xl font-bold text-cyan-700 dark:text-cyan-400">0</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">/ 128 oz</div>
+            <div className="text-2xl font-bold text-cyan-700 dark:text-cyan-400">
+              {hydrationSummary?.currentTotalOz ?? 0}
+            </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              / {hydrationSummary?.targetOz ?? 128} oz
+            </div>
           </div>
         </Card>
 
