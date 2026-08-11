@@ -25,7 +25,7 @@ export function Sidebar() {
   ]
 
   return (
-    <aside className="hidden md:flex flex-col w-60 fixed left-0 top-16 bottom-0 bg-[#faf8f3] dark:bg-[#2e2f22] border-r border-[#d6c7ad] dark:border-[#5e6544]/40 z-30">
+    <aside className="hidden md:flex flex-col w-60 fixed left-0 top-16 bottom-0 bg-[#f5e8d0] dark:bg-[#2e2f22] border-r border-[#d6c7ad] dark:border-[#5e6544]/40 z-30">
       <nav className="flex-1 overflow-y-auto py-5 px-3.5 space-y-1">
         {navItems.map((item) => (
           <NavLink
