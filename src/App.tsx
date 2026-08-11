@@ -14,6 +14,7 @@ import { CalendarPage } from '@/pages/CalendarPage'
 import { GoalsPage } from '@/pages/GoalsPage'
 import { HealthPage } from '@/pages/HealthPage'
 import { FinancePage } from '@/pages/FinancePage'
+import { BusinessPage } from '@/pages/BusinessPage'
 import { SettingsPage } from '@/pages/SettingsPage'
 
 export function App() {
@@ -39,7 +40,7 @@ export function App() {
               <Route path="goals" element={<GoalsPage />} />
               <Route path="health" element={<HealthPage />} />
               <Route path="finance" element={<FinancePage />} />
-              <Route path="business" element={<TasksPage />} /> {/* Placeholder — reuses Tasks for now */}
+              <Route path="business" element={<BusinessPage />} />
               <Route path="settings" element={<SettingsPage />} />
             </Route>
 

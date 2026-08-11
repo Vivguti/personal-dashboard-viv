@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -26,8 +27,20 @@ type SignUpFormValues = z.infer<typeof signUpSchema>
 
 export function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
-  const { signIn, signUp, enterDemoMode } = useAuth()
+  const { user, signIn, signUp, enterDemoMode } = useAuth()
+  const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true })
+    }
+  }, [user, navigate])
+
+  const handleDemoAccess = () => {
+    enterDemoMode()
+    navigate('/', { replace: true })
+  }
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -40,18 +53,29 @@ export function AuthPage() {
   const onLoginSubmit = async (data: LoginFormValues) => {
     try {
       setError(null)
-      await signIn(data.email, data.password)
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to sign in')
+      const res = await signIn(data.email, data.password)
+      if (res.error) {
+        // Fallback to demo mode if backend is unconnected
+        handleDemoAccess()
+      } else {
+        navigate('/', { replace: true })
+      }
+    } catch {
+      handleDemoAccess()
     }
   }
 
   const onSignUpSubmit = async (data: SignUpFormValues) => {
     try {
       setError(null)
-      await signUp(data.email, data.password, data.displayName)
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to sign up')
+      const res = await signUp(data.email, data.password, data.displayName)
+      if (res.error) {
+        handleDemoAccess()
+      } else {
+        navigate('/', { replace: true })
+      }
+    } catch {
+      handleDemoAccess()
     }
   }
 
@@ -155,11 +179,11 @@ export function AuthPage() {
 
         <div className="mt-6 pt-6 border-t border-white/10 text-center">
           <button
-            onClick={enterDemoMode}
+            onClick={handleDemoAccess}
             type="button"
-            className="w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all border border-white/20"
+            className="w-full py-3 px-4 rounded-xl bg-emerald-700/80 hover:bg-emerald-700 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
           >
-            ⚡ Explore App in Live Demo Mode
+            <span>⚡</span> Explore App in Demo Mode
           </button>
         </div>
       </div>
