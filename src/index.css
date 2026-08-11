@@ -1,12 +1,13 @@
 /* ============================================
-   Personal OS — Parchment Main Background (#F5E8D0)
-   Parchment: #F5E8D0 | Sand: #D6C7AD | Olive: #B7C3A1
-   Sage: #8C947D | Bark: #5E6544 | Olivewood: #2E2F22
+   Personal OS — Inverted Swatch Palette
+   Main Canvas: Parchment (#F5E8D0)
+   Top Bar & Letters: Soft Sage (#8C947D)
+   Graph Lines & Accents: Pure White (#FFFFFF)
    ============================================ */
 
 @import "tailwindcss";
 
-/* ── Custom Theme Configuration (Organic Board Swatches) ── */
+/* ── Custom Theme Configuration ── */
 @theme {
   /* Board Swatches */
   --color-parchment: #f5e8d0;
@@ -25,12 +26,9 @@
   --color-primary-500: #5e6544;
   --color-primary-600: #5e6544;
   --color-primary-700: #2e2f22;
-  --color-primary-800: #23241a;
-  --color-primary-900: #171811;
 
-  /* Status Tokens (No Blue/Purple) */
-  --color-success-500: #5e6544;
-  --color-success-600: #2e2f22;
+  /* Status Tokens */
+  --color-success-500: #8c947d;
   --color-warning-500: #d6c7ad;
   --color-danger-500: #a85d48;
 
@@ -38,8 +36,6 @@
   --color-surface-warm: #f5e8d0;
   --color-surface-card: #ffffff;
   --color-surface-secondary: #d6c7ad;
-  --color-surface-dark: #2e2f22;
-  --color-surface-dark-card: #23241a;
 
   /* Typography */
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -57,6 +53,7 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    background-color: #f5e8d0;
   }
 
   body {
@@ -89,11 +86,11 @@
   }
 
   .dark ::-webkit-scrollbar-thumb {
-    background: #5e6544;
+    background: #8c947d;
   }
 
   :focus-visible {
-    outline: 2px solid #5e6544;
+    outline: 2px solid #8c947d;
     outline-offset: 2px;
   }
 }
@@ -108,6 +105,12 @@
 
   .dark .glass {
     background: rgba(46, 47, 34, 0.95);
+  }
+
+  .glass-sage {
+    background: #8c947d;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   .no-scrollbar::-webkit-scrollbar {
@@ -158,4 +161,5 @@
 
 #root {
   height: 100%;
+  background-color: #f5e8d0;
 }
