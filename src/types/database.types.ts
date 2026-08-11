@@ -83,6 +83,149 @@ export interface Database {
           updated_at?: string
         }
       }
+      clients: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          email: string | null
+          phone: string | null
+          company: string | null
+          notes: string | null
+          active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          email?: string | null
+          phone?: string | null
+          company?: string | null
+          notes?: string | null
+          active?: boolean
+        }
+        Update: {
+          name?: string
+          email?: string | null
+          phone?: string | null
+          company?: string | null
+          notes?: string | null
+          active?: boolean
+        }
+      }
+      leads: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          email: string | null
+          phone: string | null
+          company: string | null
+          source: string | null
+          status: 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost'
+          estimated_value: number | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          email?: string | null
+          phone?: string | null
+          company?: string | null
+          source?: string | null
+          status?: 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost'
+          estimated_value?: number | null
+          notes?: string | null
+        }
+        Update: {
+          name?: string
+          email?: string | null
+          phone?: string | null
+          company?: string | null
+          source?: string | null
+          status?: 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost'
+          estimated_value?: number | null
+          notes?: string | null
+        }
+      }
+      business_projects: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          description: string | null
+          client_id: string | null
+          status: 'planning' | 'active' | 'on_hold' | 'completed' | 'cancelled'
+          priority: 'low' | 'medium' | 'high' | 'critical'
+          deadline: string | null
+          estimated_minutes: number | null
+          completed_minutes: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          description?: string | null
+          client_id?: string | null
+          status?: 'planning' | 'active' | 'on_hold' | 'completed' | 'cancelled'
+          priority?: 'low' | 'medium' | 'high' | 'critical'
+          deadline?: string | null
+          estimated_minutes?: number | null
+          completed_minutes?: number
+        }
+        Update: {
+          title?: string
+          description?: string | null
+          client_id?: string | null
+          status?: 'planning' | 'active' | 'on_hold' | 'completed' | 'cancelled'
+          priority?: 'low' | 'medium' | 'high' | 'critical'
+          deadline?: string | null
+          estimated_minutes?: number | null
+          completed_minutes?: number
+        }
+      }
+      business_revenue: {
+        Row: {
+          id: string
+          user_id: string
+          business_project_id: string | null
+          client_id: string | null
+          amount: number
+          date: string
+          description: string | null
+          category: string | null
+          invoice_number: string | null
+          linked_income_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          business_project_id?: string | null
+          client_id?: string | null
+          amount: number
+          date: string
+          description?: string | null
+          category?: string | null
+          invoice_number?: string | null
+          linked_income_id?: string | null
+        }
+        Update: {
+          amount?: number
+          date?: string
+          description?: string | null
+          category?: string | null
+          invoice_number?: string | null
+          linked_income_id?: string | null
+        }
+      }
       life_areas: {
         Row: {
           id: string
