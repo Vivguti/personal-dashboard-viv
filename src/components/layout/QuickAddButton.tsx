@@ -17,6 +17,8 @@ import { WorkoutModal } from '@/components/forms/WorkoutModal'
 import { SleepModal } from '@/components/forms/SleepModal'
 import { SupplementModal } from '@/components/forms/SupplementModal'
 import { HabitModal } from '@/components/forms/HabitModal'
+import { IncomeModal } from '@/components/forms/IncomeModal'
+import { ExpenseModal } from '@/components/forms/ExpenseModal'
 
 export interface QuickAddButtonProps {
   externalOpen?: boolean
@@ -44,6 +46,10 @@ export function QuickAddButton({
   const [isSleepModalOpen, setIsSleepModalOpen] = useState(false)
   const [isSupplementModalOpen, setIsSupplementModalOpen] = useState(false)
   const [isHabitModalOpen, setIsHabitModalOpen] = useState(false)
+
+  // Finance modal states
+  const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false)
+  const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false)
 
   const isOpen = externalOpen !== undefined ? externalOpen : internalOpen
 
@@ -93,6 +99,12 @@ export function QuickAddButton({
         break
       case 'habit':
         setIsHabitModalOpen(true)
+        break
+      case 'income':
+        setIsIncomeModalOpen(true)
+        break
+      case 'expense':
+        setIsExpenseModalOpen(true)
         break
     }
   }
@@ -155,6 +167,8 @@ export function QuickAddButton({
       <SleepModal isOpen={isSleepModalOpen} onClose={() => setIsSleepModalOpen(false)} />
       <SupplementModal isOpen={isSupplementModalOpen} onClose={() => setIsSupplementModalOpen(false)} />
       <HabitModal isOpen={isHabitModalOpen} onClose={() => setIsHabitModalOpen(false)} />
+      <IncomeModal isOpen={isIncomeModalOpen} onClose={() => setIsIncomeModalOpen(false)} />
+      <ExpenseModal isOpen={isExpenseModalOpen} onClose={() => setIsExpenseModalOpen(false)} />
     </>
   )
 }

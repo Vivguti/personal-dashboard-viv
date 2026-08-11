@@ -112,6 +112,134 @@ export interface Database {
           active?: boolean
         }
       }
+      budgets: {
+        Row: {
+          id: string
+          user_id: string
+          category: string
+          monthly_amount: number
+          start_date: string
+          end_date: string | null
+          warning_threshold: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          category: string
+          monthly_amount: number
+          start_date: string
+          end_date?: string | null
+          warning_threshold?: number | null
+        }
+        Update: {
+          category?: string
+          monthly_amount?: number
+          start_date?: string
+          end_date?: string | null
+          warning_threshold?: number | null
+        }
+      }
+      recurring_expenses: {
+        Row: {
+          id: string
+          user_id: string
+          merchant: string
+          amount: number
+          frequency: 'weekly' | 'biweekly' | 'monthly' | 'quarterly' | 'annually'
+          next_due_date: string
+          category: string
+          active: boolean
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          merchant: string
+          amount: number
+          frequency: 'weekly' | 'biweekly' | 'monthly' | 'quarterly' | 'annually'
+          next_due_date: string
+          category: string
+          active?: boolean
+          notes?: string | null
+        }
+        Update: {
+          merchant?: string
+          amount?: number
+          frequency?: 'weekly' | 'biweekly' | 'monthly' | 'quarterly' | 'annually'
+          next_due_date?: string
+          category?: string
+          active?: boolean
+          notes?: string | null
+        }
+      }
+      financial_goals: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          target_amount: number
+          current_amount: number
+          target_date: string | null
+          priority: 'low' | 'medium' | 'high' | 'critical'
+          contribution_frequency: 'weekly' | 'biweekly' | 'monthly' | 'one_time'
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          target_amount: number
+          current_amount?: number
+          target_date?: string | null
+          priority?: 'low' | 'medium' | 'high' | 'critical'
+          contribution_frequency?: 'weekly' | 'biweekly' | 'monthly' | 'one_time'
+        }
+        Update: {
+          name?: string
+          target_amount?: number
+          current_amount?: number
+          target_date?: string | null
+          priority?: 'low' | 'medium' | 'high' | 'critical'
+          contribution_frequency?: 'weekly' | 'biweekly' | 'monthly' | 'one_time'
+        }
+      }
+      allocation_rules: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          category: string
+          percentage: number | null
+          fixed_amount: number | null
+          priority: number
+          active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          category: string
+          percentage?: number | null
+          fixed_amount?: number | null
+          priority?: number
+          active?: boolean
+        }
+        Update: {
+          name?: string
+          category?: string
+          percentage?: number | null
+          fixed_amount?: number | null
+          priority?: number
+          active?: boolean
+        }
+      }
       projects: {
         Row: {
           id: string

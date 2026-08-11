@@ -10,6 +10,7 @@ import { getCalendarEvents } from '@/services/calendarService'
 import { computeWorkloadSummary } from '@/services/workloadService'
 import { getTodayHydrationSummary } from '@/services/hydrationService'
 import { getWorkouts } from '@/services/workoutService'
+import { getFinancialOverview } from '@/services/financeService'
 
 export function DashboardPage() {
   const { user } = useAuth()
@@ -18,17 +19,19 @@ export function DashboardPage() {
   const [workloadSummary, setWorkloadSummary] = useState<WorkloadSummary | null>(null)
   const [hydrationSummary, setHydrationSummary] = useState<{ currentTotalOz: number; targetOz: number } | null>(null)
   const [todayWorkout, setTodayWorkout] = useState<Workout | null>(null)
+  const [totalBalance, setTotalBalance] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
 
   const loadDashboardData = useCallback(async () => {
     try {
       setIsLoading(true)
 
-      const [allTasks, allEvents, hyd, wrks] = await Promise.all([
+      const [allTasks, allEvents, hyd, wrks, fin] = await Promise.all([
         getTasks(),
         getCalendarEvents(),
         getTodayHydrationSummary(),
         getWorkouts(),
+        getFinancialOverview(),
       ])
 
       setTasks(allTasks)
@@ -42,6 +45,7 @@ export function DashboardPage() {
       setNextEvent(upcoming ?? null)
       setHydrationSummary(hyd)
       setTodayWorkout(wrks[0] ?? null)
+      setTotalBalance(fin.totalBalance)
 
       // Compute workload
       setWorkloadSummary(computeWorkloadSummary("Today's Workload", allTasks, allEvents))
@@ -259,12 +263,16 @@ export function DashboardPage() {
             </div>
             <div>
               <h2 className="font-semibold text-gray-900 dark:text-gray-100">Finance</h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Total balance</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Net balance</p>
             </div>
           </div>
           <div className="h-20 flex flex-col items-center justify-center">
-            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">$0.00</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">manual balance</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              ${totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+            </div>
+            <div className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold mt-1">
+              active accounts
+            </div>
           </div>
         </Card>
       </div>
