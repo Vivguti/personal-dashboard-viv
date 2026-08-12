@@ -14,12 +14,15 @@ import {
 } from '@/services/aiAssistantService'
 import type { Task, CalendarEvent, WorkloadSummary } from '@/types'
 
+import { useEffect } from 'react'
+
 export interface AIAssistantDrawerProps {
   isOpen: boolean
   onClose: () => void
+  initialQuery?: 'schedule' | 'overwhelmed' | 'next_action' | 'workload' | 'deadlines'
 }
 
-export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
+export function AIAssistantDrawer({ isOpen, onClose, initialQuery }: AIAssistantDrawerProps) {
   const [activeQuery, setActiveQuery] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -37,8 +40,6 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
     whatShouldMove: Task[]
     recommendedAction: Task | null
   } | null>(null)
-
-  if (!isOpen) return null
 
   const handleAnalyzeSchedule = async () => {
     try {
@@ -116,6 +117,24 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isOpen && initialQuery) {
+      if (initialQuery === 'schedule' || initialQuery === 'plan' as any) {
+        handleAnalyzeSchedule()
+      } else if (initialQuery === 'overwhelmed') {
+        handleOverwhelmedTriage()
+      } else if (initialQuery === 'next_action' || initialQuery === 'next' as any) {
+        handleNextAction()
+      } else if (initialQuery === 'workload') {
+        handleCheckWorkload()
+      } else if (initialQuery === 'deadlines') {
+        handleCheckDeadlines()
+      }
+    }
+  }, [isOpen, initialQuery])
+
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/40 backdrop-blur-sm flex justify-end">

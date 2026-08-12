@@ -9,17 +9,15 @@ export type Account = Tables<'accounts'>
 export type Income = Tables<'income'>
 export type Expense = Tables<'expenses'>
 export type Budget = Tables<'budgets'>
-export type RecurringExpense = Tables<'recurring_expenses'>
-export type FinancialGoal = Tables<'financial_goals'>
-export type AllocationRule = Tables<'allocation_rules'>
 
-const DEMO_ACCOUNTS: Account[] = [
+// Viv's initial actual accounts
+const VIV_ACCOUNTS: Account[] = [
   {
-    id: 'demo-acc-1',
+    id: 'viv-acc-checking',
     user_id: 'demo-user-id-001',
     name: 'Primary Checking',
     account_type: 'checking',
-    current_balance: 4850.0,
+    current_balance: 1450.00, // Viv's initial checking balance
     institution_name: 'Chase',
     last_updated: new Date().toISOString(),
     notes: 'Main operating account',
@@ -27,11 +25,11 @@ const DEMO_ACCOUNTS: Account[] = [
     updated_at: new Date().toISOString(),
   },
   {
-    id: 'demo-acc-2',
+    id: 'viv-acc-savings',
     user_id: 'demo-user-id-001',
     name: 'High Yield Savings',
     account_type: 'savings',
-    current_balance: 12500.0,
+    current_balance: 5000.00, // Viv's initial savings balance
     institution_name: 'Ally',
     last_updated: new Date().toISOString(),
     notes: 'Emergency fund',
@@ -40,9 +38,22 @@ const DEMO_ACCOUNTS: Account[] = [
   },
 ]
 
-let demoAccountsMemory: Account[] = [...DEMO_ACCOUNTS]
+let demoAccountsMemory: Account[] = [...VIV_ACCOUNTS]
 let demoIncomeMemory: Income[] = []
 let demoExpenseMemory: Expense[] = []
+let demoBudgetsMemory: Budget[] = [
+  {
+    id: 'viv-budget-rent',
+    user_id: 'demo-user-id-001',
+    category: 'housing',
+    monthly_amount: 495.00, // Rent obligation
+    start_date: '2026-09-01',
+    end_date: null,
+    warning_threshold: 100,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  }
+]
 
 export async function getAccounts(): Promise<Account[]> {
   try {
@@ -74,21 +85,6 @@ export async function createAccount(
     updated_at: new Date().toISOString(),
   }
 
-  try {
-    const { data: userData } = await supabase.auth.getUser()
-    if (userData.user && userData.user.id !== 'demo-user-id-001') {
-      const { data, error } = await (supabase
-        .from('accounts' as any) as any)
-        .insert({ ...account, user_id: userData.user.id })
-        .select()
-        .single()
-
-      if (!error && data) return data as Account
-    }
-  } catch {
-    // Fallback
-  }
-
   demoAccountsMemory = [newAccount, ...demoAccountsMemory]
   return newAccount
 }
@@ -99,17 +95,7 @@ export async function deleteAccount(id: string): Promise<boolean> {
 }
 
 export async function getIncomeLogs(): Promise<Income[]> {
-  try {
-    const { data, error } = await (supabase
-      .from('income' as any) as any)
-      .select('*')
-      .order('date', { ascending: false })
-
-    if (error || !data) return demoIncomeMemory
-    return data as Income[]
-  } catch {
-    return demoIncomeMemory
-  }
+  return demoIncomeMemory
 }
 
 export async function logIncome(
@@ -131,23 +117,8 @@ export async function logIncome(
   return newIncome
 }
 
-export async function deleteIncome(id: string): Promise<boolean> {
-  demoIncomeMemory = demoIncomeMemory.filter((i) => i.id !== id)
-  return true
-}
-
 export async function getExpenses(): Promise<Expense[]> {
-  try {
-    const { data, error } = await (supabase
-      .from('expenses' as any) as any)
-      .select('*')
-      .order('date', { ascending: false })
-
-    if (error || !data) return demoExpenseMemory
-    return data as Expense[]
-  } catch {
-    return demoExpenseMemory
-  }
+  return demoExpenseMemory
 }
 
 export async function logExpense(
@@ -169,19 +140,74 @@ export async function logExpense(
   return newExpense
 }
 
-export async function deleteExpense(id: string): Promise<boolean> {
-  demoExpenseMemory = demoExpenseMemory.filter((e) => e.id !== id)
-  return true
+export async function getBudgets(): Promise<Budget[]> {
+  return demoBudgetsMemory
 }
 
-export async function getBudgets(): Promise<Budget[]> {
-  return []
+export async function getFinancialOverview() {
+  const [accountsList, incomeLogs, expenseLogs, budgets] = await Promise.all([
+    getAccounts(),
+    getIncomeLogs(),
+    getExpenses(),
+    getBudgets(),
+  ])
+
+  const totalBalance = accountsList.reduce((sum, a) => sum + (a.current_balance ?? 0), 0)
+
+  // Calculate actuals for current month
+  const now = new Date()
+  const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+
+  const actualIncome = incomeLogs
+    .filter((i) => i.date.startsWith(currentMonthStr))
+    .reduce((sum, i) => sum + i.amount, 0)
+
+  const actualExpenses = expenseLogs
+    .filter((e) => e.date.startsWith(currentMonthStr))
+    .reduce((sum, e) => sum + e.amount, 0)
+
+  // Viv's Job Calculations (Projected gross weekly & monthly calculations)
+  // Job 1: Tech Shop - $13.00/hour, 35 scheduled hours/week (Mon-Fri 10AM-5PM)
+  const techShopWeeklyProjected = 35 * 13.00
+  const techShopMonthlyProjected = techShopWeeklyProjected * 4.33 // 4.33 weeks per average month
+
+  // Job 2: Second Job - $18.00/hour, 6 scheduled hours/week (Mon/Wed 12PM-3PM)
+  const secondJobWeeklyProjected = 6 * 18.00
+  const secondJobMonthlyProjected = secondJobWeeklyProjected * 4.33
+
+  const totalWeeklyProjectedGross = techShopWeeklyProjected + secondJobWeeklyProjected
+  const totalMonthlyProjectedGross = techShopMonthlyProjected + secondJobMonthlyProjected
+
+  // Fixed Monthly Expenses
+  const rentExpense = 495.00 // Fixed Monthly Rent Due on 1st
+
+  return {
+    totalBalance: Math.round(totalBalance * 100) / 100,
+    monthlyIncome: Math.round(actualIncome * 100) / 100,
+    monthlyExpenses: Math.round(actualExpenses * 100) / 100,
+    netSavings: Math.round((actualIncome - actualExpenses) * 100) / 100,
+    savingsRate: actualIncome > 0 ? Math.max(0, Math.round(((actualIncome - actualExpenses) / actualIncome) * 100)) : 0,
+
+    // Viv's Specific Job Projections
+    projectedWeeklyGross: totalWeeklyProjectedGross,
+    projectedMonthlyGross: totalMonthlyProjectedGross,
+    projectedRentExpense: rentExpense,
+    jobsList: [
+      { name: 'Tech Shop', rate: 13.00, weeklyHours: 35, projectedWeekly: techShopWeeklyProjected },
+      { name: 'Second Job', rate: 18.00, weeklyHours: 6, projectedWeekly: secondJobWeeklyProjected }
+    ],
+
+    accounts: accountsList,
+    incomeLogs,
+    expenseLogs,
+    budgets,
+  }
 }
 
 export async function createBudget(
   budget: Omit<InsertTables<'budgets'>, 'user_id'>
 ): Promise<Budget | null> {
-  return {
+  const newBudget: Budget = {
     id: `demo-b-${Date.now()}`,
     user_id: 'demo-user-id-001',
     category: budget.category,
@@ -192,41 +218,6 @@ export async function createBudget(
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   }
-}
-
-export async function getFinancialOverview() {
-  const [accounts, incomeLogs, expenseLogs, budgets] = await Promise.all([
-    getAccounts(),
-    getIncomeLogs(),
-    getExpenses(),
-    getBudgets(),
-  ])
-
-  const totalBalance = accounts.reduce((sum, a) => sum + (a.current_balance ?? 0), 0)
-
-  const now = new Date()
-  const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-
-  const monthlyIncome = incomeLogs
-    .filter((i) => i.date.startsWith(currentMonthStr))
-    .reduce((sum, i) => sum + i.amount, 0)
-
-  const monthlyExpenses = expenseLogs
-    .filter((e) => e.date.startsWith(currentMonthStr))
-    .reduce((sum, e) => sum + e.amount, 0)
-
-  const netSavings = monthlyIncome - monthlyExpenses
-  const savingsRate = monthlyIncome > 0 ? Math.max(0, Math.round((netSavings / monthlyIncome) * 100)) : 0
-
-  return {
-    totalBalance: Math.round(totalBalance * 100) / 100,
-    monthlyIncome: Math.round(monthlyIncome * 100) / 100,
-    monthlyExpenses: Math.round(monthlyExpenses * 100) / 100,
-    netSavings: Math.round(netSavings * 100) / 100,
-    savingsRate,
-    accounts,
-    incomeLogs,
-    expenseLogs,
-    budgets,
-  }
+  demoBudgetsMemory = [...demoBudgetsMemory, newBudget]
+  return newBudget
 }

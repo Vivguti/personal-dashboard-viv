@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Wallet, TrendingUp, TrendingDown, Plus, PiggyBank, CreditCard, DollarSign } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { ProgressBar } from '@/components/ui/ProgressBar'
+import { Card } from '@/components/ui/Card'
 
 import { IncomeModal }  from '@/components/forms/IncomeModal'
 import { ExpenseModal } from '@/components/forms/ExpenseModal'
@@ -15,7 +16,6 @@ type TabId = 'overview' | 'income' | 'expenses' | 'budgets' | 'accounts'
 const TAB_ACTIVE   = 'bg-[#5e6544] text-white border-[#5e6544]'
 const TAB_INACTIVE = 'bg-white text-[#8c947d] hover:bg-[#dfe8db] border-[#c4cfbc]'
 
-// Icon bg tones — all sage-green family
 const STAT_ICONS = [
   { icon: Wallet,     label: 'Total Balance',    bg: 'bg-[#dfe8db] text-[#5e6544]' },
   { icon: TrendingUp, label: 'Monthly Income',   bg: 'bg-[#b7c3a1]/30 text-[#5e6544]' },
@@ -31,6 +31,11 @@ export function FinancePage() {
   const [monthlyIncome,   setMonthlyIncome]   = useState(0)
   const [monthlyExpenses, setMonthlyExpenses] = useState(0)
   const [savingsRate,     setSavingsRate]     = useState(0)
+
+  const [projectedWeeklyGross, setProjectedWeeklyGross] = useState(0)
+  const [projectedMonthlyGross, setProjectedMonthlyGross] = useState(0)
+  const [projectedRentExpense, setProjectedRentExpense] = useState(0)
+  const [jobsList, setJobsList] = useState<any[]>([])
 
   const [accounts,    setAccounts]    = useState<Account[]>([])
   const [incomeLogs,  setIncomeLogs]  = useState<Income[]>([])
@@ -50,6 +55,12 @@ export function FinancePage() {
       setMonthlyExpenses(data.monthlyExpenses); setSavingsRate(data.savingsRate)
       setAccounts(data.accounts); setIncomeLogs(data.incomeLogs)
       setExpenseLogs(data.expenseLogs); setBudgets(data.budgets)
+
+      // Viv's projection parameters
+      setProjectedWeeklyGross(data.projectedWeeklyGross)
+      setProjectedMonthlyGross(data.projectedMonthlyGross)
+      setProjectedRentExpense(data.projectedRentExpense)
+      setJobsList(data.jobsList)
     } catch (err) {
       console.error('Failed to load financial data:', err)
     } finally {
@@ -61,21 +72,21 @@ export function FinancePage() {
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
-    { id: 'income',   label: 'Income'   },
-    { id: 'expenses', label: 'Expenses' },
+    { id: 'income',   label: 'Income Logs'   },
+    { id: 'expenses', label: 'Expenses Logs' },
     { id: 'budgets',  label: 'Budgets'  },
     { id: 'accounts', label: 'Accounts' },
   ] as const
 
   const emptyCard = (msg: string) => (
-    <div className="bg-white rounded-2xl border border-[#c4cfbc] p-8 text-center text-sm text-[#8c947d]">{msg}</div>
+    <Card className="p-8 text-center text-sm text-[#8c947d]">{msg}</Card>
   )
 
   const statValues = [
     `$${totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-    `$${monthlyIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-    `$${monthlyExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-    `${savingsRate}%`,
+    monthlyIncome > 0 ? `$${monthlyIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}` : 'Not enough data yet',
+    monthlyExpenses > 0 ? `$${monthlyExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })}` : 'Not enough data yet',
+    savingsRate > 0 ? `${savingsRate}%` : 'Not enough data yet',
   ]
 
   return (
@@ -84,16 +95,16 @@ export function FinancePage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-[#c4cfbc]">
         <div>
           <h1 className="text-2xl font-black text-[#2e2f22] tracking-tight">Your Money</h1>
-          <p className="text-sm text-[#8c947d] mt-0.5">Accounts, income, expenses, budgets & savings</p>
+          <p className="text-sm text-[#8c947d] mt-0.5">Accounts, projections, budgets & allocations</p>
         </div>
         <div className="flex gap-2">
-          {activeTab === 'income'   && <Button variant="secondary" onClick={() => setIsIncomeModalOpen(true)}  icon={<Plus size={16}/>}>Log Income</Button>}
+          {activeTab === 'income'   && <Button variant="secondary" onClick={() => setIsIncomeModalOpen(true)}  icon={<Plus size={16}/>}>Log Paycheck</Button>}
           {activeTab === 'expenses' && <Button variant="secondary" onClick={() => setIsExpenseModalOpen(true)} icon={<Plus size={16}/>}>Log Expense</Button>}
           {activeTab === 'accounts' && <Button variant="secondary" onClick={() => setIsAccountModalOpen(true)} icon={<Plus size={16}/>}>Add Account</Button>}
           {activeTab === 'budgets'  && <Button variant="secondary" onClick={() => setIsBudgetModalOpen(true)}  icon={<Plus size={16}/>}>Set Budget</Button>}
           {activeTab === 'overview' && (
             <>
-              <Button variant="secondary" onClick={() => setIsIncomeModalOpen(true)}  icon={<Plus size={16}/>}>Income</Button>
+              <Button variant="secondary" onClick={() => setIsIncomeModalOpen(true)}  icon={<Plus size={16}/>}>Paycheck</Button>
               <Button variant="secondary" onClick={() => setIsExpenseModalOpen(true)} icon={<Plus size={16}/>}>Expense</Button>
             </>
           )}
@@ -124,42 +135,106 @@ export function FinancePage() {
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {STAT_ICONS.map(({ icon: Icon, label, bg }, i) => (
-                  <div key={label} className="bg-white rounded-2xl border border-[#c4cfbc] p-5">
+                  <Card key={label} className="p-5">
                     <div className="flex items-center gap-3 mb-2">
                       <div className={`p-2 rounded-xl ${bg}`}><Icon size={18} /></div>
                       <h3 className="font-semibold text-[10px] text-[#8c947d] uppercase tracking-wider">{label}</h3>
                     </div>
-                    <div className="text-2xl font-black text-[#2e2f22]">{statValues[i]}</div>
-                  </div>
+                    <div className="text-xl font-black text-[#2e2f22]">{statValues[i]}</div>
+                  </Card>
                 ))}
               </div>
-              <div className="space-y-3">
-                <h3 className="font-bold text-base text-[#2e2f22]">Accounts Overview</h3>
-                {accounts.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {accounts.map((acc) => (
-                      <div key={acc.id} className="bg-white rounded-2xl border border-[#c4cfbc] p-4 flex items-center justify-between">
+
+              {/* Viv's Employment & Income Projections */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="p-5 space-y-4">
+                  <div className="flex justify-between items-center pb-2 border-b border-[#dfe8db]">
+                    <h3 className="font-bold text-sm text-[#2e2f22] uppercase tracking-wider">Projected Work Income</h3>
+                    <span className="text-[10px] bg-[#dfe8db] text-[#5e6544] font-black px-2 py-0.5 rounded-full">PROJECTED</span>
+                  </div>
+
+                  <div className="space-y-3">
+                    {jobsList.map(job => (
+                      <div key={job.name} className="flex justify-between items-center text-xs">
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8c947d]">{acc.account_type}</span>
-                          <h4 className="font-semibold text-[#2e2f22]">{acc.name}</h4>
-                          {acc.institution_name && <p className="text-xs text-[#8c947d]">{acc.institution_name}</p>}
+                          <span className="font-bold text-[#2e2f22]">{job.name}</span>
+                          <p className="text-[10px] text-[#8c947d]">${job.rate}/hour · {job.weeklyHours} hours/week</p>
                         </div>
-                        <div className="text-lg font-black text-[#2e2f22]">
-                          ${(acc.current_balance ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        <div className="text-right">
+                          <span className="font-bold text-[#2e2f22]">${job.projectedWeekly}/week</span>
                         </div>
                       </div>
                     ))}
+                    <div className="pt-3 border-t border-dashed border-[#c4cfbc] space-y-1.5 text-xs">
+                      <div className="flex justify-between font-bold text-[#2e2f22]">
+                        <span>Weekly Total (Gross):</span>
+                        <span>${projectedWeeklyGross.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                      </div>
+                      <div className="flex justify-between font-bold text-[#5e6544]">
+                        <span>Monthly Average (Gross):</span>
+                        <span>${projectedMonthlyGross.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                      </div>
+                    </div>
                   </div>
-                ) : emptyCard('No accounts added. Click "Add Account" to track balances.')}
+                  <p className="text-[10px] text-[#8c947d] leading-normal italic">
+                    * Note: Projections are calculated from scheduled shifts. They represent estimates and are not counted as actual received cash.
+                  </p>
+                </Card>
+
+                {/* Viv's Fixed Rent Obligations */}
+                <Card className="p-5 space-y-4">
+                  <div className="flex justify-between items-center pb-2 border-b border-[#dfe8db]">
+                    <h3 className="font-bold text-sm text-[#2e2f22] uppercase tracking-wider">Fixed Rent Obligations</h3>
+                    <span className="text-[10px] bg-[#a85d48]/10 text-[#a85d48] font-black px-2 py-0.5 rounded-full border border-[#a85d48]/20">DUE 1ST</span>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center text-xs">
+                      <div>
+                        <span className="font-bold text-[#2e2f22]">Monthly Rent Payment</span>
+                        <p className="text-[10px] text-[#8c947d]">Category: Housing · Due on 1st</p>
+                      </div>
+                      <span className="font-bold text-[#2e2f22]">${projectedRentExpense.toFixed(2)}/month</span>
+                    </div>
+
+                    <div className="pt-4 border-t border-dashed border-[#c4cfbc] text-xs">
+                      <div className="flex justify-between items-center bg-[#F3F7F3] p-2.5 rounded-xl border border-[#c4cfbc]">
+                        <span className="font-bold text-[#2e2f22]">Rent Status:</span>
+                        <span className="text-[10px] font-bold text-[#a85d48] uppercase bg-[#a85d48]/10 px-2 py-0.5 rounded-md">UNPAID</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+
+              {/* Accounts Summary */}
+              <div className="space-y-3">
+                <h3 className="font-bold text-base text-[#2e2f22]">Bank Accounts</h3>
+                {accounts.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {accounts.map((acc) => (
+                      <Card key={acc.id} className="p-4 flex items-center justify-between">
+                        <div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8c947d]">{acc.account_type}</span>
+                          <h4 className="font-bold text-[#2e2f22]">{acc.name}</h4>
+                          {acc.institution_name && <p className="text-xs text-[#8c947d]">{acc.institution_name}</p>}
+                        </div>
+                        <div className="text-base font-black text-[#2e2f22]">
+                          ${(acc.current_balance ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                ) : emptyCard('No accounts added.')}
               </div>
             </div>
           )}
 
-          {/* INCOME */}
+          {/* INCOME LOGS */}
           {activeTab === 'income' && (
             <div className="space-y-3">
               {incomeLogs.length > 0 ? incomeLogs.map((inc) => (
-                <div key={inc.id} className="bg-white rounded-2xl border border-[#c4cfbc] p-4 flex items-center justify-between">
+                <Card key={inc.id} className="p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-[#dfe8db] text-[#5e6544] rounded-xl"><DollarSign size={18} /></div>
                     <div>
@@ -168,16 +243,16 @@ export function FinancePage() {
                     </div>
                   </div>
                   <div className="text-lg font-black text-[#5e6544]">+${inc.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                </div>
-              )) : emptyCard('No income records logged.')}
+                </Card>
+              )) : emptyCard('No actual paycheck transactions logged yet.')}
             </div>
           )}
 
-          {/* EXPENSES */}
+          {/* EXPENSES LOGS */}
           {activeTab === 'expenses' && (
             <div className="space-y-3">
               {expenseLogs.length > 0 ? expenseLogs.map((exp) => (
-                <div key={exp.id} className="bg-white rounded-2xl border border-[#c4cfbc] p-4 flex items-center justify-between">
+                <Card key={exp.id} className="p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-[#a85d48]/10 text-[#a85d48] rounded-xl"><CreditCard size={18} /></div>
                     <div>
@@ -186,8 +261,8 @@ export function FinancePage() {
                     </div>
                   </div>
                   <div className="text-lg font-black text-[#a85d48]">-${exp.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                </div>
-              )) : emptyCard('No expense records logged.')}
+                </Card>
+              )) : emptyCard('No actual expenses logged yet.')}
             </div>
           )}
 
@@ -201,22 +276,22 @@ export function FinancePage() {
                     const percent = Math.min(100, Math.round((spent / b.monthly_amount) * 100))
                     const overBudget = percent >= 90
                     return (
-                      <div key={b.id} className="bg-white rounded-2xl border border-[#c4cfbc] p-5">
+                      <Card key={b.id} className="p-5">
                         <div className="flex justify-between items-center mb-2">
-                          <h4 className="font-semibold text-[#2e2f22] capitalize">{b.category}</h4>
+                          <h4 className="font-bold text-[#2e2f22] capitalize">{b.category}</h4>
                           <span className={`text-xs font-bold ${overBudget ? 'text-[#a85d48]' : 'text-[#8c947d]'}`}>
-                            ${spent.toFixed(0)} / ${b.monthly_amount}
+                            ${spent.toFixed(2)} / ${b.monthly_amount.toFixed(2)}
                           </span>
                         </div>
                         <ProgressBar
                           value={percent}
                           color={overBudget ? 'bg-[#a85d48]' : 'bg-[#5e6544]'}
                         />
-                      </div>
+                      </Card>
                     )
                   })}
                 </div>
-              ) : emptyCard('No category budgets configured.')}
+              ) : emptyCard('No budgets configured.')}
             </div>
           )}
 
@@ -224,16 +299,16 @@ export function FinancePage() {
           {activeTab === 'accounts' && (
             <div className="space-y-3">
               {accounts.length > 0 ? accounts.map((acc) => (
-                <div key={acc.id} className="bg-white rounded-2xl border border-[#c4cfbc] p-4 flex items-center justify-between">
+                <Card key={acc.id} className="p-4 flex items-center justify-between">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-[#8c947d]">{acc.account_type}</span>
-                    <h4 className="font-semibold text-[#2e2f22]">{acc.name}</h4>
+                    <h4 className="font-bold text-[#2e2f22]">{acc.name}</h4>
                     {acc.institution_name && <p className="text-xs text-[#8c947d]">{acc.institution_name}</p>}
                   </div>
                   <div className="text-lg font-black text-[#2e2f22]">
                     ${(acc.current_balance ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </div>
-                </div>
+                </Card>
               )) : emptyCard('No accounts created.')}
             </div>
           )}

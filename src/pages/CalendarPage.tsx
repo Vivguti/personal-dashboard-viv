@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Plus, CalendarDays, Clock, Zap, Play, Trash, ChevronLeft, ChevronRight,
-  CheckCircle2, Moon, Sparkles
+  CheckCircle2, Moon, Sparkles, AlertTriangle
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { ProgressBar } from '@/components/ui/ProgressBar'
@@ -64,6 +64,20 @@ export function CalendarPage() {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
   const [eventToEdit, setEventToEdit] = useState<CalendarEvent | null>(null)
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null)
+
+  // Viv's Setup State (with persistence)
+  const [isStructuresConfirmed, setIsStructuresConfirmed] = useState<boolean>(() => {
+    return localStorage.getItem('pos_structures_confirmed') === 'true'
+  })
+  const [structuresTime, setStructuresTime] = useState<string>(() => {
+    return localStorage.getItem('pos_structures_time') || '14:00'
+  })
+  const [secondJobStartDateConfirmed, setSecondJobStartDateConfirmed] = useState<string | null>(() => {
+    return localStorage.getItem('pos_second_job_confirmed_start')
+  })
+  const [isConflictDismissed, setIsConflictDismissed] = useState<boolean>(() => {
+    return localStorage.getItem('pos_conflict_dismissed') === 'true'
+  })
 
   // Focus Mode Overlay
   const [activeFocusTask, setActiveFocusTask] = useState<Task | null>(null)
@@ -177,6 +191,63 @@ export function CalendarPage() {
       }))
     ]
 
+    // Dynamically inject Second Job shifts if confirmed
+    if (secondJobStartDateConfirmed) {
+      const startSem = new Date(secondJobStartDateConfirmed)
+      const endSem = new Date('2026-12-15')
+      let currentJob = new Date(startSem)
+      while (currentJob <= endSem) {
+        if ((currentJob.getDay() === 1 || currentJob.getDay() === 3) && isSameDay(currentJob, date)) {
+          const s = new Date(currentJob)
+          s.setHours(12, 0, 0, 0)
+          const e = new Date(currentJob)
+          e.setHours(15, 0, 0, 0)
+          items.push({
+            id: `viv-secondjob-shift-${currentJob.toISOString().slice(0, 10)}`,
+            title: 'Second Job Shift',
+            description: 'Second Job hourly shift. $18.00/hour. Fixed.',
+            start: s,
+            end: e,
+            isFixed: true,
+            type: 'business',
+            location: 'Office',
+            itemType: 'event' as const
+          })
+        }
+        currentJob.setDate(currentJob.getDate() + 1)
+      }
+    }
+
+    // Dynamically inject Architectural Structures shifts if confirmed
+    if (isStructuresConfirmed) {
+      const startSem = new Date('2026-08-24')
+      const endSem = new Date('2026-12-15')
+      let currentClass = new Date(startSem)
+      const sParts = structuresTime.split(':').map(Number)
+      const sH = sParts[0] ?? 14
+      const sM = sParts[1] ?? 0
+      while (currentClass <= endSem) {
+        if ((currentClass.getDay() === 2 || currentClass.getDay() === 4) && isSameDay(currentClass, date)) {
+          const s = new Date(currentClass)
+          s.setHours(sH, sM, 0, 0)
+          const e = new Date(currentClass)
+          e.setHours(sH, sM + 60, 0, 0) // default 1 hour class duration
+          items.push({
+            id: `viv-structures-class-${currentClass.toISOString().slice(0, 10)}`,
+            title: 'ARCH-331 Architectural Structures',
+            description: 'ARCC-105. Fixed.',
+            start: s,
+            end: e,
+            isFixed: true,
+            type: 'class',
+            location: 'ARCC-105',
+            itemType: 'event' as const
+          })
+        }
+        currentClass.setDate(currentClass.getDate() + 1)
+      }
+    }
+
     return items.sort((a, b) => a.start.getTime() - b.start.getTime())
   }
 
@@ -272,7 +343,7 @@ export function CalendarPage() {
     const duration = task.estimated_minutes ?? 60
     const schedEnd = new Date(schedStart.getTime() + duration * 60 * 1000)
 
-    await updateTaskSchedule(draggedTaskId!, schedStart.toISOString(), schedEnd.toISOString())
+    await updateTaskSchedule(draggedTaskId, schedStart.toISOString(), schedEnd.toISOString())
     setDraggedTaskId(null)
     loadData()
   }
@@ -494,6 +565,28 @@ export function CalendarPage() {
     }
   }
 
+  // Confirming Structures Class Time
+  const handleConfirmStructuresTime = (time: string) => {
+    setStructuresTime(time)
+    setIsStructuresConfirmed(true)
+    localStorage.setItem('pos_structures_confirmed', 'true')
+    localStorage.setItem('pos_structures_time', time)
+    loadData()
+  }
+
+  // Confirming Second Job start date
+  const handleConfirmSecondJobDate = (dateStr: string) => {
+    setSecondJobStartDateConfirmed(dateStr)
+    localStorage.setItem('pos_second_job_confirmed_start', dateStr)
+    loadData()
+  }
+
+  // Dismissing conflict widget
+  const handleResolveConflict = () => {
+    setIsConflictDismissed(true)
+    localStorage.setItem('pos_conflict_dismissed', 'true')
+  }
+
   // Helper values
   const timelineItems = getTimelineItems(selectedDate)
   const capacity = getCapacityDetails(selectedDate)
@@ -630,6 +723,94 @@ export function CalendarPage() {
             </Button>
           </div>
         </header>
+
+        {/* ─── VIV OS INTERACTIVE DATA SETUPS / PENDING CONFIRMATIONS ──────────────── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* 1. Structures Time pending */}
+          {!isStructuresConfirmed && (
+            <div className="bg-[#E8F0EA] border border-[#A8BDAF] rounded-2xl p-4 space-y-3">
+              <div className="flex items-center gap-2 text-[#315C4A]">
+                <Clock size={16} />
+                <span className="font-bold text-xs uppercase tracking-wide">Architectural Structures Time Pending</span>
+              </div>
+              <p className="text-xs text-[#718078]">
+                ARCH-331 is scheduled on <strong>Tuesdays & Thursdays</strong> at room <strong>ARCC-105</strong>, but time is not confirmed.
+              </p>
+              <div className="flex items-center gap-2">
+                <input
+                  type="time"
+                  id="structures-time-input"
+                  defaultValue="14:00"
+                  className="px-2.5 py-1 text-xs rounded-lg border border-[#A8BDAF] bg-white text-[#26352E]"
+                />
+                <button
+                  onClick={() => {
+                    const input = document.getElementById('structures-time-input') as HTMLInputElement
+                    handleConfirmStructuresTime(input?.value || '14:00')
+                  }}
+                  className="px-3 py-1 bg-[#315C4A] hover:bg-[#26352E] text-white font-bold rounded-lg text-xs"
+                >
+                  Confirm Time
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* 2. Second Job Start Date pending */}
+          {!secondJobStartDateConfirmed && (
+            <div className="bg-[#E8F0EA] border border-[#A8BDAF] rounded-2xl p-4 space-y-3">
+              <div className="flex items-center gap-2 text-[#315C4A]">
+                <CalendarDays size={16} />
+                <span className="font-bold text-xs uppercase tracking-wide">Second Job Start Date Pending</span>
+              </div>
+              <p className="text-xs text-[#718078]">
+                Second Job is scheduled Mon/Wed 12 PM - 3 PM. Provided start date <strong>Sept 8, 2026</strong> is a Tuesday.
+              </p>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {[
+                  { label: 'Start Tue Sept 8', val: '2026-09-08' },
+                  { label: 'Start Wed Sept 9', val: '2026-09-09' },
+                  { label: 'Start Mon Sept 14', val: '2026-09-14' }
+                ].map(opt => (
+                  <button
+                    key={opt.val}
+                    onClick={() => handleConfirmSecondJobDate(opt.val)}
+                    className="px-2 py-1 bg-white hover:bg-[#A8BDAF]/30 text-[#315C4A] border border-[#A8BDAF] text-[10px] font-bold rounded-lg"
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 3. Conflict Resolver banner */}
+        {!isConflictDismissed && (
+          <div className="bg-[#a85d48]/10 border border-[#a85d48]/30 rounded-2xl p-4 space-y-3 text-[#a85d48] text-xs">
+            <div className="flex items-center gap-2 font-bold text-sm">
+              <AlertTriangle size={16} />
+              <span>WORK SCHEDULE CONFLICT DETECTED</span>
+            </div>
+            <p className="leading-relaxed">
+              Viv, your <strong>Tech Shop shift (10:00 AM – 5:00 PM)</strong> overlaps with <strong>ARCH Design III (8:51 AM – 11:20 AM)</strong> and your <strong>Second Job (12:00 PM – 3:00 PM)</strong>. How would you like to handle this?
+            </p>
+            <div className="flex gap-2">
+              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-[#a85d48] text-white font-bold rounded-xl text-[10px] hover:bg-[#26352E]">
+                Resolve
+              </button>
+              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-white text-[#a85d48] border border-[#a85d48]/30 font-bold rounded-xl text-[10px] hover:bg-[#a85d48]/10">
+                Keep Both
+              </button>
+              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-white text-[#a85d48] border border-[#a85d48]/30 font-bold rounded-xl text-[10px] hover:bg-[#a85d48]/10">
+                Adjust Work Schedule
+              </button>
+              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-white text-[#a85d48] border border-[#a85d48]/30 font-bold rounded-xl text-[10px] hover:bg-[#a85d48]/10">
+                Review Later
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* ─── METRICS ROW: Capacity ring, Next up, Natural language Quick Add ─── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
