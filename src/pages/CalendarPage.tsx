@@ -853,9 +853,9 @@ export function CalendarPage() {
               Event
             </Button>
             <Button
-              variant="primary"
               onClick={() => setIsTaskModalOpen(true)}
               icon={<Plus size={16} />}
+              className="bg-[#315C4A] hover:bg-[#26352E] text-white border-none shadow-sm font-semibold"
             >
               Task
             </Button>

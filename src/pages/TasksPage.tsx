@@ -71,7 +71,7 @@ export function TasksPage() {
             {tasks.length} total · {tasks.filter(t => t.status === 'completed').length} completed
           </p>
         </div>
-        <Button variant="secondary" onClick={handleCreateNew} icon={<Plus size={16} />}>
+        <Button onClick={handleCreateNew} icon={<Plus size={16} />} className="bg-[#315C4A] hover:bg-[#26352E] text-white border-none shadow-sm font-semibold">
           New Priority
         </Button>
       </div>
@@ -132,7 +132,7 @@ export function TasksPage() {
               ? 'No priorities match your current filters.'
               : 'Add your first priority to start managing your daily workload.'}
           </p>
-          <Button variant="secondary" onClick={handleCreateNew} icon={<Plus size={16} />}>
+          <Button onClick={handleCreateNew} icon={<Plus size={16} />} className="bg-[#315C4A] hover:bg-[#26352E] text-white border-none shadow-sm font-semibold">
             Create Priority
           </Button>
         </div>
