@@ -9,7 +9,7 @@ export function AppShell() {
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#f5e8d0] dark:bg-[#2e2f22] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#f5e8d0] flex flex-col font-sans">
       <Header />
 
       <div className="flex flex-1 relative">

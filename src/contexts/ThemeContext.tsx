@@ -17,13 +17,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 const THEME_STORAGE_KEY = 'personal-os-theme'
 
 function getInitialTheme(): ThemeMode {
-  if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY)
-    if (stored === 'light' || stored === 'dark') {
-      return stored
-    }
-  }
-  return 'light' // Default to light mode (Parchment #F5E8D0)
+  return 'light' // Always default to light Parchment background (#F5E8D0)
 }
 
 interface ThemeProviderProps {
@@ -35,16 +29,12 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   useEffect(() => {
     const root = document.documentElement
-    if (theme === 'dark') {
-      root.classList.add('dark')
-    } else {
-      root.classList.remove('dark')
-    }
+    root.classList.remove('dark')
     const meta = document.querySelector('meta[name="theme-color"]')
     if (meta) {
-      meta.setAttribute('content', theme === 'dark' ? '#2e2f22' : '#f5e8d0')
+      meta.setAttribute('content', '#8c947d')
     }
-    localStorage.setItem(THEME_STORAGE_KEY, theme)
+    localStorage.setItem(THEME_STORAGE_KEY, 'light')
   }, [theme])
 
   const toggleTheme = useCallback(() => {

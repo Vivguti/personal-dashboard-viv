@@ -80,7 +80,7 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f5e8d0] dark:bg-[#2e2f22] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#f5e8d0] p-4">
       <div className="w-full max-w-md bg-white dark:bg-[#23241a] rounded-2xl p-8 shadow-xl border border-[#d6c7ad] dark:border-[#5e6544]/40">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 bg-[#5e6544] text-[#faf8f3] font-black text-lg rounded-xl mb-3 shadow-xs">

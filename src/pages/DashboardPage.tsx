@@ -1,13 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { ProgressBar } from '@/components/ui/ProgressBar'
 
 import {
   Sparkles, Clock, CalendarDays, CheckCircle2,
   Droplets, Dumbbell, UtensilsCrossed, Moon,
-  Wallet, Briefcase, Target, Zap, CheckSquare
+  Wallet, Briefcase, Target, Zap, CheckSquare,
+  TrendingUp
 } from 'lucide-react'
 
 import type { Task, CalendarEvent, WorkloadSummary, Workout } from '@/types'
@@ -20,26 +19,32 @@ import { getFinancialOverview } from '@/services/financeService'
 import { getBusinessOverview } from '@/services/businessService'
 import { AIAssistantDrawer } from '@/components/ai/AIAssistantDrawer'
 
+// ─── Palette reference ────────────────────────────────────────────────────────
+// Parchment  #f5e8d0 — page canvas
+// Sand       #d6c7ad — dividers, chip fills, soft borders
+// Olive      #b7c3a1 — status pills, softest accent
+// Sage       #8c947d — icons, secondary labels, accent borders
+// Bark       #5e6544 — hero surfaces, strong accents, primary CTA bg
+// Olivewood  #2e2f22 — headings, primary body text
+// White      #ffffff — card surfaces
+// ─────────────────────────────────────────────────────────────────────────────
+
 export function DashboardPage() {
   const { user } = useAuth()
   const [tasks, setTasks] = useState<Task[]>([])
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [workloadSummary, setWorkloadSummary] = useState<WorkloadSummary | null>(null)
-
-  // Subsystems data
   const [hydrationSummary, setHydrationSummary] = useState<{ currentTotalOz: number; targetOz: number } | null>(null)
   const [todayWorkout, setTodayWorkout] = useState<Workout | null>(null)
   const [totalBalance, setTotalBalance] = useState(0)
   const [activeProjectsCount, setActiveProjectsCount] = useState(0)
   const [totalBusinessRevenue, setTotalBusinessRevenue] = useState(0)
-
   const [isLoading, setIsLoading] = useState(true)
   const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false)
 
   const loadDashboardData = useCallback(async () => {
     try {
       setIsLoading(true)
-
       const [allTasks, allEvents, hyd, wrks, fin, biz] = await Promise.all([
         getTasks(),
         getCalendarEvents(),
@@ -48,7 +53,6 @@ export function DashboardPage() {
         getFinancialOverview(),
         getBusinessOverview(),
       ])
-
       setTasks(allTasks)
       setEvents(allEvents)
       setHydrationSummary(hyd)
@@ -56,7 +60,6 @@ export function DashboardPage() {
       setTotalBalance(fin.totalBalance)
       setActiveProjectsCount(biz.activeProjectsCount)
       setTotalBusinessRevenue(biz.totalRevenue)
-
       setWorkloadSummary(computeWorkloadSummary("Today's Workload", allTasks, allEvents))
     } catch (err) {
       console.error('Error loading dashboard data:', err)
@@ -65,9 +68,7 @@ export function DashboardPage() {
     }
   }, [])
 
-  useEffect(() => {
-    loadDashboardData()
-  }, [loadDashboardData])
+  useEffect(() => { loadDashboardData() }, [loadDashboardData])
 
   const handleToggleTask = async (task: Task) => {
     const isCompleted = task.status === 'completed'
@@ -86,193 +87,184 @@ export function DashboardPage() {
   }
 
   const userDisplayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Viv'
+  const todayDateString = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
 
-  const todayDateString = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  })
-
-  // Priority tasks
   const pendingTasks = tasks.filter((t) => t.status !== 'completed')
   const topPriorities = pendingTasks.slice(0, 3)
   const nextAction = pendingTasks[0] ?? null
-
   const capacityPercent = workloadSummary?.percentageCapacityUsed ?? 65
   const capacityStatus = workloadSummary?.capacityStatus ?? 'Balanced'
 
+  const priorityColor = (p: string) => {
+    if (p === 'critical') return 'bg-[#a85d48]/10 text-[#a85d48] border-[#a85d48]/30'
+    if (p === 'high') return 'bg-[#d6c7ad] text-[#5e6544] border-[#b7c3a1]'
+    if (p === 'medium') return 'bg-[#b7c3a1]/30 text-[#5e6544] border-[#b7c3a1]'
+    return 'bg-[#f5e8d0] text-[#8c947d] border-[#d6c7ad]'
+  }
+
   return (
     <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 animate-fade-in">
-      {/* 1. HERO GREETING */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-[#d6c7ad]">
+
+      {/* ── 1. HERO GREETING ─────────────────────────────────────────────── */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-[#d6c7ad]">
         <div>
-          <span className="text-xs font-black uppercase tracking-wider text-[#8c947d]">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#8c947d] mb-1">
             {todayDateString}
-          </span>
-          <h1 className="text-3xl md:text-4xl font-black text-[#8c947d] tracking-tight mt-1">
+          </p>
+          <h1 className="text-3xl md:text-4xl font-black text-[#2e2f22] tracking-tight leading-tight">
             {getGreeting()}, {userDisplayName}.
           </h1>
-          <p className="text-sm font-bold text-[#5e6544] mt-1 flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#8c947d] inline-block shadow-xs"></span>
-            You're looking {capacityStatus.toLowerCase()} today. Let's make today count.
+          <p className="text-sm text-[#5e6544] mt-2 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#b7c3a1] inline-block"></span>
+            Workload is <strong className="text-[#2e2f22]">{capacityStatus.toLowerCase()}</strong> — let's make today count.
           </p>
         </div>
-
         <Button
-          variant="primary"
           size="sm"
           onClick={() => setIsAIDrawerOpen(true)}
-          className="bg-white text-[#8c947d] font-black border border-[#d6c7ad] shadow-xs hover:bg-[#d6c7ad]/30"
-          icon={<Sparkles size={16} className="text-[#8c947d]" />}
+          className="bg-[#5e6544] hover:bg-[#2e2f22] text-white border-none shadow-sm font-semibold"
+          icon={<Sparkles size={14} />}
         >
           Plan My Day
         </Button>
       </header>
 
-      {/* 2. AI COMMAND ENTRY ("What's on your mind?") — PARCHMENT CONTAINER */}
-      <Card className="p-4 md:p-5 bg-white border border-[#d6c7ad]">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-[#8c947d] text-white rounded-xl shadow-xs">
-              <Sparkles size={18} />
-            </div>
-            <div>
-              <h3 className="font-black text-sm text-[#8c947d]">What's on your mind?</h3>
-              <p className="text-xs text-[#8c947d]/80 font-medium">AI Life Assistant & Workload Optimizer</p>
-            </div>
+      {/* ── 2. AI QUICK-ENTRY STRIP ──────────────────────────────────────── */}
+      <div className="bg-white border border-[#d6c7ad] rounded-2xl p-4 shadow-xs">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-8 h-8 rounded-xl bg-[#5e6544] flex items-center justify-center flex-shrink-0">
+            <Sparkles size={16} className="text-white" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-[#2e2f22]">What's on your mind?</p>
+            <p className="text-xs text-[#8c947d]">AI Life Assistant · Workload Optimizer</p>
           </div>
         </div>
-
-        <div className="flex flex-wrap gap-2 pt-1">
-          <button
-            onClick={() => setIsAIDrawerOpen(true)}
-            className="px-3.5 py-2 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad] text-xs font-bold text-[#8c947d] hover:bg-[#d6c7ad]/50 transition-all flex items-center gap-1.5 shadow-xs"
-          >
-            <span>✨</span> Plan my day
-          </button>
-          <button
-            onClick={() => setIsAIDrawerOpen(true)}
-            className="px-3.5 py-2 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad] text-xs font-bold text-[#8c947d] hover:bg-[#d6c7ad]/50 transition-all flex items-center gap-1.5 shadow-xs"
-          >
-            <span>🧘</span> I'm overwhelmed
-          </button>
-          <button
-            onClick={() => setIsAIDrawerOpen(true)}
-            className="px-3.5 py-2 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad] text-xs font-bold text-[#8c947d] hover:bg-[#d6c7ad]/50 transition-all flex items-center gap-1.5 shadow-xs"
-          >
-            <span>⚡</span> What should I do next?
-          </button>
-          <button
-            onClick={() => setIsAIDrawerOpen(true)}
-            className="px-3.5 py-2 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad] text-xs font-bold text-[#8c947d] hover:bg-[#d6c7ad]/50 transition-all flex items-center gap-1.5 shadow-xs"
-          >
-            <span>💳</span> Review my spending
-          </button>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { emoji: '✨', label: 'Plan my day' },
+            { emoji: '🧘', label: "I'm overwhelmed" },
+            { emoji: '⚡', label: "What's next?" },
+            { emoji: '💳', label: 'Review spending' },
+          ].map(({ emoji, label }) => (
+            <button
+              key={label}
+              onClick={() => setIsAIDrawerOpen(true)}
+              className="px-3 py-1.5 rounded-lg bg-[#f5e8d0] border border-[#d6c7ad] text-xs font-semibold text-[#5e6544] hover:bg-[#d6c7ad] hover:border-[#b7c3a1] transition-all"
+            >
+              {emoji} {label}
+            </button>
+          ))}
         </div>
-      </Card>
+      </div>
 
-      {/* 3. DAILY COMMAND CENTER & CAPACITY ring with Pure White (#FFFFFF) Graph Stroke */}
+      {/* ── 3. MAIN GRID ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column (2 cols): Command Center & Priorities */}
+
+        {/* LEFT COLUMN — 2/3 width */}
         <div className="lg:col-span-2 space-y-6">
-          {/* DAILY CAPACITY CARD */}
-          <Card className="p-6 bg-white border border-[#d6c7ad]">
-            <div className="flex items-center justify-between mb-4">
+
+          {/* ── DAILY COMMAND CENTER ──────────────────────────────────────── */}
+          <div className="bg-white border border-[#d6c7ad] rounded-2xl p-6 shadow-xs">
+            {/* Header row */}
+            <div className="flex items-center justify-between mb-5">
               <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#8c947d]">
-                  DAILY COMMAND CENTER
-                </span>
-                <h2 className="text-xl font-black text-[#8c947d] tracking-tight mt-0.5">
-                  TODAY
-                </h2>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#8c947d]">Daily Command Center</p>
+                <h2 className="text-lg font-black text-[#2e2f22] mt-0.5">Today's Overview</h2>
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#d6c7ad] text-[#2e2f22] border border-[#b7c3a1]">
+              <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide border ${
+                capacityStatus === 'Balanced'   ? 'bg-[#b7c3a1]/20 text-[#5e6544] border-[#b7c3a1]'  :
+                capacityStatus === 'Busy'       ? 'bg-[#d6c7ad]/40 text-[#5e6544] border-[#d6c7ad]'  :
+                capacityStatus === 'Overloaded' ? 'bg-[#a85d48]/10 text-[#a85d48] border-[#a85d48]/30' :
+                'bg-[#f5e8d0] text-[#8c947d] border-[#d6c7ad]'
+              }`}>
                 {capacityStatus}
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 items-center pt-2">
-              {/* Circular Capacity Ring with High-Contrast Pure White (#FFFFFF) Progress Line */}
-              <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#8c947d] text-white border border-[#5e6544] shadow-sm">
-                <div className="relative w-28 h-28 flex items-center justify-center">
-                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                    <path
-                      className="text-[#5e6544]/60"
-                      strokeWidth="4"
-                      stroke="currentColor"
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 items-center">
+              {/* SVG Ring — Bark bg, white stroke */}
+              <div className="flex items-center justify-center">
+                <div className="relative w-32 h-32">
+                  <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                    {/* Track */}
+                    <circle
+                      cx="18" cy="18" r="15.9"
                       fill="none"
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      stroke="#d6c7ad"
+                      strokeWidth="3.5"
                     />
-                    <path
-                      className="text-white drop-shadow-md transition-all duration-1000 ease-out"
-                      strokeDasharray={`${capacityPercent}, 100`}
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                      stroke="currentColor"
+                    {/* Progress — Bark color (#5e6544) */}
+                    <circle
+                      cx="18" cy="18" r="15.9"
                       fill="none"
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      stroke="#5e6544"
+                      strokeWidth="3.5"
+                      strokeLinecap="round"
+                      strokeDasharray={`${capacityPercent} 100`}
+                      className="transition-all duration-1000 ease-out"
                     />
                   </svg>
-                  <div className="absolute flex flex-col items-center">
-                    <span className="text-2xl font-black text-white">
-                      {capacityPercent}%
-                    </span>
-                    <span className="text-[10px] font-bold text-[#f5e8d0] uppercase tracking-wider">capacity</span>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-2xl font-black text-[#2e2f22]">{capacityPercent}%</span>
+                    <span className="text-[10px] font-semibold text-[#8c947d] uppercase tracking-wide">capacity</span>
                   </div>
                 </div>
               </div>
 
-              {/* Metrics Summary */}
-              <div className="sm:col-span-2 space-y-3">
-                <div className="grid grid-cols-3 gap-2 text-center sm:text-left">
-                  <div>
-                    <div className="text-lg font-black text-[#8c947d]">
-                      {pendingTasks.length}
+              {/* Stats + bar — 2 cols */}
+              <div className="sm:col-span-2 space-y-4">
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { value: pendingTasks.length, label: 'Priorities' },
+                    { value: events.length,       label: 'Events'     },
+                    {
+                      value: `${Math.floor((workloadSummary?.scheduledMinutes ?? 320) / 60)}h ${(workloadSummary?.scheduledMinutes ?? 320) % 60}m`,
+                      label: 'Planned',
+                    },
+                  ].map(({ value, label }) => (
+                    <div key={label} className="bg-[#f5e8d0] rounded-xl p-3 text-center">
+                      <div className="text-lg font-black text-[#2e2f22]">{value}</div>
+                      <div className="text-[10px] font-semibold text-[#8c947d] uppercase tracking-wide mt-0.5">{label}</div>
                     </div>
-                    <div className="text-[11px] text-[#8c947d]/80 font-bold">priorities</div>
-                  </div>
-                  <div>
-                    <div className="text-lg font-black text-[#8c947d]">
-                      {events.length}
-                    </div>
-                    <div className="text-[11px] text-[#8c947d]/80 font-bold">commitments</div>
-                  </div>
-                  <div>
-                    <div className="text-lg font-black text-[#8c947d]">
-                      {Math.floor((workloadSummary?.scheduledMinutes ?? 320) / 60)}h{' '}
-                      {(workloadSummary?.scheduledMinutes ?? 320) % 60}m
-                    </div>
-                    <div className="text-[11px] text-[#8c947d]/80 font-bold">planned</div>
-                  </div>
+                  ))}
                 </div>
 
-                <div className="pt-2">
-                  <div className="flex justify-between text-xs font-bold text-[#8c947d] mb-1.5">
-                    <span>Available focus time remaining</span>
-                    <span className="text-[#8c947d] font-black">
+                <div>
+                  <div className="flex justify-between text-xs font-semibold text-[#8c947d] mb-1.5">
+                    <span>Focus capacity used</span>
+                    <span className="font-bold text-[#2e2f22]">
                       {Math.floor((workloadSummary?.remainingCapacityMinutes ?? 160) / 60)}h{' '}
-                      {(workloadSummary?.remainingCapacityMinutes ?? 160) % 60}m available
+                      {(workloadSummary?.remainingCapacityMinutes ?? 160) % 60}m free
                     </span>
                   </div>
-                  <ProgressBar value={capacityPercent} />
+                  {/* Custom progress bar — Bark (#5e6544) fill on Sand (#d6c7ad) track */}
+                  <div className="w-full h-2.5 bg-[#d6c7ad] rounded-full overflow-hidden border border-[#b7c3a1]/50">
+                    <div
+                      className="h-full bg-[#5e6544] rounded-full transition-all duration-700 ease-out"
+                      style={{ width: `${capacityPercent}%` }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
 
-          {/* 4. NEXT UP HERO ACTION (SOFT SAGE GREEN SURFACE #8C947D WITH PURE WHITE LETTERING) */}
+          {/* ── NEXT UP HERO ─────────────────────────────────────────────── */}
           {nextAction && (
-            <Card className="p-5 bg-[#8c947d] text-white border-none shadow-md relative overflow-hidden">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-white text-[#8c947d] inline-flex items-center gap-1 shadow-xs">
-                    <Zap size={10} /> NEXT UP
+            <div className="bg-[#5e6544] rounded-2xl p-5 shadow-sm relative overflow-hidden">
+              {/* Subtle texture element */}
+              <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/5 -translate-y-12 translate-x-12 pointer-events-none" />
+              <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="space-y-1.5">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 text-white text-[10px] font-bold uppercase tracking-widest">
+                    <Zap size={10} /> Up Next
                   </span>
-                  <h3 className="text-lg font-black tracking-tight text-white">{nextAction.title}</h3>
-                  <div className="flex items-center gap-3 text-xs text-[#f5e8d0] font-bold">
+                  <h3 className="text-lg font-black text-white leading-snug">{nextAction.title}</h3>
+                  <div className="flex items-center gap-3 text-xs text-white/70 font-medium">
                     {nextAction.estimated_minutes && (
                       <span className="flex items-center gap-1">
-                        <Clock size={12} /> {nextAction.estimated_minutes} mins focus
+                        <Clock size={11} /> {nextAction.estimated_minutes} min
                       </span>
                     )}
                     {nextAction.deadline && (
@@ -280,236 +272,212 @@ export function DashboardPage() {
                     )}
                   </div>
                 </div>
-
-                <Button
+                <button
                   onClick={() => handleToggleTask(nextAction)}
-                  className="bg-white text-[#8c947d] hover:bg-[#f5e8d0] border-none font-black text-xs shadow-xs"
-                  icon={<CheckCircle2 size={16} className="text-[#8c947d]" />}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-[#5e6544] text-xs font-bold hover:bg-[#f5e8d0] transition-all shadow-xs shrink-0"
                 >
-                  Start Focus
-                </Button>
+                  <CheckCircle2 size={15} /> Start Focus
+                </button>
               </div>
-            </Card>
+            </div>
           )}
 
-          {/* 5. TODAY'S PRIORITIES */}
-          <Card className="p-6">
+          {/* ── TODAY'S PRIORITIES ───────────────────────────────────────── */}
+          <div className="bg-white border border-[#d6c7ad] rounded-2xl p-6 shadow-xs">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-base font-black text-[#8c947d]">
-                  Today's Priorities
-                </h3>
-                <p className="text-xs text-[#8c947d]/80 font-medium">
-                  {topPriorities.length} key tasks needing your focus
-                </p>
+                <h3 className="text-base font-black text-[#2e2f22]">Today's Priorities</h3>
+                <p className="text-xs text-[#8c947d] mt-0.5">{topPriorities.length} task{topPriorities.length !== 1 ? 's' : ''} needing focus</p>
               </div>
             </div>
 
             {isLoading ? (
-              <div className="text-xs text-[#8c947d] py-4 text-center">Loading priorities...</div>
+              <div className="py-6 text-center text-xs text-[#8c947d]">Loading…</div>
             ) : topPriorities.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {topPriorities.map((task, index) => (
                   <div
                     key={task.id}
-                    className="p-3.5 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad] flex items-center justify-between transition-all hover:border-[#8c947d]"
+                    className="flex items-center gap-3.5 p-3.5 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad] hover:border-[#8c947d] transition-all group"
                   >
-                    <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                      <span className="text-xs font-black text-[#8c947d]">
-                        0{index + 1}
-                      </span>
-                      <button
-                        onClick={() => handleToggleTask(task)}
-                        className={`w-5 h-5 rounded-lg border flex items-center justify-center transition-colors ${
-                          task.status === 'completed'
-                            ? 'bg-[#8c947d] border-[#8c947d] text-white'
-                            : 'border-[#8c947d] hover:border-[#5e6544]'
-                        }`}
-                      >
-                        {task.status === 'completed' && <CheckSquare size={13} />}
-                      </button>
-                      <div className="min-w-0 flex-1">
-                        <h4 className="text-sm font-black text-[#2e2f22] truncate">
-                          {task.title}
-                        </h4>
-                        <div className="flex items-center gap-2 text-[11px] text-[#8c947d] font-bold mt-0.5">
-                          <span className="uppercase tracking-wider text-[#8c947d]">
-                            {task.priority}
-                          </span>
-                          {task.estimated_minutes && <span>· {task.estimated_minutes}m</span>}
-                        </div>
+                    <span className="text-[11px] font-black text-[#d6c7ad] w-5 shrink-0">0{index + 1}</span>
+                    <button
+                      onClick={() => handleToggleTask(task)}
+                      className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors shrink-0 ${
+                        task.status === 'completed'
+                          ? 'bg-[#8c947d] border-[#8c947d]'
+                          : 'border-[#b7c3a1] group-hover:border-[#8c947d]'
+                      }`}
+                    >
+                      {task.status === 'completed' && <CheckSquare size={12} className="text-white" />}
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-semibold truncate ${task.status === 'completed' ? 'line-through text-[#8c947d]' : 'text-[#2e2f22]'}`}>
+                        {task.title}
+                      </p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border ${priorityColor(task.priority)}`}>
+                          {task.priority}
+                        </span>
+                        {task.estimated_minutes && (
+                          <span className="text-[10px] text-[#8c947d]">{task.estimated_minutes}m</span>
+                        )}
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="py-8 text-center text-xs text-[#8c947d]">
-                No pending priorities. All caught up for today!
+              <div className="py-10 text-center">
+                <CheckCircle2 size={28} className="text-[#b7c3a1] mx-auto mb-2" />
+                <p className="text-xs text-[#8c947d]">All caught up for today.</p>
               </div>
             )}
-          </Card>
+          </div>
         </div>
 
-        {/* Right Column (1 col): Timeline, Wellness, Money, Business */}
-        <div className="space-y-6">
-          {/* 6. "YOUR DAY" TIMELINE */}
-          <Card className="p-5">
+        {/* RIGHT COLUMN — 1/3 width */}
+        <div className="space-y-5">
+
+          {/* ── YOUR DAY TIMELINE ────────────────────────────────────────── */}
+          <div className="bg-white border border-[#d6c7ad] rounded-2xl p-5 shadow-xs">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-black text-[#8c947d] flex items-center gap-2">
-                <CalendarDays size={16} className="text-[#8c947d]" /> YOUR DAY
+              <h3 className="text-xs font-black uppercase tracking-widest text-[#2e2f22] flex items-center gap-2">
+                <CalendarDays size={14} className="text-[#8c947d]" /> Your Day
               </h3>
-              <span className="text-[10px] font-black uppercase text-[#8c947d]">Timeline</span>
+              <span className="text-[10px] font-semibold text-[#8c947d]">Timeline</span>
             </div>
 
-            <div className="relative pl-4 space-y-4 border-l-2 border-[#d6c7ad] ml-2">
-              <div className="relative">
-                <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#8c947d] ring-2 ring-white"></div>
-                <div className="text-xs font-bold text-[#8c947d]">9:00 AM</div>
-                <div className="text-xs font-black text-[#2e2f22]">
-                  Architecture Studio Session
+            <div className="relative space-y-4 pl-5 border-l-2 border-[#d6c7ad] ml-1">
+              {[
+                { time: '9:00 AM', title: 'Architecture Studio', type: 'Fixed', fixed: true },
+                { time: '11:00 AM', title: 'Physics Problem Set', type: 'Task', fixed: false },
+                { time: '2:00 PM', title: 'Client Strategy Brief', type: 'Fixed', fixed: true },
+                { time: '4:30 PM', title: 'Training & Mobility', type: 'Wellness', fixed: false },
+              ].map(({ time, title, type, fixed }) => (
+                <div key={time} className="relative">
+                  <div className={`absolute -left-[22px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
+                    fixed ? 'bg-[#5e6544]' : 'bg-[#b7c3a1]'
+                  }`} />
+                  <p className="text-[10px] font-bold text-[#8c947d] uppercase tracking-wide">{time}</p>
+                  <p className="text-xs font-bold text-[#2e2f22] mt-0.5">{title}</p>
+                  <span className={`inline-block mt-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase tracking-wide ${
+                    fixed ? 'bg-[#5e6544]/10 text-[#5e6544]' : 'bg-[#d6c7ad]/50 text-[#8c947d]'
+                  }`}>
+                    {type}
+                  </span>
                 </div>
-                <div className="text-[10px] text-[#8c947d] font-medium">Fixed Commitment</div>
-              </div>
-
-              <div className="relative">
-                <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#b7c3a1]"></div>
-                <div className="text-xs font-bold text-[#8c947d]">11:00 AM</div>
-                <div className="text-xs font-black text-[#2e2f22]">
-                  Physics Problem Set
-                </div>
-                <div className="text-[10px] text-[#8c947d] font-medium">Flexible Task</div>
-              </div>
-
-              <div className="relative">
-                <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#8c947d] ring-2 ring-white"></div>
-                <div className="text-xs font-bold text-[#8c947d]">2:00 PM</div>
-                <div className="text-xs font-black text-[#2e2f22]">
-                  Client Strategy Briefing
-                </div>
-                <div className="text-[10px] text-[#8c947d] font-medium">Fixed Commitment</div>
-              </div>
-
-              <div className="relative">
-                <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#b7c3a1]"></div>
-                <div className="text-xs font-bold text-[#8c947d]">4:30 PM</div>
-                <div className="text-xs font-black text-[#2e2f22]">
-                  Training & Mobility
-                </div>
-                <div className="text-[10px] text-[#8c947d] font-medium">Wellness</div>
-              </div>
+              ))}
             </div>
-          </Card>
-
-          {/* 7. YOUR WELLNESS SECTION */}
-          <Card className="p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-black text-[#8c947d] flex items-center gap-2">
-                <Droplets size={16} className="text-[#8c947d]" /> YOUR WELLNESS
-              </h3>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2.5 text-xs">
-              <div className="p-3 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad] flex flex-col justify-between">
-                <div className="flex items-center gap-1.5 text-[#8c947d] font-bold">
-                  <Droplets size={14} className="text-[#8c947d]" /> Water
-                </div>
-                <div className="font-black text-[#2e2f22] text-sm mt-1">
-                  {hydrationSummary?.currentTotalOz ?? 64} / {hydrationSummary?.targetOz ?? 96} oz
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad] flex flex-col justify-between">
-                <div className="flex items-center gap-1.5 text-[#8c947d] font-bold">
-                  <Dumbbell size={14} className="text-[#8c947d]" /> Movement
-                </div>
-                <div className="font-black text-[#8c947d] text-xs mt-1">
-                  {todayWorkout ? 'Logged ✓' : 'Workout ready'}
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad] flex flex-col justify-between">
-                <div className="flex items-center gap-1.5 text-[#8c947d] font-bold">
-                  <UtensilsCrossed size={14} className="text-[#8c947d]" /> Nutrition
-                </div>
-                <div className="font-black text-[#2e2f22] text-xs mt-1">
-                  2 / 3 Meals
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad] flex flex-col justify-between">
-                <div className="flex items-center gap-1.5 text-[#8c947d] font-bold">
-                  <Moon size={14} className="text-[#8c947d]" /> Sleep
-                </div>
-                <div className="font-black text-[#2e2f22] text-xs mt-1">
-                  7h 42m
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          {/* 8. YOUR MONEY & YOUR BUSINESS SNAPSHOT */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Card className="p-4">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#8c947d] mb-1">
-                <Wallet size={14} className="text-[#8c947d]" /> YOUR MONEY
-              </div>
-              <div className="text-lg font-black text-[#2e2f22]">
-                ${totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-              </div>
-              <div className="text-[10px] text-[#8c947d] font-bold mt-1">Available balance</div>
-            </Card>
-
-            <Card className="p-4">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#8c947d] mb-1">
-                <Briefcase size={14} className="text-[#8c947d]" /> YOUR BUSINESS
-              </div>
-              <div className="text-lg font-black text-[#2e2f22]">
-                ${totalBusinessRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-              </div>
-              <div className="text-[10px] text-[#8c947d] font-bold mt-1">
-                {activeProjectsCount} active projects
-              </div>
-            </Card>
           </div>
 
-          {/* 9. WHAT YOU'RE BUILDING (GOALS) */}
-          <Card className="p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-black uppercase tracking-wider text-[#8c947d]">
-                WHAT YOU'RE BUILDING
+          {/* ── WELLNESS GRID ────────────────────────────────────────────── */}
+          <div className="bg-white border border-[#d6c7ad] rounded-2xl p-5 shadow-xs">
+            <h3 className="text-xs font-black uppercase tracking-widest text-[#2e2f22] mb-4 flex items-center gap-2">
+              <Droplets size={14} className="text-[#8c947d]" /> Wellness
+            </h3>
+            <div className="grid grid-cols-2 gap-2.5">
+              {[
+                {
+                  icon: <Droplets size={14} />,
+                  label: 'Water',
+                  value: `${hydrationSummary?.currentTotalOz ?? 64} / ${hydrationSummary?.targetOz ?? 96} oz`,
+                  pct: ((hydrationSummary?.currentTotalOz ?? 64) / (hydrationSummary?.targetOz ?? 96)) * 100,
+                },
+                {
+                  icon: <Dumbbell size={14} />,
+                  label: 'Movement',
+                  value: todayWorkout ? 'Done ✓' : 'Pending',
+                  pct: todayWorkout ? 100 : 0,
+                },
+                {
+                  icon: <UtensilsCrossed size={14} />,
+                  label: 'Nutrition',
+                  value: '2 / 3 meals',
+                  pct: 67,
+                },
+                {
+                  icon: <Moon size={14} />,
+                  label: 'Sleep',
+                  value: '7h 42m',
+                  pct: 87,
+                },
+              ].map(({ icon, label, value, pct }) => (
+                <div key={label} className="p-3 rounded-xl bg-[#f5e8d0] border border-[#d6c7ad]">
+                  <div className="flex items-center gap-1.5 text-[#8c947d] mb-1.5">
+                    {icon}
+                    <span className="text-[10px] font-bold uppercase tracking-wide">{label}</span>
+                  </div>
+                  <p className="text-xs font-black text-[#2e2f22] mb-1.5">{value}</p>
+                  {/* Thin progress track */}
+                  <div className="w-full h-1 bg-[#d6c7ad] rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#8c947d] rounded-full transition-all duration-500"
+                      style={{ width: `${Math.min(pct, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── MONEY & BUSINESS ─────────────────────────────────────────── */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-white border border-[#d6c7ad] rounded-2xl p-4 shadow-xs">
+              <div className="flex items-center gap-1.5 text-[#8c947d] mb-2">
+                <Wallet size={13} />
+                <span className="text-[10px] font-bold uppercase tracking-wide">Money</span>
+              </div>
+              <p className="text-base font-black text-[#2e2f22]">
+                ${totalBalance.toLocaleString('en-US', { minimumFractionDigits: 0 })}
+              </p>
+              <p className="text-[10px] text-[#8c947d] font-medium mt-0.5">Available</p>
+            </div>
+            <div className="bg-white border border-[#d6c7ad] rounded-2xl p-4 shadow-xs">
+              <div className="flex items-center gap-1.5 text-[#8c947d] mb-2">
+                <Briefcase size={13} />
+                <span className="text-[10px] font-bold uppercase tracking-wide">Business</span>
+              </div>
+              <p className="text-base font-black text-[#2e2f22]">
+                ${totalBusinessRevenue.toLocaleString('en-US', { minimumFractionDigits: 0 })}
+              </p>
+              <p className="text-[10px] text-[#8c947d] font-medium mt-0.5">{activeProjectsCount} projects</p>
+            </div>
+          </div>
+
+          {/* ── GOALS PROGRESS ───────────────────────────────────────────── */}
+          <div className="bg-white border border-[#d6c7ad] rounded-2xl p-5 shadow-xs">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xs font-black uppercase tracking-widest text-[#2e2f22] flex items-center gap-2">
+                <Target size={14} className="text-[#8c947d]" /> Building
               </h3>
-              <Target size={14} className="text-[#8c947d]" />
+              <TrendingUp size={14} className="text-[#b7c3a1]" />
             </div>
-
-            <div className="space-y-3 text-xs">
-              <div>
-                <div className="flex justify-between font-black text-[#2e2f22] mb-1">
-                  <span>Architecture Portfolio</span>
-                  <span className="text-[#8c947d]">72%</span>
+            <div className="space-y-3.5">
+              {[
+                { label: 'Architecture Portfolio', pct: 72 },
+                { label: 'Client Pipeline', pct: 41 },
+                { label: 'Fitness & Mobility', pct: 64 },
+              ].map(({ label, pct }) => (
+                <div key={label}>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-xs font-semibold text-[#2e2f22]">{label}</span>
+                    <span className="text-[11px] font-bold text-[#8c947d]">{pct}%</span>
+                  </div>
+                  {/* Bark fill on Sand track */}
+                  <div className="w-full h-2 bg-[#d6c7ad] rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#5e6544] rounded-full transition-all duration-700 ease-out"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
                 </div>
-                <ProgressBar value={72} />
-              </div>
-
-              <div>
-                <div className="flex justify-between font-black text-[#2e2f22] mb-1">
-                  <span>Startup Client Pipeline</span>
-                  <span className="text-[#8c947d]">41%</span>
-                </div>
-                <ProgressBar value={41} />
-              </div>
-
-              <div>
-                <div className="flex justify-between font-black text-[#2e2f22] mb-1">
-                  <span>Fitness & Mobility</span>
-                  <span className="text-[#8c947d]">64%</span>
-                </div>
-                <ProgressBar value={64} />
-              </div>
+              ))}
             </div>
-          </Card>
-        </div>
-      </div>
+          </div>
+
+        </div>{/* end right col */}
+      </div>{/* end main grid */}
 
       <AIAssistantDrawer isOpen={isAIDrawerOpen} onClose={() => setIsAIDrawerOpen(false)} />
     </div>

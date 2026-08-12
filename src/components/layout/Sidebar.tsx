@@ -25,7 +25,7 @@ export function Sidebar() {
   ]
 
   return (
-    <aside className="hidden md:flex flex-col w-60 fixed left-0 top-16 bottom-0 bg-[#f5e8d0] dark:bg-[#2e2f22] border-r border-[#d6c7ad] dark:border-[#5e6544]/40 z-30">
+    <aside className="hidden md:flex flex-col w-60 fixed left-0 top-16 bottom-0 bg-[#f5e8d0] border-r border-[#d6c7ad] z-30">
       <nav className="flex-1 overflow-y-auto py-5 px-3.5 space-y-1">
         {navItems.map((item) => (
           <NavLink
@@ -35,8 +35,8 @@ export function Sidebar() {
               `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px]
               ${
                 isActive
-                  ? 'bg-[#5e6544] text-[#f5e8d0] shadow-xs border border-[#5e6544]'
-                  : 'text-[#2e2f22] dark:text-[#b7c3a1] hover:bg-[#d6c7ad]/40 dark:hover:bg-[#23241a] hover:text-[#2e2f22]'
+                  ? 'bg-[#8c947d] text-white shadow-xs border border-[#8c947d]'
+                  : 'text-[#8c947d] hover:bg-[#d6c7ad]/40 hover:text-[#2e2f22]'
               }`
             }
           >
@@ -45,15 +45,15 @@ export function Sidebar() {
           </NavLink>
         ))}
 
-        <div className="pt-4 mt-4 border-t border-[#d6c7ad] dark:border-[#5e6544]/40">
+        <div className="pt-4 mt-4 border-t border-[#d6c7ad]">
           <NavLink
             to="/settings"
             className={({ isActive }) =>
               `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px]
               ${
                 isActive
-                  ? 'bg-[#5e6544] text-[#f5e8d0] shadow-xs border border-[#5e6544]'
-                  : 'text-[#2e2f22] dark:text-[#b7c3a1] hover:bg-[#d6c7ad]/40 dark:hover:bg-[#23241a] hover:text-[#2e2f22]'
+                  ? 'bg-[#8c947d] text-white shadow-xs border border-[#8c947d]'
+                  : 'text-[#8c947d] hover:bg-[#d6c7ad]/40 hover:text-[#2e2f22]'
               }`
             }
           >
@@ -63,15 +63,15 @@ export function Sidebar() {
         </div>
       </nav>
 
-      <div className="p-4 border-t border-[#d6c7ad] dark:border-[#5e6544]/40">
+      <div className="p-4 border-t border-[#d6c7ad]">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#5e6544] text-[#f5e8d0] flex items-center justify-center flex-shrink-0 border border-[#5e6544]">
+          <div className="w-8 h-8 rounded-full bg-[#8c947d] text-white flex items-center justify-center flex-shrink-0 border border-[#8c947d]">
             <span className="font-black text-xs">
               {user?.email ? user.email.charAt(0).toUpperCase() : '?'}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-[#2e2f22] dark:text-[#f5e8d0] truncate">
+            <p className="text-xs font-bold text-[#8c947d] truncate">
               {user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User'}
             </p>
           </div>
