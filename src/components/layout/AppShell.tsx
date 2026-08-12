@@ -1,12 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Header } from './Header'
 import { Sidebar } from './Sidebar'
 import { BottomNav } from './BottomNav'
 import { QuickAddButton } from './QuickAddButton'
+import { prefetchAllPages } from '@/utils/prefetch'
 
 export function AppShell() {
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false)
+
+  useEffect(() => {
+    prefetchAllPages()
+  }, [])
 
   return (
     <div className="min-h-screen bg-[#eef1eb] flex flex-col font-sans">
