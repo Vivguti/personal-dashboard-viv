@@ -80,7 +80,7 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f5e8d0] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#eef1eb] p-4">
       <div className="w-full max-w-md bg-white dark:bg-[#23241a] rounded-2xl p-8 shadow-xl border border-[#d6c7ad] dark:border-[#5e6544]/40">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 bg-[#5e6544] text-[#faf8f3] font-black text-lg rounded-xl mb-3 shadow-xs">
@@ -90,7 +90,7 @@ export function AuthPage() {
           <p className="text-[#8c947d] text-sm">Your life, priorities & wellness organized.</p>
         </div>
 
-        <div className="flex mb-6 bg-[#f5e8d0] dark:bg-[#2e2f22] rounded-xl p-1 border border-[#d6c7ad]">
+        <div className="flex mb-6 bg-[#dfe8db] rounded-xl p-1 border border-[#c4cfbc]">
           <button
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${isLogin ? 'bg-[#5e6544] text-[#faf8f3]' : 'text-[#8c947d] hover:text-[#2e2f22]'}`}
             onClick={() => setIsLogin(true)}

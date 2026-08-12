@@ -1,3 +1,4 @@
+// Green palette progress bar: #c4cfbc track, #5e6544 fill
 export interface ProgressBarProps {
   value: number
   max?: number
@@ -11,7 +12,7 @@ export interface ProgressBarProps {
 export function ProgressBar({
   value,
   max = 100,
-  color = 'bg-white shadow-xs',
+  color = 'bg-[#5e6544]',
   size = 'md',
   showLabel = false,
   label,
@@ -19,11 +20,7 @@ export function ProgressBar({
 }: ProgressBarProps) {
   const percentage = (value / max) * 100
   const clampedValue = Math.min(Math.max(percentage, 0), 100)
-
-  const sizeClasses = {
-    sm: 'h-1.5',
-    md: 'h-2.5',
-  }
+  const sizeClasses = { sm: 'h-1.5', md: 'h-2.5' }
 
   return (
     <div className={`w-full ${className}`}>
@@ -33,7 +30,7 @@ export function ProgressBar({
           {showLabel && <span className="text-xs font-bold text-[#8c947d]">{Math.round(clampedValue)}%</span>}
         </div>
       )}
-      <div className={`w-full bg-[#d6c7ad] dark:bg-[#5e6544]/50 rounded-full border border-[#b7c3a1]/60 overflow-hidden ${sizeClasses[size]}`}>
+      <div className={`w-full bg-[#c4cfbc] rounded-full overflow-hidden ${sizeClasses[size]}`}>
         <div
           className={`${color} h-full rounded-full transition-all duration-500 ease-out`}
           style={{ width: `${clampedValue}%` }}

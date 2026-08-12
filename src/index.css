@@ -1,152 +1,93 @@
 /* ============================================
-   Personal OS — Parchment Main Background (#F5E8D0)
-   Main Canvas: Parchment (#F5E8D0) ALWAYS
-   Top Bar: Soft Sage (#8C947D)
-   Cards: Pure White (#FFFFFF)
+   Personal OS — Full Green Palette
+   Canvas        : #eef1eb  very light sage
+   Chip fill     : #dfe8db  sage-green tile
+   Borders       : #c4cfbc  sage-green border
+   Soft accent   : #b7c3a1  olive
+   Sage / logo   : #8c947d  header bar / icons / labels
+   Bark          : #5e6544  dark green CTAs, graph fills
+   Olivewood     : #2e2f22  headings, primary text
+   Cards         : #ffffff
    ============================================ */
 
 @import "tailwindcss";
 
-/* ── Custom Theme Configuration ── */
 @theme {
-  /* Board Swatches */
-  --color-parchment: #f5e8d0;
-  --color-sand: #d6c7ad;
-  --color-olive: #b7c3a1;
-  --color-sage: #8c947d;
-  --color-bark: #5e6544;
-  --color-olivewood: #2e2f22;
+  --color-canvas:     #eef1eb;
+  --color-chip:       #dfe8db;
+  --color-border:     #c4cfbc;
+  --color-olive:      #b7c3a1;
+  --color-sage:       #8c947d;
+  --color-bark:       #5e6544;
+  --color-olivewood:  #2e2f22;
 
-  /* Primary Theme Aliases */
-  --color-primary-50: #fbf8f3;
-  --color-primary-100: #f5e8d0;
-  --color-primary-200: #d6c7ad;
+  /* keep legacy names mapped to green equivalents */
+  --color-parchment:  #dfe8db;
+  --color-sand:       #c4cfbc;
+
+  --color-primary-50:  #eef1eb;
+  --color-primary-100: #dfe8db;
+  --color-primary-200: #c4cfbc;
   --color-primary-300: #b7c3a1;
   --color-primary-400: #8c947d;
   --color-primary-500: #5e6544;
-  --color-primary-600: #5e6544;
   --color-primary-700: #2e2f22;
 
-  /* Status Tokens */
-  --color-success-500: #8c947d;
-  --color-warning-500: #d6c7ad;
   --color-danger-500: #a85d48;
 
-  /* Surface Tokens — Main Surface is PARCHMENT #F5E8D0 */
-  --color-surface-warm: #f5e8d0;
-  --color-surface-card: #ffffff;
-  --color-surface-secondary: #d6c7ad;
-
-  /* Typography */
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-
-  /* Safe Area */
   --spacing-safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* ── Base Styles ── */
 @layer base {
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
+  * { -webkit-tap-highlight-color: transparent; }
 
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    background-color: #f5e8d0 !important;
+    background-color: #eef1eb !important;
   }
 
   body {
     font-family: var(--font-sans);
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-feature-settings: 'cv02','cv03','cv04','cv11';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #f5e8d0 !important;
+    background-color: #eef1eb !important;
     color: #2e2f22;
   }
 
-  /* Custom Scrollbars */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #c4cfbc; border-radius: 3px; }
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #d6c7ad;
-    border-radius: 3px;
-  }
-
-  :focus-visible {
-    outline: 2px solid #8c947d;
-    outline-offset: 2px;
-  }
+  :focus-visible { outline: 2px solid #8c947d; outline-offset: 2px; }
 }
 
-/* ── Utility Classes ── */
 @layer utilities {
   .glass {
-    background: rgba(245, 232, 208, 0.95);
+    background: rgba(238, 241, 235, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
 
-  .glass-sage {
-    background: #8c947d;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
+  .glass-sage { background: #8c947d; }
 
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  .pt-safe {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe  { padding-top:    env(safe-area-inset-top,    0px); }
 
   .subtle-shadow {
-    box-shadow: 0 4px 18px -2px rgba(46, 47, 34, 0.05), 0 2px 4px -1px rgba(46, 47, 34, 0.02);
+    box-shadow: 0 4px 18px -2px rgba(46,47,34,.05), 0 2px 4px -1px rgba(46,47,34,.02);
   }
 }
 
-/* ── Animations ── */
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+@keyframes fade-in  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slide-up { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+.animate-fade-in  { animation: fade-in  0.25s ease-out; }
+.animate-slide-up { animation: slide-up 0.3s cubic-bezier(0.16,1,0.3,1); }
 
-.animate-fade-in {
-  animation: fade-in 0.25s ease-out;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-#root {
-  height: 100%;
-  background-color: #f5e8d0 !important;
-}
+#root { height: 100%; background-color: #eef1eb !important; }

@@ -35,7 +35,7 @@ export function Header() {
               variant="primary"
               size="sm"
               onClick={() => setIsAIDrawerOpen(true)}
-              className="bg-[#f5e8d0] hover:bg-[#d6c7ad] text-[#2e2f22] font-bold text-xs flex items-center gap-1.5 rounded-xl border border-[#d6c7ad] shadow-xs"
+              className="bg-[#dfe8db] hover:bg-[#c4cfbc] text-[#2e2f22] font-bold text-xs flex items-center gap-1.5 rounded-xl border border-[#c4cfbc] shadow-xs"
             >
               <Sparkles size={14} className="text-[#8c947d]" />
               <span className="hidden sm:inline">AI Assistant</span>

@@ -1,86 +1,85 @@
-import { useAuth } from '@/contexts/AuthContext';
-import { useTheme } from '@/contexts/ThemeContext';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { User, Moon, Sun, Info, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext'
+import { Button } from '@/components/ui/Button'
+import { User, Info, LogOut, Leaf } from 'lucide-react'
 
 export function SettingsPage() {
-  const { user, signOut } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { user, signOut } = useAuth()
+
+  const sectionHeader = (icon: React.ReactNode, label: string) => (
+    <div className="flex items-center gap-2 p-4 border-b border-[#dfe8db] bg-[#eef1eb]">
+      <span className="text-[#8c947d]">{icon}</span>
+      <h2 className="font-bold text-sm text-[#2e2f22]">{label}</h2>
+    </div>
+  )
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-3xl mx-auto space-y-6">
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Settings</h1>
-      </header>
+    <div className="p-4 md:p-6 lg:p-8 max-w-3xl mx-auto space-y-6 animate-fade-in">
+      <div className="pb-4 border-b border-[#c4cfbc]">
+        <h1 className="text-2xl font-black text-[#2e2f22] tracking-tight">Settings</h1>
+        <p className="text-sm text-[#8c947d] mt-0.5">Account, appearance & about</p>
+      </div>
 
-      <Card className="p-0 overflow-hidden">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex items-center gap-2">
-          <User size={18} className="text-gray-500 dark:text-gray-400" />
-          <h2 className="font-semibold text-gray-700 dark:text-gray-300">Profile</h2>
-        </div>
-        <div className="p-4 space-y-4">
+      {/* Profile */}
+      <div className="bg-white rounded-2xl border border-[#c4cfbc] overflow-hidden">
+        {sectionHeader(<User size={16} />, 'Profile')}
+        <div className="p-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Display Name</label>
-            <div className="text-gray-900 dark:text-gray-100 font-medium">
+            <label className="block text-xs font-semibold text-[#8c947d] uppercase tracking-wide mb-1">Display Name</label>
+            <div className="text-sm font-semibold text-[#2e2f22]">
               {user?.user_metadata?.display_name || 'Not set'}
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Email</label>
-            <div className="text-gray-900 dark:text-gray-100">
-              {user?.email}
-            </div>
+            <label className="block text-xs font-semibold text-[#8c947d] uppercase tracking-wide mb-1">Email</label>
+            <div className="text-sm text-[#2e2f22]">{user?.email}</div>
           </div>
         </div>
-      </Card>
+      </div>
 
-      <Card className="p-0 overflow-hidden">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex items-center gap-2">
-          {theme === 'dark' ? (
-            <Moon size={18} className="text-gray-500 dark:text-gray-400" />
-          ) : (
-            <Sun size={18} className="text-gray-500 dark:text-gray-400" />
-          )}
-          <h2 className="font-semibold text-gray-700 dark:text-gray-300">Appearance</h2>
-        </div>
-        <div className="p-4 flex items-center justify-between">
+      {/* Appearance */}
+      <div className="bg-white rounded-2xl border border-[#c4cfbc] overflow-hidden">
+        {sectionHeader(<Leaf size={16} />, 'Appearance')}
+        <div className="p-5 flex items-center justify-between">
           <div>
-            <div className="font-medium text-gray-900 dark:text-gray-100">Dark Mode</div>
-            <div className="text-sm text-gray-500 dark:text-gray-400">Toggle dark mode interface</div>
+            <div className="text-sm font-semibold text-[#2e2f22]">Color Theme</div>
+            <div className="text-xs text-[#8c947d] mt-0.5">Sage Green — always light</div>
           </div>
-          <button
-            onClick={toggleTheme}
-            className={`w-12 h-6 rounded-full transition-colors relative ${theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-gray-600'}`}
-          >
-            <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${theme === 'dark' ? 'translate-x-6' : 'translate-x-0'}`} />
-          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded-full bg-[#eef1eb] border border-[#c4cfbc]" title="Canvas" />
+            <div className="w-5 h-5 rounded-full bg-[#8c947d]" title="Sage" />
+            <div className="w-5 h-5 rounded-full bg-[#5e6544]" title="Bark" />
+          </div>
         </div>
-      </Card>
+      </div>
 
-      <Card className="p-0 overflow-hidden">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex items-center gap-2">
-          <Info size={18} className="text-gray-500 dark:text-gray-400" />
-          <h2 className="font-semibold text-gray-700 dark:text-gray-300">About</h2>
+      {/* About */}
+      <div className="bg-white rounded-2xl border border-[#c4cfbc] overflow-hidden">
+        {sectionHeader(<Info size={16} />, 'About')}
+        <div className="p-5 space-y-3">
+          {[
+            ['Version',  '1.0.0'],
+            ['Status',   'Phase 1 — Foundation'],
+            ['Theme',    'Sage Green System'],
+          ].map(([key, val]) => (
+            <div key={key} className="flex justify-between text-sm">
+              <span className="text-[#8c947d]">{key}</span>
+              <span className="font-semibold text-[#2e2f22]">{val}</span>
+            </div>
+          ))}
         </div>
-        <div className="p-4 space-y-2">
-          <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">Version</span>
-            <span className="font-medium text-gray-900 dark:text-gray-100">1.0.0</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">Status</span>
-            <span className="font-medium text-gray-900 dark:text-gray-100">Phase 1 — Foundation</span>
-          </div>
-        </div>
-      </Card>
+      </div>
 
-      <div className="pt-4">
-        <Button variant="danger" className="w-full flex justify-center items-center gap-2" onClick={() => signOut()}>
-          <LogOut size={18} />
+      {/* Sign Out */}
+      <div className="pt-2">
+        <Button
+          variant="danger"
+          fullWidth
+          onClick={() => signOut()}
+          icon={<LogOut size={16} />}
+        >
           Sign Out
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}

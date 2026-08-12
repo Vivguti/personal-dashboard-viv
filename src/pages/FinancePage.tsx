@@ -1,53 +1,55 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Wallet, TrendingUp, TrendingDown, Plus, PiggyBank, CreditCard, DollarSign } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Card } from '@/components/ui/Card'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 
-import { IncomeModal } from '@/components/forms/IncomeModal'
+import { IncomeModal }  from '@/components/forms/IncomeModal'
 import { ExpenseModal } from '@/components/forms/ExpenseModal'
 import { AccountModal } from '@/components/forms/AccountModal'
-import { BudgetModal } from '@/components/forms/BudgetModal'
+import { BudgetModal }  from '@/components/forms/BudgetModal'
 
 import { getFinancialOverview, type Account, type Income, type Expense, type Budget } from '@/services/financeService'
 
 type TabId = 'overview' | 'income' | 'expenses' | 'budgets' | 'accounts'
 
+const TAB_ACTIVE   = 'bg-[#5e6544] text-white border-[#5e6544]'
+const TAB_INACTIVE = 'bg-white text-[#8c947d] hover:bg-[#dfe8db] border-[#c4cfbc]'
+
+// Icon bg tones — all sage-green family
+const STAT_ICONS = [
+  { icon: Wallet,     label: 'Total Balance',    bg: 'bg-[#dfe8db] text-[#5e6544]' },
+  { icon: TrendingUp, label: 'Monthly Income',   bg: 'bg-[#b7c3a1]/30 text-[#5e6544]' },
+  { icon: TrendingDown,label:'Monthly Expenses', bg: 'bg-[#a85d48]/10 text-[#a85d48]' },
+  { icon: PiggyBank,  label: 'Savings Rate',     bg: 'bg-[#c4cfbc]/50 text-[#8c947d]' },
+]
+
 export function FinancePage() {
   const [activeTab, setActiveTab] = useState<TabId>('overview')
   const [isLoading, setIsLoading] = useState(true)
 
-  // Overview State
-  const [totalBalance, setTotalBalance] = useState(0)
-  const [monthlyIncome, setMonthlyIncome] = useState(0)
+  const [totalBalance,    setTotalBalance]    = useState(0)
+  const [monthlyIncome,   setMonthlyIncome]   = useState(0)
   const [monthlyExpenses, setMonthlyExpenses] = useState(0)
-  const [savingsRate, setSavingsRate] = useState(0)
+  const [savingsRate,     setSavingsRate]     = useState(0)
 
-  // Items State
-  const [accounts, setAccounts] = useState<Account[]>([])
-  const [incomeLogs, setIncomeLogs] = useState<Income[]>([])
+  const [accounts,    setAccounts]    = useState<Account[]>([])
+  const [incomeLogs,  setIncomeLogs]  = useState<Income[]>([])
   const [expenseLogs, setExpenseLogs] = useState<Expense[]>([])
-  const [budgets, setBudgets] = useState<Budget[]>([])
+  const [budgets,     setBudgets]     = useState<Budget[]>([])
 
-  // Modal States
-  const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false)
+  const [isIncomeModalOpen,  setIsIncomeModalOpen]  = useState(false)
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false)
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false)
-  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false)
+  const [isBudgetModalOpen,  setIsBudgetModalOpen]  = useState(false)
 
   const loadFinanceData = useCallback(async () => {
     try {
       setIsLoading(true)
       const data = await getFinancialOverview()
-      setTotalBalance(data.totalBalance)
-      setMonthlyIncome(data.monthlyIncome)
-      setMonthlyExpenses(data.monthlyExpenses)
-      setSavingsRate(data.savingsRate)
-
-      setAccounts(data.accounts)
-      setIncomeLogs(data.incomeLogs)
-      setExpenseLogs(data.expenseLogs)
-      setBudgets(data.budgets)
+      setTotalBalance(data.totalBalance);   setMonthlyIncome(data.monthlyIncome)
+      setMonthlyExpenses(data.monthlyExpenses); setSavingsRate(data.savingsRate)
+      setAccounts(data.accounts); setIncomeLogs(data.incomeLogs)
+      setExpenseLogs(data.expenseLogs); setBudgets(data.budgets)
     } catch (err) {
       console.error('Failed to load financial data:', err)
     } finally {
@@ -55,47 +57,45 @@ export function FinancePage() {
     }
   }, [])
 
-  useEffect(() => {
-    loadFinanceData()
-  }, [loadFinanceData])
+  useEffect(() => { loadFinanceData() }, [loadFinanceData])
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
-    { id: 'income', label: 'Income' },
+    { id: 'income',   label: 'Income'   },
     { id: 'expenses', label: 'Expenses' },
-    { id: 'budgets', label: 'Budgets' },
+    { id: 'budgets',  label: 'Budgets'  },
     { id: 'accounts', label: 'Accounts' },
   ] as const
+
+  const emptyCard = (msg: string) => (
+    <div className="bg-white rounded-2xl border border-[#c4cfbc] p-8 text-center text-sm text-[#8c947d]">{msg}</div>
+  )
+
+  const statValues = [
+    `$${totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+    `$${monthlyIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+    `$${monthlyExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+    `${savingsRate}%`,
+  ]
 
   return (
     <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-[#c4cfbc]">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#26352e] dark:text-[#f3f7f3] tracking-tight">Your Money</h1>
-          <p className="text-sm text-[#718078] dark:text-[#a8bdaf]">
-            Accounts, income logging, expense budgets, and savings progress
-          </p>
+          <h1 className="text-2xl font-black text-[#2e2f22] tracking-tight">Your Money</h1>
+          <p className="text-sm text-[#8c947d] mt-0.5">Accounts, income, expenses, budgets & savings</p>
         </div>
-
         <div className="flex gap-2">
-          {activeTab === 'income' && (
-            <Button onClick={() => setIsIncomeModalOpen(true)} icon={<Plus size={18} />}>Log Income</Button>
-          )}
-          {activeTab === 'expenses' && (
-            <Button onClick={() => setIsExpenseModalOpen(true)} icon={<Plus size={18} />}>Log Expense</Button>
-          )}
-          {activeTab === 'accounts' && (
-            <Button onClick={() => setIsAccountModalOpen(true)} icon={<Plus size={18} />}>Add Account</Button>
-          )}
-          {activeTab === 'budgets' && (
-            <Button onClick={() => setIsBudgetModalOpen(true)} icon={<Plus size={18} />}>Set Budget</Button>
-          )}
+          {activeTab === 'income'   && <Button variant="secondary" onClick={() => setIsIncomeModalOpen(true)}  icon={<Plus size={16}/>}>Log Income</Button>}
+          {activeTab === 'expenses' && <Button variant="secondary" onClick={() => setIsExpenseModalOpen(true)} icon={<Plus size={16}/>}>Log Expense</Button>}
+          {activeTab === 'accounts' && <Button variant="secondary" onClick={() => setIsAccountModalOpen(true)} icon={<Plus size={16}/>}>Add Account</Button>}
+          {activeTab === 'budgets'  && <Button variant="secondary" onClick={() => setIsBudgetModalOpen(true)}  icon={<Plus size={16}/>}>Set Budget</Button>}
           {activeTab === 'overview' && (
-            <div className="flex gap-2">
-              <Button onClick={() => setIsIncomeModalOpen(true)} icon={<Plus size={18} />}>Income</Button>
-              <Button onClick={() => setIsExpenseModalOpen(true)} icon={<Plus size={18} />}>Expense</Button>
-            </div>
+            <>
+              <Button variant="secondary" onClick={() => setIsIncomeModalOpen(true)}  icon={<Plus size={16}/>}>Income</Button>
+              <Button variant="secondary" onClick={() => setIsExpenseModalOpen(true)} icon={<Plus size={16}/>}>Expense</Button>
+            </>
           )}
         </div>
       </div>
@@ -107,11 +107,7 @@ export function FinancePage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabId)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                activeTab === tab.id
-                  ? 'bg-[#d6c7ad] text-[#2e2f22] border border-[#b7c3a1] shadow-xs'
-                  : 'bg-white dark:bg-[#23241a] text-[#8c947d] hover:bg-[#f5e8d0] border border-[#d6c7ad]'
-              }`}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${activeTab === tab.id ? TAB_ACTIVE : TAB_INACTIVE}`}
             >
               {tab.label}
             </button>
@@ -120,219 +116,134 @@ export function FinancePage() {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12 text-gray-500 text-sm">Loading financial records...</div>
+        <div className="text-center py-12 text-[#8c947d] text-sm">Loading financial records…</div>
       ) : (
         <>
-          {/* TAB 1: OVERVIEW */}
+          {/* OVERVIEW */}
           {activeTab === 'overview' && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 bg-emerald-100 dark:bg-emerald-950/50 rounded-lg text-emerald-700 dark:text-emerald-300">
-                      <Wallet size={20} />
+                {STAT_ICONS.map(({ icon: Icon, label, bg }, i) => (
+                  <div key={label} className="bg-white rounded-2xl border border-[#c4cfbc] p-5">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className={`p-2 rounded-xl ${bg}`}><Icon size={18} /></div>
+                      <h3 className="font-semibold text-[10px] text-[#8c947d] uppercase tracking-wider">{label}</h3>
                     </div>
-                    <h3 className="font-semibold text-xs text-gray-500 uppercase tracking-wider">Total Balance</h3>
+                    <div className="text-2xl font-black text-[#2e2f22]">{statValues[i]}</div>
                   </div>
-                  <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">
-                    ${totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                  </div>
-                </Card>
-
-                <Card className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 bg-blue-100 dark:bg-blue-950/50 rounded-lg text-blue-700 dark:text-blue-300">
-                      <TrendingUp size={20} />
-                    </div>
-                    <h3 className="font-semibold text-xs text-gray-500 uppercase tracking-wider">Monthly Income</h3>
-                  </div>
-                  <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">
-                    ${monthlyIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                  </div>
-                </Card>
-
-                <Card className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 bg-red-100 dark:bg-red-950/50 rounded-lg text-red-700 dark:text-red-300">
-                      <TrendingDown size={20} />
-                    </div>
-                    <h3 className="font-semibold text-xs text-gray-500 uppercase tracking-wider">Monthly Expenses</h3>
-                  </div>
-                  <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">
-                    ${monthlyExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                  </div>
-                </Card>
-
-                <Card className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 bg-purple-100 dark:bg-purple-950/50 rounded-lg text-purple-700 dark:text-purple-300">
-                      <PiggyBank size={20} />
-                    </div>
-                    <h3 className="font-semibold text-xs text-gray-500 uppercase tracking-wider">Savings Rate</h3>
-                  </div>
-                  <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">
-                    {savingsRate}%
-                  </div>
-                </Card>
+                ))}
               </div>
-
-              {/* Accounts Summary Row */}
               <div className="space-y-3">
-                <h3 className="font-bold text-base text-gray-900 dark:text-gray-100">Accounts Overview</h3>
+                <h3 className="font-bold text-base text-[#2e2f22]">Accounts Overview</h3>
                 {accounts.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {accounts.map((acc) => (
-                      <Card key={acc.id} className="p-4 flex items-center justify-between">
+                      <div key={acc.id} className="bg-white rounded-2xl border border-[#c4cfbc] p-4 flex items-center justify-between">
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
-                            {acc.account_type}
-                          </span>
-                          <h4 className="font-semibold text-gray-900 dark:text-gray-100">{acc.name}</h4>
-                          {acc.institution_name && (
-                            <p className="text-xs text-gray-500">{acc.institution_name}</p>
-                          )}
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8c947d]">{acc.account_type}</span>
+                          <h4 className="font-semibold text-[#2e2f22]">{acc.name}</h4>
+                          {acc.institution_name && <p className="text-xs text-[#8c947d]">{acc.institution_name}</p>}
                         </div>
-                        <div className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                        <div className="text-lg font-black text-[#2e2f22]">
                           ${(acc.current_balance ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </div>
-                      </Card>
+                      </div>
                     ))}
                   </div>
-                ) : (
-                  <Card className="p-8 text-center text-sm text-gray-500">
-                    No accounts added. Click "Add Account" to track checking or savings balances.
-                  </Card>
-                )}
+                ) : emptyCard('No accounts added. Click "Add Account" to track balances.')}
               </div>
             </div>
           )}
 
-          {/* TAB 2: INCOME */}
+          {/* INCOME */}
           {activeTab === 'income' && (
-            <div className="space-y-4">
-              {incomeLogs.length > 0 ? (
-                <div className="space-y-3">
-                  {incomeLogs.map((inc) => (
-                    <Card key={inc.id} className="p-4 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 rounded-xl">
-                          <DollarSign size={20} />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-gray-100">{inc.source}</h4>
-                          <p className="text-xs text-gray-500">
-                            {inc.date} · Category: {inc.category}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-lg font-bold text-emerald-700 dark:text-emerald-400">
-                        +${inc.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </div>
-                    </Card>
-                  ))}
+            <div className="space-y-3">
+              {incomeLogs.length > 0 ? incomeLogs.map((inc) => (
+                <div key={inc.id} className="bg-white rounded-2xl border border-[#c4cfbc] p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-[#dfe8db] text-[#5e6544] rounded-xl"><DollarSign size={18} /></div>
+                    <div>
+                      <h4 className="font-semibold text-[#2e2f22]">{inc.source}</h4>
+                      <p className="text-xs text-[#8c947d]">{inc.date} · {inc.category}</p>
+                    </div>
+                  </div>
+                  <div className="text-lg font-black text-[#5e6544]">+${inc.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                 </div>
-              ) : (
-                <Card className="p-8 text-center text-sm text-gray-500">No income records logged.</Card>
-              )}
+              )) : emptyCard('No income records logged.')}
             </div>
           )}
 
-          {/* TAB 3: EXPENSES */}
+          {/* EXPENSES */}
           {activeTab === 'expenses' && (
-            <div className="space-y-4">
-              {expenseLogs.length > 0 ? (
-                <div className="space-y-3">
-                  {expenseLogs.map((exp) => (
-                    <Card key={exp.id} className="p-4 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2.5 bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 rounded-xl">
-                          <CreditCard size={20} />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-gray-100">{exp.merchant}</h4>
-                          <p className="text-xs text-gray-500">
-                            {exp.date} · {exp.category} {exp.recurring ? '(Recurring)' : ''}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                        -${exp.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </div>
-                    </Card>
-                  ))}
+            <div className="space-y-3">
+              {expenseLogs.length > 0 ? expenseLogs.map((exp) => (
+                <div key={exp.id} className="bg-white rounded-2xl border border-[#c4cfbc] p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-[#a85d48]/10 text-[#a85d48] rounded-xl"><CreditCard size={18} /></div>
+                    <div>
+                      <h4 className="font-semibold text-[#2e2f22]">{exp.merchant}</h4>
+                      <p className="text-xs text-[#8c947d]">{exp.date} · {exp.category} {exp.recurring ? '(Recurring)' : ''}</p>
+                    </div>
+                  </div>
+                  <div className="text-lg font-black text-[#a85d48]">-${exp.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                 </div>
-              ) : (
-                <Card className="p-8 text-center text-sm text-gray-500">No expense records logged.</Card>
-              )}
+              )) : emptyCard('No expense records logged.')}
             </div>
           )}
 
-          {/* TAB 4: BUDGETS */}
+          {/* BUDGETS */}
           {activeTab === 'budgets' && (
             <div className="space-y-4">
               {budgets.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {budgets.map((b: Budget) => {
-                    const spent = expenseLogs
-                      .filter((e) => e.category === b.category)
-                      .reduce((sum, e) => sum + e.amount, 0)
-
+                    const spent   = expenseLogs.filter((e) => e.category === b.category).reduce((sum, e) => sum + e.amount, 0)
                     const percent = Math.min(100, Math.round((spent / b.monthly_amount) * 100))
-
+                    const overBudget = percent >= 90
                     return (
-                      <Card key={b.id} className="p-5">
+                      <div key={b.id} className="bg-white rounded-2xl border border-[#c4cfbc] p-5">
                         <div className="flex justify-between items-center mb-2">
-                          <h4 className="font-semibold text-gray-900 dark:text-gray-100 capitalize">{b.category}</h4>
-                          <span className="text-xs font-bold text-gray-500">
-                            ${spent} / ${b.monthly_amount}
+                          <h4 className="font-semibold text-[#2e2f22] capitalize">{b.category}</h4>
+                          <span className={`text-xs font-bold ${overBudget ? 'text-[#a85d48]' : 'text-[#8c947d]'}`}>
+                            ${spent.toFixed(0)} / ${b.monthly_amount}
                           </span>
                         </div>
-                        <ProgressBar value={percent} />
-                      </Card>
+                        <ProgressBar
+                          value={percent}
+                          color={overBudget ? 'bg-[#a85d48]' : 'bg-[#5e6544]'}
+                        />
+                      </div>
                     )
                   })}
                 </div>
-              ) : (
-                <Card className="p-8 text-center text-sm text-gray-500">No category budgets configured.</Card>
-              )}
+              ) : emptyCard('No category budgets configured.')}
             </div>
           )}
 
-          {/* TAB 5: ACCOUNTS */}
+          {/* ACCOUNTS */}
           {activeTab === 'accounts' && (
-            <div className="space-y-4">
-              {accounts.length > 0 ? (
-                <div className="space-y-3">
-                  {accounts.map((acc) => (
-                    <Card key={acc.id} className="p-4 flex items-center justify-between">
-                      <div>
-                        <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
-                          {acc.account_type}
-                        </span>
-                        <h4 className="font-semibold text-gray-900 dark:text-gray-100">{acc.name}</h4>
-                        {acc.institution_name && (
-                          <p className="text-xs text-gray-500">{acc.institution_name}</p>
-                        )}
-                      </div>
-                      <div className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                        ${(acc.current_balance ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </div>
-                    </Card>
-                  ))}
+            <div className="space-y-3">
+              {accounts.length > 0 ? accounts.map((acc) => (
+                <div key={acc.id} className="bg-white rounded-2xl border border-[#c4cfbc] p-4 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#8c947d]">{acc.account_type}</span>
+                    <h4 className="font-semibold text-[#2e2f22]">{acc.name}</h4>
+                    {acc.institution_name && <p className="text-xs text-[#8c947d]">{acc.institution_name}</p>}
+                  </div>
+                  <div className="text-lg font-black text-[#2e2f22]">
+                    ${(acc.current_balance ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  </div>
                 </div>
-              ) : (
-                <Card className="p-8 text-center text-sm text-gray-500">No accounts created.</Card>
-              )}
+              )) : emptyCard('No accounts created.')}
             </div>
           )}
         </>
       )}
 
-      {/* Creation Modals */}
-      <IncomeModal isOpen={isIncomeModalOpen} onClose={() => setIsIncomeModalOpen(false)} onIncomeLogged={loadFinanceData} />
+      <IncomeModal  isOpen={isIncomeModalOpen}  onClose={() => setIsIncomeModalOpen(false)}  onIncomeLogged={loadFinanceData} />
       <ExpenseModal isOpen={isExpenseModalOpen} onClose={() => setIsExpenseModalOpen(false)} onExpenseLogged={loadFinanceData} />
       <AccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} onAccountSaved={loadFinanceData} />
-      <BudgetModal isOpen={isBudgetModalOpen} onClose={() => setIsBudgetModalOpen(false)} onBudgetSaved={loadFinanceData} />
+      <BudgetModal  isOpen={isBudgetModalOpen}  onClose={() => setIsBudgetModalOpen(false)}  onBudgetSaved={loadFinanceData} />
     </div>
   )
 }

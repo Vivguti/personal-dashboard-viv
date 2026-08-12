@@ -13,7 +13,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#f5e8d0] dark:bg-[#2e2f22]">
+      <div className="flex h-screen items-center justify-center bg-[#eef1eb]">
         <LoadingSpinner size="lg" />
       </div>
     )
