@@ -50,6 +50,104 @@ interface TimelineItem {
   itemType: 'event' | 'task'
 }
 
+// ─── Unified Calendar Color Coding Categories ──────────────────────────────
+export type CalendarCategory = 'school' | 'work' | 'extra' | 'assignment_test' | 'other'
+
+export const getItemCategory = (item: TimelineItem): CalendarCategory => {
+  const titleLower = item.title.toLowerCase()
+
+  // 1. Assignments and Tests (distinct terracotta tone)
+  if (
+    titleLower.includes('assignment') ||
+    titleLower.includes('test') ||
+    titleLower.includes('exam') ||
+    titleLower.includes('quiz') ||
+    titleLower.includes('project') ||
+    titleLower.includes('study') ||
+    titleLower.includes('homework') ||
+    item.rawEvent?.event_type === 'deadline' ||
+    (item.itemType === 'task' && item.rawTask?.priority === 'critical')
+  ) {
+    return 'assignment_test'
+  }
+
+  // 2. School / Architecture Classes
+  if (
+    item.type === 'class' ||
+    item.rawEvent?.life_area_id === 'school' ||
+    item.rawTask?.life_area_id === 'school'
+  ) {
+    return 'school'
+  }
+
+  // 3. Work Shifts / Employment responsibilities
+  if (
+    item.type === 'business' ||
+    titleLower.includes('work') ||
+    titleLower.includes('shift') ||
+    titleLower.includes('tech shop') ||
+    titleLower.includes('job') ||
+    item.rawEvent?.life_area_id === 'work' ||
+    item.rawTask?.life_area_id === 'work'
+  ) {
+    return 'work'
+  }
+
+  // 4. Extra Activities / Training / Personal commitments / Wellness
+  if (
+    item.type === 'training' ||
+    item.type === 'personal' ||
+    titleLower.includes('gym') ||
+    titleLower.includes('training') ||
+    titleLower.includes('workout') ||
+    titleLower.includes('meal') ||
+    titleLower.includes('water') ||
+    titleLower.includes('habit') ||
+    item.rawEvent?.life_area_id === 'health' ||
+    item.rawTask?.life_area_id === 'health' ||
+    item.rawEvent?.life_area_id === 'personal' ||
+    item.rawTask?.life_area_id === 'personal'
+  ) {
+    return 'extra'
+  }
+
+  return 'other'
+}
+
+export const getItemStyles = (item: TimelineItem): string => {
+  if (item.itemType === 'task' && item.rawTask?.status === 'completed') {
+    return 'bg-[#F3F7F3] text-[#718078] border-[#E8F0EA] line-through'
+  }
+
+  const category = getItemCategory(item)
+  switch (category) {
+    case 'assignment_test':
+      return 'bg-[#a85d48] text-white border-[#8c4837]'
+    case 'school':
+      return 'bg-[#315C4A] text-white border-[#26352E]'
+    case 'work':
+      return 'bg-[#5e6544] text-[#FBFAF6] border-[#2e2f22]'
+    case 'extra':
+      return 'bg-[#E8F0EA] text-[#315C4A] border-[#A8BDAF]'
+    default:
+      return 'bg-[#FBFAF6] text-[#26352E] border-[#315C4A]/50 border-l-4 border-l-[#315C4A]'
+  }
+}
+
+export const getDotColor = (item: TimelineItem): string => {
+  if (item.itemType === 'task' && item.rawTask?.status === 'completed') {
+    return 'bg-[#718078]'
+  }
+  const category = getItemCategory(item)
+  switch (category) {
+    case 'assignment_test': return 'bg-[#a85d48]'
+    case 'school': return 'bg-[#315C4A]'
+    case 'work': return 'bg-[#5e6544]'
+    case 'extra': return 'bg-[#A8BDAF]'
+    default: return 'bg-[#718078]'
+  }
+}
+
 export function CalendarPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('today')
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
@@ -724,6 +822,26 @@ export function CalendarPage() {
           </div>
         </header>
 
+        {/* Color Coding Legend */}
+        <div className="bg-white rounded-2xl border border-[#E8F0EA] p-3 flex flex-wrap gap-4 text-xs font-bold justify-center md:justify-start">
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded-md bg-[#315C4A] border border-[#26352E]" />
+            <span className="text-[#26352E]">School (Classes)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded-md bg-[#5e6544] border border-[#2e2f22]" />
+            <span className="text-[#26352E]">Work (Shifts)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded-md bg-[#E8F0EA] border border-[#A8BDAF]" />
+            <span className="text-[#315C4A]">Extra Activities & Wellness</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded-md bg-[#a85d48] border border-[#8c4837]" />
+            <span className="text-[#26352E]">Assignments & Tests</span>
+          </div>
+        </div>
+
         {/* ─── VIV OS INTERACTIVE DATA SETUPS / PENDING CONFIRMATIONS ──────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* 1. Structures Time pending */}
@@ -1003,15 +1121,7 @@ export function CalendarPage() {
                             setIsTaskModalOpen(true)
                           }
                         }}
-                        className={`absolute left-16 right-2 rounded-xl p-3 border shadow-xs cursor-pointer select-none transition-all hover:brightness-95 flex flex-col justify-between group overflow-hidden ${
-                          item.itemType === 'event'
-                            ? item.isFixed
-                              ? 'bg-[#315C4A] text-white border-[#26352E]'
-                              : 'bg-[#E8F0EA] text-[#315C4A] border-[#A8BDAF]'
-                            : item.rawTask?.status === 'completed'
-                              ? 'bg-[#F3F7F3] text-[#718078] border-[#E8F0EA] line-through'
-                              : 'bg-[#FBFAF6] text-[#26352E] border-[#315C4A]/50 border-l-4 border-l-[#315C4A]'
-                        }`}
+                        className={`absolute left-16 right-2 rounded-xl p-3 border shadow-xs cursor-pointer select-none transition-all hover:brightness-95 flex flex-col justify-between group overflow-hidden ${getItemStyles(item)}`}
                         style={{
                           top: `${top}px`,
                           height: `${height}px`
@@ -1222,7 +1332,7 @@ export function CalendarPage() {
                     <div className="space-y-1.5 pt-2 border-t border-[#E8F0EA]">
                       {dayItems.slice(0, 3).map(item => (
                         <div key={item.id} className="text-[10px] truncate text-[#26352E] font-medium flex items-center gap-1.5">
-                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${item.isFixed ? 'bg-[#315C4A]' : 'bg-[#A8BDAF]'}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${getDotColor(item)}`} />
                           <span className="truncate">{item.title}</span>
                         </div>
                       ))}
@@ -1272,11 +1382,9 @@ export function CalendarPage() {
 
                     <div className="space-y-1 overflow-hidden mt-1 flex-1">
                       {dayItems.slice(0, 2).map(item => (
-                        <div
+                         <div
                           key={item.id}
-                          className={`text-[9px] px-1 py-0.5 rounded truncate font-medium ${
-                            item.isFixed ? 'bg-[#315C4A] text-white' : 'bg-[#E8F0EA] text-[#315C4A]'
-                          }`}
+                          className={`text-[9px] px-1 py-0.5 rounded truncate font-medium ${getItemStyles(item)}`}
                         >
                           {item.title}
                         </div>
