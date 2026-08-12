@@ -692,17 +692,57 @@ export function CalendarPage() {
   const missedTasks = getMissedTasks()
   const conflicts = getConflicts(selectedDate)
 
-  // Calendar navigation
-  const handlePrevDay = () => {
+  // Global Time Navigation
+  const handlePrev = () => {
     const d = new Date(selectedDate)
-    d.setDate(d.getDate() - 1)
+    if (viewMode === 'month') {
+      d.setMonth(d.getMonth() - 1)
+    } else if (viewMode === 'week') {
+      d.setDate(d.getDate() - 7)
+    } else {
+      d.setDate(d.getDate() - 1)
+    }
     setSelectedDate(d)
   }
-  const handleNextDay = () => {
+
+  const handleNext = () => {
     const d = new Date(selectedDate)
-    d.setDate(d.getDate() + 1)
+    if (viewMode === 'month') {
+      d.setMonth(d.getMonth() + 1)
+    } else if (viewMode === 'week') {
+      d.setDate(d.getDate() + 7)
+    } else {
+      d.setDate(d.getDate() + 1)
+    }
     setSelectedDate(d)
   }
+
+  const getWeekRange = (date: Date) => {
+    const start = new Date(date)
+    start.setDate(date.getDate() - date.getDay() + 1) // Monday
+    const end = new Date(start)
+    end.setDate(start.getDate() + 4) // Friday (capacity work days)
+    return { start, end }
+  }
+
+  const getMonthDays = (date: Date): Date[] => {
+    const year = date.getFullYear()
+    const month = date.getMonth()
+    const firstDay = new Date(year, month, 1)
+    const startDayOfWeek = firstDay.getDay()
+    const startDate = new Date(firstDay)
+    startDate.setDate(firstDay.getDate() - startDayOfWeek) // align to Sunday start column
+
+    const days: Date[] = []
+    for (let i = 0; i < 42; i++) {
+      const d = new Date(startDate)
+      d.setDate(startDate.getDate() + i)
+      days.push(d)
+    }
+    return days
+  }
+
+  const { start: weekStart, end: weekEnd } = getWeekRange(selectedDate)
 
   // Get range bounds (7 AM to 10 PM)
   const hoursRange = Array.from({ length: 16 }, (_, i) => 7 + i) // 7 to 22
@@ -840,6 +880,30 @@ export function CalendarPage() {
             <span className="w-3.5 h-3.5 rounded-md bg-[#a85d48] border border-[#8c4837]" />
             <span className="text-[#26352E]">Assignments & Tests</span>
           </div>
+        </div>
+
+        {/* Global Time Navigation Switcher */}
+        <div className="bg-white rounded-2xl border border-[#E8F0EA] p-4 flex items-center justify-between shadow-xs">
+          <button onClick={handlePrev} className="p-2 hover:bg-[#F3F7F3] rounded-xl text-[#315C4A] transition-all">
+            <ChevronLeft size={20} />
+          </button>
+          <div className="text-center space-y-0.5">
+            <h2 className="text-lg font-black text-[#26352E]">
+              {viewMode === 'today' && selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+              {viewMode === 'week' && `Week of ${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
+              {viewMode === 'month' && selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+              {viewMode === 'agenda' && 'All Commitments'}
+            </h2>
+            <p className="text-[10px] font-bold text-[#718078] uppercase tracking-wider">
+              {viewMode === 'today' && "Today's Schedule"}
+              {viewMode === 'week' && 'Weekly Load Capacity'}
+              {viewMode === 'month' && 'Monthly Overview'}
+              {viewMode === 'agenda' && 'Upcoming Events Agenda'}
+            </p>
+          </div>
+          <button onClick={handleNext} className="p-2 hover:bg-[#F3F7F3] rounded-xl text-[#315C4A] transition-all">
+            <ChevronRight size={20} />
+          </button>
         </div>
 
         {/* ─── VIV OS INTERACTIVE DATA SETUPS / PENDING CONFIRMATIONS ──────────────── */}
@@ -1048,18 +1112,8 @@ export function CalendarPage() {
         {viewMode === 'today' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            {/* Left/Middle Columns: Date switcher + Vertical Timeline */}
+            {/* Left/Middle Columns: Vertical Timeline */}
             <div className="lg:col-span-2 space-y-4">
-              <div className="bg-white rounded-2xl border border-[#E8F0EA] p-4 flex items-center justify-between">
-                <button onClick={handlePrevDay} className="p-2 hover:bg-[#F3F7F3] rounded-xl"><ChevronLeft size={16} /></button>
-                <div className="text-center">
-                  <h3 className="font-black text-sm text-[#26352E]">
-                    {selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-                  </h3>
-                  <p className="text-[10px] font-bold text-[#718078] uppercase tracking-wider mt-0.5">Today's Schedule</p>
-                </div>
-                <button onClick={handleNextDay} className="p-2 hover:bg-[#F3F7F3] rounded-xl"><ChevronRight size={16} /></button>
-              </div>
 
               {/* Vertical Hour Timeline */}
               <div
@@ -1357,11 +1411,10 @@ export function CalendarPage() {
             </div>
 
             <div className="grid grid-cols-7 gap-2">
-              {Array.from({ length: 35 }).map((_, i) => {
-                const day = new Date()
-                day.setDate(day.getDate() - day.getDay() + i - 10) // Render a grid centering today
+              {getMonthDays(selectedDate).map((day, i) => {
                 const dayItems = getTimelineItems(day)
                 const isToday = isSameDay(day, new Date())
+                const isCurrentMonth = day.getMonth() === selectedDate.getMonth()
 
                 return (
                   <div
@@ -1370,13 +1423,21 @@ export function CalendarPage() {
                       setSelectedDate(day)
                       setViewMode('today')
                     }}
-                    className={`min-h-[90px] p-2 rounded-xl border flex flex-col justify-between transition-all cursor-pointer ${
+                    className={`min-h-[100px] p-2 rounded-xl border flex flex-col justify-between transition-all cursor-pointer ${
                       isToday
                         ? 'border-[#315C4A] bg-[#E8F0EA]/40'
-                        : 'border-[#F3F7F3] hover:border-[#A8BDAF] bg-white'
+                        : isCurrentMonth
+                          ? 'border-[#E8F0EA] hover:border-[#A8BDAF] bg-white'
+                          : 'border-[#F3F7F3] bg-[#FBFAF6]/60 opacity-50 hover:opacity-90'
                     }`}
                   >
-                    <span className={`text-xs font-black self-end ${isToday ? 'text-[#315C4A]' : 'text-[#718078]'}`}>
+                    <span className={`text-xs font-black self-end ${
+                      isToday
+                        ? 'text-[#315C4A]'
+                        : isCurrentMonth
+                          ? 'text-[#26352E]'
+                          : 'text-[#718078]/80'
+                    }`}>
                       {day.getDate()}
                     </span>
 
