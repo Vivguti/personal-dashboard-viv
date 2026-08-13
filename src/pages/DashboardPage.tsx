@@ -464,7 +464,7 @@ export function DashboardPage() {
             <div className="flex items-center justify-between border-b border-[#F3F7F3] pb-3">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[#718078]">Wellness</p>
-                <h3 className="text-sm font-black text-[#26352E] mt-0.5">Apple Watch</h3>
+                <h3 className="text-sm font-black text-[#26352E] mt-0.5">Apple Health</h3>
               </div>
               <div className="w-8 h-8 rounded-xl bg-[#E8F0EA] flex items-center justify-center">
                 <Dumbbell size={15} className="text-[#315C4A]" />

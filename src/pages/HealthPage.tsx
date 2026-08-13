@@ -52,7 +52,7 @@ export function HealthPage() {
   const [habits, setHabits]                       = useState<Habit[]>([])
   const [habitCompletions, setHabitCompletions]   = useState<HabitCompletion[]>([])
 
-  // Apple Watch connection states
+  // Apple Health connection states
   const [isSyncing, setIsSyncing] = useState(false)
   const [lastSyncTime, setLastSyncTime] = useState<string>('2 mins ago')
   const [syncSleep, setSyncSleep] = useState(true)
@@ -94,7 +94,7 @@ export function HealthPage() {
   const handleHabitToggle      = async (habitId: string, currentCompleted: boolean) => { await toggleHabitCompletion(habitId, !currentCompleted); loadHealthData() }
   const handleWorkoutToggle    = async (workout: Workout) => { await toggleWorkoutComplete(workout.id, !workout.completed); loadHealthData() }
 
-  // Trigger Apple Watch Sync
+  // Trigger Apple Health Sync
   const handleSyncWatch = () => {
     setIsSyncing(true)
     setTimeout(() => {
@@ -197,7 +197,7 @@ export function HealthPage() {
                 {/* Sleep stage breakdown */}
                 <div className="bg-white rounded-2xl border border-[#E8F0EA] p-5 shadow-xs space-y-4">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-sm font-black text-[#26352E]">Apple Watch Sleep Architecture</h3>
+                    <h3 className="text-sm font-black text-[#26352E]">Apple Health Sleep Architecture</h3>
                     <span className="text-[10px] font-bold bg-[#E8F0EA] text-[#315C4A] px-2.5 py-0.5 rounded-full">
                       ★ 84/100 Quality
                     </span>
@@ -238,7 +238,7 @@ export function HealthPage() {
                     <div className="bg-[#E8F0EA]/40 rounded-2xl p-4 flex flex-col justify-between border border-[#A8BDAF]">
                       <span className="text-[9px] font-bold text-[#718078] uppercase tracking-wide">Active Energy Burned</span>
                       <h4 className="text-2xl font-black text-[#315C4A] mt-1">420 kcal</h4>
-                      <p className="text-[10px] text-[#718078] mt-2">Syncing live from Apple Watch</p>
+                      <p className="text-[10px] text-[#718078] mt-2">Syncing via Apple Health</p>
                     </div>
                   </div>
                 </div>
@@ -258,7 +258,7 @@ export function HealthPage() {
                       <div className="flex items-center gap-1.5 mt-0.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
                         <span className="text-[10px] text-[#718078] font-bold uppercase tracking-wider">
-                          Watch Connected
+                          Health App Connected
                         </span>
                       </div>
                     </div>
@@ -297,14 +297,14 @@ export function HealthPage() {
                     className="w-full py-2.5 rounded-xl border border-[#A8BDAF] bg-[#E8F0EA] hover:bg-[#A8BDAF]/30 text-[#315C4A] text-xs font-bold flex items-center justify-center gap-2 transition-all"
                   >
                     <RefreshCw size={14} className={isSyncing ? 'animate-spin' : ''} />
-                    {isSyncing ? 'Syncing...' : 'Sync Apple Watch Now'}
+                    {isSyncing ? 'Syncing...' : 'Sync Apple Health Now'}
                   </button>
                 </div>
 
                 {/* Heart rate monitor card */}
                 <div className="bg-white rounded-2xl border border-[#E8F0EA] p-5 shadow-xs space-y-3.5">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-black text-[#26352E]">Apple Watch Heart Rate</h3>
+                    <h3 className="text-sm font-black text-[#26352E]">Apple Health Heart Rate</h3>
                     <Heart size={16} className="text-[#315C4A] animate-pulse" />
                   </div>
 
