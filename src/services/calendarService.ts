@@ -39,7 +39,6 @@ const VIV_CLASSES_SEED = [
   }
 ]
 
-let demoEventsMemory: CalendarEvent[] = []
 
 // Dynamic recurrence generator for Viv's Fall 2026 semester classes (Aug 24, 2026 to Dec 15, 2026)
 function generateVivClassEvents(): CalendarEvent[] {
