@@ -8,8 +8,8 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().min(1, 'Username or email required'),
+  password: z.string().min(1, 'Password required'),
 })
 
 const signUpSchema = z.object({
@@ -53,6 +53,12 @@ export function AuthPage() {
   const onLoginSubmit = async (data: LoginFormValues) => {
     try {
       setError(null)
+      // Custom bypass for Viv
+      if (data.email.toLowerCase() === 'viv' && data.password === 'viv') {
+        handleDemoAccess()
+        return
+      }
+
       const res = await signIn(data.email, data.password)
       if (res.error) {
         // Fallback to demo mode if backend is unconnected
@@ -114,8 +120,8 @@ export function AuthPage() {
         {isLogin ? (
           <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
             <Input
-              label="Email"
-              type="email"
+              label="Username or Email"
+              type="text"
               {...loginForm.register('email')}
               error={loginForm.formState.errors.email?.message}
               className="bg-white/5 border-white/10 text-white placeholder-gray-400"
