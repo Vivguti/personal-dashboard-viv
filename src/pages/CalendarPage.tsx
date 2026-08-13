@@ -11,8 +11,10 @@ import { Modal } from '@/components/ui/Modal'
 import {
   getCalendarEvents,
   createCalendarEvent,
-  deleteCalendarEvent
+  deleteCalendarEvent,
+  generateAIPlan
 } from '@/services/calendarService'
+import { useAppSync, triggerSync } from '@/lib/sync'
 import {
   getTasks,
   createTask,
@@ -27,7 +29,7 @@ import type { CalendarEvent, Task } from '@/types'
 // Sage                   : #A8BDAF
 // Light Sage             : #E8F0EA
 // Very Light Sage        : #F3F7F3
-// Warm Ivory             : #FBFAF6
+// Warm Ivory             : #FFFFFF
 // White                  : #FFFFFF
 // Dark Green-Charcoal    : #26352E
 // Muted Green-Gray       : #718078
@@ -122,15 +124,15 @@ export const getItemStyles = (item: TimelineItem): string => {
   const category = getItemCategory(item)
   switch (category) {
     case 'assignment_test':
-      return 'bg-[#a85d48] text-white border-[#8c4837]'
+      return 'bg-[#26352E] text-white border-[#26352E]'
     case 'school':
       return 'bg-[#315C4A] text-white border-[#26352E]'
     case 'work':
-      return 'bg-[#5e6544] text-[#FBFAF6] border-[#2e2f22]'
+      return 'bg-[#315C4A] text-[#FFFFFF] border-[#26352E]'
     case 'extra':
       return 'bg-[#E8F0EA] text-[#315C4A] border-[#A8BDAF]'
     default:
-      return 'bg-[#FBFAF6] text-[#26352E] border-[#315C4A]/50 border-l-4 border-l-[#315C4A]'
+      return 'bg-[#FFFFFF] text-[#26352E] border-[#315C4A]/50 border-l-4 border-l-[#315C4A]'
   }
 }
 
@@ -140,9 +142,9 @@ export const getDotColor = (item: TimelineItem): string => {
   }
   const category = getItemCategory(item)
   switch (category) {
-    case 'assignment_test': return 'bg-[#a85d48]'
+    case 'assignment_test': return 'bg-[#26352E]'
     case 'school': return 'bg-[#315C4A]'
-    case 'work': return 'bg-[#5e6544]'
+    case 'work': return 'bg-[#315C4A]'
     case 'extra': return 'bg-[#A8BDAF]'
     default: return 'bg-[#718078]'
   }
@@ -247,6 +249,8 @@ export function CalendarPage() {
   useEffect(() => {
     loadData()
   }, [loadData])
+
+  useAppSync(loadData)
 
   // Parse Date string logic
   const isSameDay = (date1: Date, date2: Date) => {
@@ -652,14 +656,14 @@ export function CalendarPage() {
   const handleDeleteEvent = async (id: string) => {
     if (confirm('Delete this event?')) {
       await deleteCalendarEvent(id)
-      loadData()
+      triggerSync()
     }
   }
 
   const handleDeleteTask = async (id: string) => {
     if (confirm('Delete this task?')) {
       await deleteTask(id)
-      loadData()
+      triggerSync()
     }
   }
 
@@ -748,7 +752,7 @@ export function CalendarPage() {
   const hoursRange = Array.from({ length: 16 }, (_, i) => 7 + i) // 7 to 22
 
   return (
-    <div className="min-h-screen bg-[#FBFAF6] text-[#26352E] flex flex-col">
+    <div className="min-h-screen bg-[#FFFFFF] text-[#26352E] flex flex-col">
 
       {/* ─── FOCUS MODE DISTRACTION-FREE OVERLAY ──────────────────────────────── */}
       {activeFocusTask && (
@@ -869,7 +873,7 @@ export function CalendarPage() {
             <span className="text-[#26352E]">School (Classes)</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3.5 h-3.5 rounded-md bg-[#5e6544] border border-[#2e2f22]" />
+            <span className="w-3.5 h-3.5 rounded-md bg-[#315C4A] border border-[#26352E]" />
             <span className="text-[#26352E]">Work (Shifts)</span>
           </div>
           <div className="flex items-center gap-2">
@@ -877,7 +881,7 @@ export function CalendarPage() {
             <span className="text-[#315C4A]">Extra Activities & Wellness</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3.5 h-3.5 rounded-md bg-[#a85d48] border border-[#8c4837]" />
+            <span className="w-3.5 h-3.5 rounded-md bg-[#26352E] border border-[#26352E]" />
             <span className="text-[#26352E]">Assignments & Tests</span>
           </div>
         </div>
@@ -969,25 +973,25 @@ export function CalendarPage() {
 
         {/* 3. Conflict Resolver banner */}
         {!isConflictDismissed && (
-          <div className="bg-[#a85d48]/10 border border-[#a85d48]/30 rounded-2xl p-4 space-y-3 text-[#a85d48] text-xs">
+          <div className="bg-[#26352E] border border-[#26352E] rounded-2xl p-4 space-y-3 text-white text-xs">
             <div className="flex items-center gap-2 font-bold text-sm">
-              <AlertTriangle size={16} />
+              <AlertTriangle size={16} className="text-[#A8BDAF]" />
               <span>WORK SCHEDULE CONFLICT DETECTED</span>
             </div>
-            <p className="leading-relaxed">
+            <p className="leading-relaxed opacity-90">
               Viv, your <strong>Tech Shop shift (10:00 AM – 5:00 PM)</strong> overlaps with <strong>ARCH Design III (8:51 AM – 11:20 AM)</strong> and your <strong>Second Job (12:00 PM – 3:00 PM)</strong>. How would you like to handle this?
             </p>
-            <div className="flex gap-2">
-              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-[#a85d48] text-white font-bold rounded-xl text-[10px] hover:bg-[#26352E]">
+            <div className="flex flex-wrap gap-2">
+              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-[#E8F0EA] text-[#26352E] font-bold rounded-xl text-[10px] hover:bg-white transition-all">
                 Resolve
               </button>
-              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-white text-[#a85d48] border border-[#a85d48]/30 font-bold rounded-xl text-[10px] hover:bg-[#a85d48]/10">
+              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-transparent text-white border border-white/30 font-bold rounded-xl text-[10px] hover:bg-white/10 transition-all">
                 Keep Both
               </button>
-              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-white text-[#a85d48] border border-[#a85d48]/30 font-bold rounded-xl text-[10px] hover:bg-[#a85d48]/10">
+              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-transparent text-white border border-white/30 font-bold rounded-xl text-[10px] hover:bg-white/10 transition-all">
                 Adjust Work Schedule
               </button>
-              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-white text-[#a85d48] border border-[#a85d48]/30 font-bold rounded-xl text-[10px] hover:bg-[#a85d48]/10">
+              <button onClick={handleResolveConflict} className="px-3 py-1.5 bg-transparent text-white border border-white/30 font-bold rounded-xl text-[10px] hover:bg-white/10 transition-all">
                 Review Later
               </button>
             </div>
@@ -1088,13 +1092,13 @@ export function CalendarPage() {
 
         {/* Missed Tasks / Conflict warnings */}
         {(missedTasks.length > 0 || conflicts.length > 0) && (
-          <div className="bg-[#a85d48]/10 border border-[#a85d48]/30 rounded-2xl p-4 space-y-2 text-[#a85d48] text-xs">
+          <div className="bg-[#26352E] border border-[#26352E] rounded-2xl p-4 space-y-2 text-white text-xs">
             {missedTasks.map(t => (
               <div key={t.id} className="flex justify-between items-center">
                 <span>⚠️ Missed Scheduled Task: <strong>{t.title}</strong></span>
                 <button
                   onClick={() => handleAutoReschedule(t)}
-                  className="px-2.5 py-1 bg-[#a85d48] text-white font-bold rounded-lg text-[10px] hover:bg-[#26352E]"
+                  className="px-2.5 py-1 bg-[#E8F0EA] text-[#26352E] font-bold rounded-lg text-[10px] hover:bg-white transition-all"
                 >
                   Reschedule Tomorrow
                 </button>
@@ -1131,9 +1135,9 @@ export function CalendarPage() {
                       top: `${((currentTime.getHours() - 7) * 60 + currentTime.getMinutes()) * 1.2}px`
                     }}
                   >
-                    <div className="w-2 h-2 rounded-full bg-[#a85d48] ml-3" />
-                    <div className="flex-1 h-[2px] bg-[#a85d48]" />
-                    <span className="text-[9px] font-bold text-[#a85d48] uppercase tracking-widest px-2.5 py-0.5 bg-[#FBFAF6] border border-[#a85d48] rounded-full mr-3 shadow-xs">
+                    <div className="w-2 h-2 rounded-full bg-[#315C4A] ml-3" />
+                    <div className="flex-1 h-[2px] bg-[#315C4A]" />
+                    <span className="text-[9px] font-bold text-[#315C4A] uppercase tracking-widest px-2.5 py-0.5 bg-white border border-[#315C4A] rounded-full mr-3 shadow-xs">
                       NOW · {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
@@ -1294,7 +1298,7 @@ export function CalendarPage() {
                       setIsOptimizerOpen(true)
                       handleGenerateOptimizedPlan()
                     }}
-                    className="py-2 rounded-xl bg-[#315C4A] hover:bg-[#26352E] text-white text-xs font-bold transition-all text-center"
+                    className="py-2 rounded-xl bg-[#315C4A] hover:bg-[#26352E] text-white text-xs font-bold transition-all text-center shadow-sm"
                   >
                     Plan My Day
                   </button>
@@ -1428,7 +1432,7 @@ export function CalendarPage() {
                         ? 'border-[#315C4A] bg-[#E8F0EA]/40'
                         : isCurrentMonth
                           ? 'border-[#E8F0EA] hover:border-[#A8BDAF] bg-white'
-                          : 'border-[#F3F7F3] bg-[#FBFAF6]/60 opacity-50 hover:opacity-90'
+                          : 'border-[#F3F7F3] bg-[#FFFFFF]/60 opacity-50 hover:opacity-90'
                     }`}
                   >
                     <span className={`text-xs font-black self-end ${

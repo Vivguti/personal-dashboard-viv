@@ -57,14 +57,14 @@ export function HydrationModal({ isOpen, onClose, onHydrationLogged }: Hydration
     <Modal isOpen={isOpen} onClose={onClose} title="Log Hydration">
       <div className="space-y-6">
         {error && (
-          <div className="p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm dark:bg-red-950/40 dark:border-red-800 dark:text-red-300">
+          <div className="p-3 bg-red-100 border border-red-300 text-red-700 rounded-xl text-sm">
             {error}
           </div>
         )}
 
         {/* Preset Quick Action Buttons */}
         <div>
-          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-semibold text-[#718078] uppercase tracking-wider mb-2">
             Quick Add Presets
           </label>
           <div className="grid grid-cols-4 gap-2">
@@ -74,7 +74,7 @@ export function HydrationModal({ isOpen, onClose, onHydrationLogged }: Hydration
                 type="button"
                 disabled={isSubmitting}
                 onClick={() => handleQuickLog(preset.amount)}
-                className="p-3 rounded-xl border border-cyan-200 dark:border-cyan-900/60 bg-cyan-50/60 dark:bg-cyan-950/30 text-cyan-800 dark:text-cyan-300 hover:bg-cyan-100 dark:hover:bg-cyan-950/60 transition-all font-bold text-sm flex flex-col items-center justify-center gap-1 active:scale-95 disabled:opacity-50"
+                className="p-3 rounded-xl border border-[#E8F0EA] bg-[#F3F7F3] text-[#315C4A] hover:bg-[#E8F0EA] hover:border-[#A8BDAF] transition-all font-bold text-sm flex flex-col items-center justify-center gap-1 active:scale-95 disabled:opacity-50"
               >
                 <Droplets size={18} />
                 <span>{preset.label}</span>
@@ -83,8 +83,8 @@ export function HydrationModal({ isOpen, onClose, onHydrationLogged }: Hydration
           </div>
         </div>
 
-        <div className="relative border-t border-gray-200 dark:border-gray-800 pt-4">
-          <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+        <div className="relative border-t border-[#E8F0EA] pt-4">
+          <label className="block text-xs font-semibold text-[#718078] uppercase tracking-wider mb-2">
             Custom Entry
           </label>
           <form onSubmit={handleCustomSubmit} className="space-y-4">
@@ -102,7 +102,7 @@ export function HydrationModal({ isOpen, onClose, onHydrationLogged }: Hydration
               <select
                 value={unit}
                 onChange={(e) => setUnit(e.target.value as 'oz' | 'ml')}
-                className="rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                className="rounded-xl border border-[#E8F0EA] bg-white px-3 py-2 text-sm font-semibold text-[#26352E] focus:ring-2 focus:ring-[#315C4A] focus:outline-none"
               >
                 <option value="oz">oz</option>
                 <option value="ml">ml</option>

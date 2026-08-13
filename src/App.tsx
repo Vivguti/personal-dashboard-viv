@@ -28,7 +28,7 @@ export function App() {
         <AuthProvider>
           <Suspense
             fallback={
-              <div className="min-h-screen bg-[#eef1eb] flex items-center justify-center">
+              <div className="min-h-screen bg-[#F3F7F3] flex items-center justify-center">
                 <LoadingSpinner size="lg" />
               </div>
             }

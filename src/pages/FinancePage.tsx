@@ -13,14 +13,14 @@ import { getFinancialOverview, type Account, type Income, type Expense, type Bud
 
 type TabId = 'overview' | 'income' | 'expenses' | 'budgets' | 'accounts'
 
-const TAB_ACTIVE   = 'bg-[#5e6544] text-white border-[#5e6544]'
-const TAB_INACTIVE = 'bg-white text-[#8c947d] hover:bg-[#dfe8db] border-[#c4cfbc]'
+const TAB_ACTIVE   = 'bg-[#315C4A] text-white border-[#315C4A]'
+const TAB_INACTIVE = 'bg-white text-[#718078] hover:bg-[#F3F7F3] border-[#E8F0EA]'
 
 const STAT_ICONS = [
-  { icon: Wallet,     label: 'Total Balance',    bg: 'bg-[#dfe8db] text-[#5e6544]' },
-  { icon: TrendingUp, label: 'Monthly Income',   bg: 'bg-[#b7c3a1]/30 text-[#5e6544]' },
-  { icon: TrendingDown,label:'Monthly Expenses', bg: 'bg-[#a85d48]/10 text-[#a85d48]' },
-  { icon: PiggyBank,  label: 'Savings Rate',     bg: 'bg-[#c4cfbc]/50 text-[#8c947d]' },
+  { icon: Wallet,     label: 'Total Balance',    bg: 'bg-[#F3F7F3] text-[#315C4A]' },
+  { icon: TrendingUp, label: 'Monthly Income',   bg: 'bg-[#A8BDAF]/30 text-[#315C4A]' },
+  { icon: TrendingDown,label:'Monthly Expenses', bg: 'bg-[#26352E]/10 text-[#26352E]' },
+  { icon: PiggyBank,  label: 'Savings Rate',     bg: 'bg-[#E8F0EA]/50 text-[#718078]' },
 ]
 
 export function FinancePage() {
@@ -79,7 +79,7 @@ export function FinancePage() {
   ] as const
 
   const emptyCard = (msg: string) => (
-    <Card className="p-8 text-center text-sm text-[#8c947d]">{msg}</Card>
+    <Card className="p-8 text-center text-sm text-[#718078]">{msg}</Card>
   )
 
   const statValues = [
@@ -92,10 +92,10 @@ export function FinancePage() {
   return (
     <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-[#c4cfbc]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-[#E8F0EA]">
         <div>
-          <h1 className="text-2xl font-black text-[#2e2f22] tracking-tight">Your Money</h1>
-          <p className="text-sm text-[#8c947d] mt-0.5">Accounts, projections, budgets & allocations</p>
+          <h1 className="text-2xl font-black text-[#26352E] tracking-tight">Your Money</h1>
+          <p className="text-sm text-[#718078] mt-0.5">Accounts, projections, budgets & allocations</p>
         </div>
         <div className="flex gap-2">
           {activeTab === 'income'   && <Button variant="secondary" onClick={() => setIsIncomeModalOpen(true)}  icon={<Plus size={16}/>}>Log Paycheck</Button>}
@@ -127,7 +127,7 @@ export function FinancePage() {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12 text-[#8c947d] text-sm">Loading financial records…</div>
+        <div className="text-center py-12 text-[#718078] text-sm">Loading financial records…</div>
       ) : (
         <>
           {/* OVERVIEW */}
@@ -138,9 +138,9 @@ export function FinancePage() {
                   <Card key={label} className="p-5">
                     <div className="flex items-center gap-3 mb-2">
                       <div className={`p-2 rounded-xl ${bg}`}><Icon size={18} /></div>
-                      <h3 className="font-semibold text-[10px] text-[#8c947d] uppercase tracking-wider">{label}</h3>
+                      <h3 className="font-semibold text-[10px] text-[#718078] uppercase tracking-wider">{label}</h3>
                     </div>
-                    <div className="text-xl font-black text-[#2e2f22]">{statValues[i]}</div>
+                    <div className="text-xl font-black text-[#26352E]">{statValues[i]}</div>
                   </Card>
                 ))}
               </div>
@@ -148,59 +148,58 @@ export function FinancePage() {
               {/* Viv's Employment & Income Projections */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card className="p-5 space-y-4">
-                  <div className="flex justify-between items-center pb-2 border-b border-[#dfe8db]">
-                    <h3 className="font-bold text-sm text-[#2e2f22] uppercase tracking-wider">Projected Work Income</h3>
-                    <span className="text-[10px] bg-[#dfe8db] text-[#5e6544] font-black px-2 py-0.5 rounded-full">PROJECTED</span>
+                  <div className="flex justify-between items-center pb-2 border-b border-[#F3F7F3]">
+                    <h3 className="font-bold text-sm text-[#26352E] uppercase tracking-wider">Projected Work Income</h3>
+                    <span className="text-[10px] bg-[#F3F7F3] text-[#315C4A] font-black px-2 py-0.5 rounded-full">PROJECTED</span>
                   </div>
 
                   <div className="space-y-3">
                     {jobsList.map(job => (
                       <div key={job.name} className="flex justify-between items-center text-xs">
                         <div>
-                          <span className="font-bold text-[#2e2f22]">{job.name}</span>
-                          <p className="text-[10px] text-[#8c947d]">${job.rate}/hour · {job.weeklyHours} hours/week</p>
+                          <span className="font-bold text-[#26352E]">{job.name}</span>
+                          <p className="text-[10px] text-[#718078]">${job.rate}/hour · {job.weeklyHours} hours/week</p>
                         </div>
                         <div className="text-right">
-                          <span className="font-bold text-[#2e2f22]">${job.projectedWeekly}/week</span>
+                          <span className="font-bold text-[#26352E]">${job.projectedWeekly}/week</span>
                         </div>
                       </div>
                     ))}
-                    <div className="pt-3 border-t border-dashed border-[#c4cfbc] space-y-1.5 text-xs">
-                      <div className="flex justify-between font-bold text-[#2e2f22]">
+                    <div className="pt-3 border-t border-dashed border-[#E8F0EA] space-y-1.5 text-xs">
+                      <div className="flex justify-between font-bold text-[#26352E]">
                         <span>Weekly Total (Gross):</span>
                         <span>${projectedWeeklyGross.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
                       </div>
-                      <div className="flex justify-between font-bold text-[#5e6544]">
+                      <div className="flex justify-between font-bold text-[#315C4A]">
                         <span>Monthly Average (Gross):</span>
                         <span>${projectedMonthlyGross.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-[10px] text-[#8c947d] leading-normal italic">
+                  <p className="text-[10px] text-[#718078] leading-normal italic">
                     * Note: Projections are calculated from scheduled shifts. They represent estimates and are not counted as actual received cash.
                   </p>
                 </Card>
 
                 {/* Viv's Fixed Rent Obligations */}
                 <Card className="p-5 space-y-4">
-                  <div className="flex justify-between items-center pb-2 border-b border-[#dfe8db]">
-                    <h3 className="font-bold text-sm text-[#2e2f22] uppercase tracking-wider">Fixed Rent Obligations</h3>
-                    <span className="text-[10px] bg-[#a85d48]/10 text-[#a85d48] font-black px-2 py-0.5 rounded-full border border-[#a85d48]/20">DUE 1ST</span>
+                  <div className="flex justify-between items-center pb-2 border-b border-[#F3F7F3]">
+                    <span className="text-[10px] bg-[#26352E]/10 text-[#26352E] font-black px-2 py-0.5 rounded-full border border-[#26352E]/20">DUE 1ST</span>
                   </div>
 
                   <div className="space-y-4">
                     <div className="flex justify-between items-center text-xs">
                       <div>
-                        <span className="font-bold text-[#2e2f22]">Monthly Rent Payment</span>
-                        <p className="text-[10px] text-[#8c947d]">Category: Housing · Due on 1st</p>
+                        <span className="font-bold text-[#26352E]">Monthly Rent Payment</span>
+                        <p className="text-[10px] text-[#718078]">Category: Housing · Due on 1st</p>
                       </div>
-                      <span className="font-bold text-[#2e2f22]">${projectedRentExpense.toFixed(2)}/month</span>
+                      <span className="font-bold text-[#26352E]">${projectedRentExpense.toFixed(2)}/month</span>
                     </div>
 
-                    <div className="pt-4 border-t border-dashed border-[#c4cfbc] text-xs">
-                      <div className="flex justify-between items-center bg-[#F3F7F3] p-2.5 rounded-xl border border-[#c4cfbc]">
-                        <span className="font-bold text-[#2e2f22]">Rent Status:</span>
-                        <span className="text-[10px] font-bold text-[#a85d48] uppercase bg-[#a85d48]/10 px-2 py-0.5 rounded-md">UNPAID</span>
+                    <div className="pt-4 border-t border-dashed border-[#E8F0EA] text-xs">
+                      <div className="flex justify-between items-center bg-[#F3F7F3] p-2.5 rounded-xl border border-[#E8F0EA]">
+                        <span className="font-bold text-[#26352E]">Rent Status:</span>
+                        <span className="text-[10px] font-bold text-[#26352E] uppercase bg-[#26352E]/10 px-2 py-0.5 rounded-md">UNPAID</span>
                       </div>
                     </div>
                   </div>
@@ -209,17 +208,17 @@ export function FinancePage() {
 
               {/* Accounts Summary */}
               <div className="space-y-3">
-                <h3 className="font-bold text-base text-[#2e2f22]">Bank Accounts</h3>
+                <h3 className="font-bold text-base text-[#26352E]">Bank Accounts</h3>
                 {accounts.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {accounts.map((acc) => (
                       <Card key={acc.id} className="p-4 flex items-center justify-between">
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8c947d]">{acc.account_type}</span>
-                          <h4 className="font-bold text-[#2e2f22]">{acc.name}</h4>
-                          {acc.institution_name && <p className="text-xs text-[#8c947d]">{acc.institution_name}</p>}
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#718078]">{acc.account_type}</span>
+                          <h4 className="font-bold text-[#26352E]">{acc.name}</h4>
+                          {acc.institution_name && <p className="text-xs text-[#718078]">{acc.institution_name}</p>}
                         </div>
-                        <div className="text-base font-black text-[#2e2f22]">
+                        <div className="text-base font-black text-[#26352E]">
                           ${(acc.current_balance ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </div>
                       </Card>
@@ -236,13 +235,13 @@ export function FinancePage() {
               {incomeLogs.length > 0 ? incomeLogs.map((inc) => (
                 <Card key={inc.id} className="p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-[#dfe8db] text-[#5e6544] rounded-xl"><DollarSign size={18} /></div>
+                    <div className="p-2.5 bg-[#F3F7F3] text-[#315C4A] rounded-xl"><DollarSign size={18} /></div>
                     <div>
-                      <h4 className="font-semibold text-[#2e2f22]">{inc.source}</h4>
-                      <p className="text-xs text-[#8c947d]">{inc.date} · {inc.category}</p>
+                      <h4 className="font-semibold text-[#26352E]">{inc.source}</h4>
+                      <p className="text-xs text-[#718078]">{inc.date} · {inc.category}</p>
                     </div>
                   </div>
-                  <div className="text-lg font-black text-[#5e6544]">+${inc.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                  <div className="text-lg font-black text-[#315C4A]">+${inc.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                 </Card>
               )) : emptyCard('No actual paycheck transactions logged yet.')}
             </div>
@@ -254,13 +253,13 @@ export function FinancePage() {
               {expenseLogs.length > 0 ? expenseLogs.map((exp) => (
                 <Card key={exp.id} className="p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-[#a85d48]/10 text-[#a85d48] rounded-xl"><CreditCard size={18} /></div>
+                    <div className="p-2.5 bg-[#26352E]/10 text-[#26352E] rounded-xl"><CreditCard size={18} /></div>
                     <div>
-                      <h4 className="font-semibold text-[#2e2f22]">{exp.merchant}</h4>
-                      <p className="text-xs text-[#8c947d]">{exp.date} · {exp.category} {exp.recurring ? '(Recurring)' : ''}</p>
+                      <h4 className="font-semibold text-[#26352E]">{exp.merchant}</h4>
+                      <p className="text-xs text-[#718078]">{exp.date} · {exp.category} {exp.recurring ? '(Recurring)' : ''}</p>
                     </div>
                   </div>
-                  <div className="text-lg font-black text-[#a85d48]">-${exp.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                  <div className="text-lg font-black text-[#26352E]">-${exp.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                 </Card>
               )) : emptyCard('No actual expenses logged yet.')}
             </div>
@@ -278,14 +277,14 @@ export function FinancePage() {
                     return (
                       <Card key={b.id} className="p-5">
                         <div className="flex justify-between items-center mb-2">
-                          <h4 className="font-bold text-[#2e2f22] capitalize">{b.category}</h4>
-                          <span className={`text-xs font-bold ${overBudget ? 'text-[#a85d48]' : 'text-[#8c947d]'}`}>
+                          <h4 className="font-bold text-[#26352E] capitalize">{b.category}</h4>
+                          <span className={`text-xs font-bold ${overBudget ? 'text-[#26352E]' : 'text-[#718078]'}`}>
                             ${spent.toFixed(2)} / ${b.monthly_amount.toFixed(2)}
                           </span>
                         </div>
                         <ProgressBar
                           value={percent}
-                          color={overBudget ? 'bg-[#a85d48]' : 'bg-[#5e6544]'}
+                          color={overBudget ? 'bg-[#26352E]' : 'bg-[#315C4A]'}
                         />
                       </Card>
                     )
@@ -301,11 +300,11 @@ export function FinancePage() {
               {accounts.length > 0 ? accounts.map((acc) => (
                 <Card key={acc.id} className="p-4 flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#8c947d]">{acc.account_type}</span>
-                    <h4 className="font-bold text-[#2e2f22]">{acc.name}</h4>
-                    {acc.institution_name && <p className="text-xs text-[#8c947d]">{acc.institution_name}</p>}
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#718078]">{acc.account_type}</span>
+                    <h4 className="font-bold text-[#26352E]">{acc.name}</h4>
+                    {acc.institution_name && <p className="text-xs text-[#718078]">{acc.institution_name}</p>}
                   </div>
-                  <div className="text-lg font-black text-[#2e2f22]">
+                  <div className="text-lg font-black text-[#26352E]">
                     ${(acc.current_balance ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </div>
                 </Card>

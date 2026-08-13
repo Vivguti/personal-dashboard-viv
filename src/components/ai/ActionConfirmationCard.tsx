@@ -3,6 +3,7 @@ import { Sparkles, Check, X, Clock } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { applyProposedSchedule, type AIActionProposal } from '@/services/aiAssistantService'
+import { triggerSync } from '@/lib/sync'
 
 export interface ActionConfirmationCardProps {
   proposal: AIActionProposal
@@ -25,51 +26,52 @@ export function ActionConfirmationCard({
 
     if (success) {
       setApplied(true)
+      triggerSync()
       if (onApplied) onApplied()
     }
   }
 
   if (applied) {
     return (
-      <Card className="p-4 bg-[#d6c7ad] border border-[#b7c3a1] text-[#2e2f22] text-xs font-bold flex items-center gap-2">
+      <Card className="p-4 bg-[#E8F0EA] border border-[#A8BDAF] text-[#26352E] text-xs font-bold flex items-center gap-2">
         <Check size={16} /> Schedule optimization plan applied successfully!
       </Card>
     )
   }
 
   return (
-    <Card className="p-5 border-2 border-[#d6c7ad] bg-[#f5e8d0] dark:bg-[#23241a] space-y-4">
+    <Card className="p-5 border-2 border-[#E8F0EA] bg-[#f5e8d0] dark:bg-[#23241a] space-y-4">
       <div className="flex items-start gap-3">
-        <div className="p-2 bg-[#d6c7ad] text-[#2e2f22] border border-[#b7c3a1] rounded-xl">
+        <div className="p-2 bg-[#E8F0EA] text-[#26352E] border border-[#A8BDAF] rounded-xl">
           <Sparkles size={20} />
         </div>
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8c947d]">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#718078]">
               AI Action Proposal (Requires Confirmation)
             </span>
           </div>
-          <h4 className="font-bold text-sm text-[#2e2f22] dark:text-[#faf8f3] mt-0.5">{proposal.title}</h4>
-          <p className="text-xs text-[#8c947d] mt-1">{proposal.description}</p>
+          <h4 className="font-bold text-sm text-[#26352E] dark:text-[#faf8f3] mt-0.5">{proposal.title}</h4>
+          <p className="text-xs text-[#718078] mt-1">{proposal.description}</p>
         </div>
       </div>
 
       {/* Proposed Time Blocks */}
       {proposal.blocks.length > 0 && (
         <div className="space-y-2 pt-1">
-          <span className="text-[11px] font-bold text-[#8c947d] uppercase tracking-wider">
+          <span className="text-[11px] font-bold text-[#718078] uppercase tracking-wider">
             Proposed Schedule Adjustments:
           </span>
           <div className="space-y-1.5">
             {proposal.blocks.map((block) => (
               <div
                 key={block.taskId}
-                className="p-2.5 rounded-xl bg-white dark:bg-[#2e2f22] border border-[#d6c7ad] flex items-center justify-between text-xs"
+                className="p-2.5 rounded-xl bg-white dark:bg-[#26352E] border border-[#E8F0EA] flex items-center justify-between text-xs"
               >
-                <span className="font-bold text-[#2e2f22] dark:text-[#faf8f3] truncate flex-1 pr-2">
+                <span className="font-bold text-[#26352E] dark:text-[#faf8f3] truncate flex-1 pr-2">
                   {block.taskTitle}
                 </span>
-                <span className="text-[#2e2f22] font-bold flex items-center gap-1">
+                <span className="text-[#26352E] font-bold flex items-center gap-1">
                   <Clock size={12} />
                   {new Date(block.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -{' '}
                   {new Date(block.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -81,7 +83,7 @@ export function ActionConfirmationCard({
       )}
 
       {/* Action Confirmation Buttons */}
-      <div className="flex justify-end gap-2 pt-2 border-t border-[#d6c7ad]">
+      <div className="flex justify-end gap-2 pt-2 border-t border-[#E8F0EA]">
         <Button variant="ghost" size="sm" onClick={onDismissed} icon={<X size={14} />}>
           Dismiss
         </Button>

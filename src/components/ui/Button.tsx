@@ -26,14 +26,14 @@ export function Button({
   const variantClasses = {
     // Primary: light sage chip — readable on white cards
     primary:
-      'bg-[#dfe8db] text-[#2e2f22] hover:bg-[#c4cfbc] focus:ring-[#8c947d] shadow-xs border border-[#c4cfbc]',
+      'bg-[#F3F7F3] text-[#26352E] hover:bg-[#E8F0EA] focus:ring-[#718078] shadow-xs border border-[#E8F0EA]',
     // Secondary: dark bark — high contrast CTA
     secondary:
-      'bg-[#5e6544] text-white hover:bg-[#2e2f22] focus:ring-[#5e6544] border border-[#5e6544]',
+      'bg-[#315C4A] text-white hover:bg-[#26352E] focus:ring-[#315C4A] border border-[#315C4A]',
     // Ghost: transparent sage text
     ghost:
-      'bg-transparent text-[#5e6544] hover:bg-[#dfe8db] focus:ring-[#c4cfbc]',
-    danger: 'bg-[#a85d48] text-white hover:bg-[#8c4735] focus:ring-[#a85d48]',
+      'bg-transparent text-[#315C4A] hover:bg-[#F3F7F3] focus:ring-[#E8F0EA]',
+    danger: 'bg-[#26352E] text-white hover:bg-[#1a2520] focus:ring-[#26352E] border border-[#26352E]',
   }
 
   const sizeClasses = {

@@ -80,25 +80,25 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#eef1eb] p-4">
-      <div className="w-full max-w-md bg-white dark:bg-[#23241a] rounded-2xl p-8 shadow-xl border border-[#d6c7ad] dark:border-[#5e6544]/40">
+    <div className="min-h-screen flex items-center justify-center bg-[#F3F7F3] p-4">
+      <div className="w-full max-w-md bg-white dark:bg-[#23241a] rounded-2xl p-8 shadow-xl border border-[#E8F0EA] dark:border-[#315C4A]/40">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-[#5e6544] text-[#faf8f3] font-black text-lg rounded-xl mb-3 shadow-xs">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-[#315C4A] text-[#faf8f3] font-black text-lg rounded-xl mb-3 shadow-xs">
             OS
           </div>
-          <h1 className="text-3xl font-black text-[#2e2f22] dark:text-[#faf8f3] mb-1">Personal OS</h1>
-          <p className="text-[#8c947d] text-sm">Your life, priorities & wellness organized.</p>
+          <h1 className="text-3xl font-black text-[#26352E] dark:text-[#faf8f3] mb-1">Personal OS</h1>
+          <p className="text-[#718078] text-sm">Your life, priorities & wellness organized.</p>
         </div>
 
-        <div className="flex mb-6 bg-[#dfe8db] rounded-xl p-1 border border-[#c4cfbc]">
+        <div className="flex mb-6 bg-[#F3F7F3] rounded-xl p-1 border border-[#E8F0EA]">
           <button
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${isLogin ? 'bg-[#5e6544] text-[#faf8f3]' : 'text-[#8c947d] hover:text-[#2e2f22]'}`}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${isLogin ? 'bg-[#315C4A] text-[#faf8f3]' : 'text-[#718078] hover:text-[#26352E]'}`}
             onClick={() => setIsLogin(true)}
           >
             Login
           </button>
           <button
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${!isLogin ? 'bg-[#5e6544] text-[#faf8f3]' : 'text-[#8c947d] hover:text-[#2e2f22]'}`}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${!isLogin ? 'bg-[#315C4A] text-[#faf8f3]' : 'text-[#718078] hover:text-[#26352E]'}`}
             onClick={() => setIsLogin(false)}
           >
             Sign Up
@@ -177,11 +177,11 @@ export function AuthPage() {
           </form>
         )}
 
-        <div className="mt-6 pt-6 border-t border-[#d6c7ad] dark:border-[#5e6544]/40 text-center">
+        <div className="mt-6 pt-6 border-t border-[#E8F0EA] dark:border-[#315C4A]/40 text-center">
           <button
             onClick={handleDemoAccess}
             type="button"
-            className="w-full py-3 px-4 rounded-xl bg-[#5e6544] hover:bg-[#2e2f22] text-[#faf8f3] font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 px-4 rounded-xl bg-[#315C4A] hover:bg-[#26352E] text-[#faf8f3] font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>⚡</span> Explore App in Demo Mode
           </button>

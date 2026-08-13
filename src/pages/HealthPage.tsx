@@ -27,7 +27,7 @@ import type { Meal, Workout, Supplement } from '@/types'
 // Sage                   : #A8BDAF
 // Light Sage             : #E8F0EA
 // Very Light Sage        : #F3F7F3
-// Warm Ivory             : #FBFAF6
+// Warm Ivory             : #FFFFFF
 // White                  : #FFFFFF
 // Dark Green-Charcoal    : #26352E
 // Muted Green-Gray       : #718078
@@ -305,7 +305,7 @@ export function HealthPage() {
                 <div className="bg-white rounded-2xl border border-[#E8F0EA] p-5 shadow-xs space-y-3.5">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-black text-[#26352E]">Apple Watch Heart Rate</h3>
-                    <Heart size={16} className="text-[#a85d48] animate-pulse" />
+                    <Heart size={16} className="text-[#315C4A] animate-pulse" />
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-center">
@@ -497,7 +497,7 @@ export function HealthPage() {
                           className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                             isTakenToday
                               ? 'bg-[#315C4A] text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-[#dfe8db]'
+                              : 'bg-gray-100 text-gray-700 hover:bg-[#F3F7F3]'
                           }`}
                         >
                           {isTakenToday ? <Check size={14} /> : null}

@@ -46,7 +46,7 @@ export function SleepModal({ isOpen, onClose, onSleepLogged }: SleepModalProps) 
     <Modal isOpen={isOpen} onClose={onClose} title="Log Sleep & Recovery">
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm dark:bg-red-950/40 dark:border-red-800 dark:text-red-300">
+          <div className="p-3 bg-red-100 border border-red-300 text-red-700 rounded-xl text-sm">
             {error}
           </div>
         )}
@@ -70,7 +70,7 @@ export function SleepModal({ isOpen, onClose, onSleepLogged }: SleepModalProps) 
 
         {/* Quality Score 1-5 Stars */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-sm font-medium text-[#26352E] mb-2">
             Sleep Quality Rating ({quality} / 5 Stars)
           </label>
           <div className="flex gap-2">
@@ -81,25 +81,25 @@ export function SleepModal({ isOpen, onClose, onSleepLogged }: SleepModalProps) 
                 onClick={() => setQuality(star)}
                 className={`p-3 rounded-xl border flex-1 flex items-center justify-center transition-all ${
                   quality >= star
-                    ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-300 dark:border-indigo-800 text-indigo-600 dark:text-indigo-300'
-                    : 'border-gray-200 dark:border-gray-800 text-gray-400'
+                    ? 'bg-[#E8F0EA] border-[#A8BDAF] text-[#315C4A]'
+                    : 'border-[#E8F0EA] text-[#718078]'
                 }`}
               >
-                <Star size={20} className={quality >= star ? 'fill-indigo-600 dark:fill-indigo-400' : ''} />
+                <Star size={20} className={quality >= star ? 'fill-[#315C4A]' : ''} />
               </button>
             ))}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-[#26352E] mb-1">
             Recovery Notes
           </label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+            className="w-full rounded-xl border border-[#E8F0EA] bg-white px-3 py-2 text-sm text-[#26352E] focus:ring-2 focus:ring-[#315C4A] focus:outline-none"
             placeholder="Felt rested, night awakenings, dreams..."
           />
         </div>

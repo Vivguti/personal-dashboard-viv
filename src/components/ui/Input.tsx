@@ -18,7 +18,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     
     const borderClasses = error
       ? 'border-red-300 text-red-900 focus:border-red-500 focus:ring-red-500 dark:border-red-700 dark:text-red-100 dark:focus:border-red-500 dark:focus:ring-red-500'
-      : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:focus:border-indigo-500 dark:focus:ring-indigo-500';
+      : 'border-[#E8F0EA] focus:border-[#315C4A] focus:ring-[#315C4A]';
 
     const paddingClasses = icon ? 'pl-10 pr-3 py-2' : 'px-3 py-2';
 

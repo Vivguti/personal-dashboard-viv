@@ -14,7 +14,7 @@ export function AppShell() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#eef1eb] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F3F7F3] flex flex-col font-sans">
       <Header />
       <div className="flex flex-1 relative">
         <Sidebar />

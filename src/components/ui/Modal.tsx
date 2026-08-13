@@ -34,22 +34,22 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-      <div className="fixed inset-0 bg-[#2e2f22]/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <div className="fixed inset-0 bg-[#26352E]/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       <div
         className={`relative bg-white w-full sm:w-auto ${sizeClasses[size]}
-          rounded-t-2xl sm:rounded-2xl shadow-xl border border-[#c4cfbc]
+          rounded-t-2xl sm:rounded-2xl shadow-xl border border-[#E8F0EA]
           flex flex-col max-h-[90vh]`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? 'modal-title' : undefined}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#dfe8db]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#F3F7F3]">
           {title ? (
-            <h2 id="modal-title" className="text-lg font-black text-[#2e2f22]">{title}</h2>
+            <h2 id="modal-title" className="text-lg font-black text-[#26352E]">{title}</h2>
           ) : <div />}
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-[#8c947d] hover:bg-[#dfe8db] transition-colors"
+            className="w-8 h-8 rounded-xl flex items-center justify-center text-[#718078] hover:bg-[#F3F7F3] transition-colors"
             aria-label="Close modal"
           >
             <X className="w-4 h-4" />

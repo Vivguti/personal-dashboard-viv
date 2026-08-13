@@ -14,20 +14,21 @@ export function Badge({
   className = '',
 }: BadgeProps) {
   const variantClasses = {
-    default: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-    success: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-    danger: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-    info: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+    // Strictly greens and white:
+    default: 'bg-[#F3F7F3] text-[#718078] border border-[#E8F0EA]',
+    success: 'bg-[#E8F0EA] text-[#315C4A] border border-[#A8BDAF]',
+    warning: 'bg-[#F3F7F3] text-[#315C4A] border border-[#E8F0EA]',
+    danger: 'bg-[#26352E] text-white border border-[#26352E]',
+    info: 'bg-[#E8F0EA] text-[#315C4A] border border-[#A8BDAF]',
   };
 
   const sizeClasses = {
-    sm: 'px-2 py-0.5 text-xs',
-    md: 'px-2.5 py-0.5 text-sm',
+    sm: 'px-2 py-0.5 text-[10px] font-bold rounded-md',
+    md: 'px-2.5 py-0.5 text-xs font-bold rounded-lg',
   };
 
   return (
-    <span className={`inline-flex items-center font-medium rounded-full ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}>
+    <span className={`inline-flex items-center font-bold tracking-tight ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}>
       {children}
     </span>
   );

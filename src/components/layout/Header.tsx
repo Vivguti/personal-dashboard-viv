@@ -14,13 +14,13 @@ export function Header() {
 
   return (
     <>
-      {/* Top Bar Background: Soft Sage Green (#8C947D) */}
-      <header className="sticky top-0 z-40 w-full bg-[#8c947d] text-white border-b border-[#5e6544]/30 h-14 md:h-16 shadow-xs">
+      {/* Header: Deep Botanical Green — matches sidebar and Health-page palette */}
+      <header className="sticky top-0 z-40 w-full bg-[#315C4A] text-white border-b border-[#26352E]/40 h-14 md:h-16 shadow-sm">
         <div className="flex items-center justify-between h-full px-4 md:px-6">
           <div className="flex items-center gap-2.5">
-            {/* Logo Mark: Pure White Background (#FFFFFF) with Soft Sage Text (#8C947D) */}
-            <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center shadow-xs">
-              <span className="text-[#8c947d] font-black text-xs tracking-wider">OS</span>
+            {/* Logo mark */}
+            <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center shadow-sm">
+              <span className="text-[#315C4A] font-black text-xs tracking-wider">OS</span>
             </div>
             <span className="hidden md:block text-base font-black text-white tracking-tight">
               PERSONAL OS
@@ -35,9 +35,9 @@ export function Header() {
               variant="primary"
               size="sm"
               onClick={() => setIsAIDrawerOpen(true)}
-              className="bg-[#dfe8db] hover:bg-[#c4cfbc] text-[#2e2f22] font-bold text-xs flex items-center gap-1.5 rounded-xl border border-[#c4cfbc] shadow-xs"
+              className="bg-white/15 hover:bg-white/25 text-white font-bold text-xs flex items-center gap-1.5 rounded-xl border border-white/25 shadow-sm backdrop-blur-sm"
             >
-              <Sparkles size={14} className="text-[#8c947d]" />
+              <Sparkles size={14} className="text-[#A8BDAF]" />
               <span className="hidden sm:inline">AI Assistant</span>
             </Button>
 
@@ -45,7 +45,7 @@ export function Header() {
               variant="ghost"
               size="sm"
               onClick={toggleTheme}
-              className="w-9 h-9 p-0 rounded-full text-white hover:bg-[#5e6544]/40"
+              className="w-9 h-9 p-0 rounded-full text-white hover:bg-white/15"
               aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             >
               {theme === 'light' ? (
@@ -55,7 +55,7 @@ export function Header() {
               )}
             </Button>
 
-            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-white text-[#8c947d] font-black text-xs shadow-xs">
+            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#315C4A] font-black text-xs shadow-sm">
               {userInitial}
             </div>
           </div>

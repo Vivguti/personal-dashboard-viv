@@ -12,12 +12,15 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
       manifest: {
-        name: 'Personal OS',
-        short_name: 'PersonalOS',
+        name: 'Viv',
+        short_name: 'Viv',
         description: 'Your personal life operating system',
-        theme_color: '#0f172a',
-        background_color: '#0f172a',
+        theme_color: '#315C4A',
+        background_color: '#F3F7F3',
         display: 'standalone',
         orientation: 'portrait-primary',
         start_url: '/',
@@ -41,21 +44,8 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
+      injectManifest: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'supabase-api-cache',
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 5, // 5 minutes
-              },
-            },
-          },
-        ],
       },
     }),
   ],

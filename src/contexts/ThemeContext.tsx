@@ -32,7 +32,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     root.classList.remove('dark')
     const meta = document.querySelector('meta[name="theme-color"]')
     if (meta) {
-      meta.setAttribute('content', '#8c947d')
+      meta.setAttribute('content', '#718078')
     }
     localStorage.setItem(THEME_STORAGE_KEY, 'light')
   }, [theme])

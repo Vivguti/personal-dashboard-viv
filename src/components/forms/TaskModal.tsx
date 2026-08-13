@@ -148,7 +148,7 @@ export function TaskModal({ isOpen, onClose, taskToEdit, onTaskSaved }: TaskModa
     <Modal isOpen={isOpen} onClose={onClose} title={taskToEdit ? 'Edit Task' : 'New Task'}>
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3 bg-[#a85d48]/10 border border-[#a85d48]/30 text-[#a85d48] rounded-lg text-sm">
+          <div className="p-3 bg-[#a85d48]/10 border border-[#a85d48]/30 text-[#a85d48] rounded-xl text-sm">
             {error}
           </div>
         )}
@@ -169,7 +169,7 @@ export function TaskModal({ isOpen, onClose, taskToEdit, onTaskSaved }: TaskModa
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
-            className="w-full rounded-xl border border-[#c4cfbc] bg-[#FBFAF6] px-3 py-2 text-sm text-[#2e2f22] focus:ring-1 focus:ring-[#315C4A] focus:outline-none placeholder-[#8c947d]/60"
+            className="w-full rounded-xl border border-[#E8F0EA] bg-[#FFFFFF] px-3 py-2 text-sm text-[#26352E] focus:ring-1 focus:ring-[#315C4A] focus:outline-none placeholder-[#718078]/60"
             placeholder="Additional notes..."
           />
         </div>
@@ -182,7 +182,7 @@ export function TaskModal({ isOpen, onClose, taskToEdit, onTaskSaved }: TaskModa
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as Priority)}
-              className="w-full rounded-xl border border-[#c4cfbc] bg-white px-3 py-2 text-sm text-[#2e2f22] focus:ring-1 focus:ring-[#315C4A] focus:outline-none"
+              className="w-full rounded-xl border border-[#E8F0EA] bg-white px-3 py-2 text-sm text-[#26352E] focus:ring-1 focus:ring-[#315C4A] focus:outline-none"
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -198,7 +198,7 @@ export function TaskModal({ isOpen, onClose, taskToEdit, onTaskSaved }: TaskModa
             <select
               value={energyRequired}
               onChange={(e) => setEnergyRequired(e.target.value as EnergyLevel)}
-              className="w-full rounded-xl border border-[#c4cfbc] bg-white px-3 py-2 text-sm text-[#2e2f22] focus:ring-1 focus:ring-[#315C4A] focus:outline-none"
+              className="w-full rounded-xl border border-[#E8F0EA] bg-white px-3 py-2 text-sm text-[#26352E] focus:ring-1 focus:ring-[#315C4A] focus:outline-none"
             >
               <option value="low">Low Energy</option>
               <option value="medium">Medium Energy</option>
@@ -219,7 +219,7 @@ export function TaskModal({ isOpen, onClose, taskToEdit, onTaskSaved }: TaskModa
                   type="number"
                   value={estHours}
                   onChange={(e) => setEstHours(Math.max(0, Number(e.target.value)))}
-                  className="w-full rounded-xl border border-[#c4cfbc] bg-white px-3 py-1.5 text-xs text-[#2e2f22]"
+                  className="w-full rounded-xl border border-[#E8F0EA] bg-white px-3 py-1.5 text-xs text-[#26352E]"
                   placeholder="Hrs"
                   min={0}
                 />
@@ -230,7 +230,7 @@ export function TaskModal({ isOpen, onClose, taskToEdit, onTaskSaved }: TaskModa
                   type="number"
                   value={estMinutes}
                   onChange={(e) => setEstMinutes(Math.max(0, Math.min(59, Number(e.target.value))))}
-                  className="w-full rounded-xl border border-[#c4cfbc] bg-white px-3 py-1.5 text-xs text-[#2e2f22]"
+                  className="w-full rounded-xl border border-[#E8F0EA] bg-white px-3 py-1.5 text-xs text-[#26352E]"
                   placeholder="Min"
                   min={0}
                   max={59}
@@ -250,7 +250,7 @@ export function TaskModal({ isOpen, onClose, taskToEdit, onTaskSaved }: TaskModa
                   type="number"
                   value={actHours}
                   onChange={(e) => setActHours(Math.max(0, Number(e.target.value)))}
-                  className="w-full rounded-xl border border-[#c4cfbc] bg-white px-3 py-1.5 text-xs text-[#2e2f22]"
+                  className="w-full rounded-xl border border-[#E8F0EA] bg-white px-3 py-1.5 text-xs text-[#26352E]"
                   placeholder="Hrs"
                   min={0}
                 />
@@ -261,7 +261,7 @@ export function TaskModal({ isOpen, onClose, taskToEdit, onTaskSaved }: TaskModa
                   type="number"
                   value={actMinutes}
                   onChange={(e) => setActMinutes(Math.max(0, Math.min(59, Number(e.target.value))))}
-                  className="w-full rounded-xl border border-[#c4cfbc] bg-white px-3 py-1.5 text-xs text-[#2e2f22]"
+                  className="w-full rounded-xl border border-[#E8F0EA] bg-white px-3 py-1.5 text-xs text-[#26352E]"
                   placeholder="Min"
                   min={0}
                   max={59}

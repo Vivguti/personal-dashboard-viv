@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-// Green palette: White cards, #c4cfbc borders, #2e2f22 headings, #8c947d labels
+// Green palette: White cards, #E8F0EA borders, #26352E headings, #718078 labels
 export interface CardProps {
   children: ReactNode
   title?: ReactNode
@@ -29,14 +29,14 @@ export function Card({
   const hasHeader = title || subtitle || icon || action
 
   return (
-    <div className={`bg-white rounded-2xl subtle-shadow border border-[#c4cfbc] overflow-hidden ${hoverClasses} ${className}`}>
+    <div className={`bg-white rounded-2xl subtle-shadow border border-[#E8F0EA] overflow-hidden ${hoverClasses} ${className}`}>
       {hasHeader && (
-        <div className="flex items-start justify-between px-5 pt-5 pb-3 border-b border-[#dfe8db]">
+        <div className="flex items-start justify-between px-5 pt-5 pb-3 border-b border-[#F3F7F3]">
           <div className="flex items-center gap-3">
-            {icon && <div className="text-[#8c947d] flex-shrink-0">{icon}</div>}
+            {icon && <div className="text-[#718078] flex-shrink-0">{icon}</div>}
             <div>
-              {title && <h3 className="font-bold text-[#2e2f22] text-base leading-tight">{title}</h3>}
-              {subtitle && <p className="text-xs text-[#8c947d] mt-0.5">{subtitle}</p>}
+              {title && <h3 className="font-bold text-[#26352E] text-base leading-tight">{title}</h3>}
+              {subtitle && <p className="text-xs text-[#718078] mt-0.5">{subtitle}</p>}
             </div>
           </div>
           {action && <div className="ml-4 flex-shrink-0">{action}</div>}

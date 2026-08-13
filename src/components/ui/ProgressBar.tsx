@@ -1,4 +1,4 @@
-// Green palette progress bar: #c4cfbc track, #5e6544 fill
+// Green palette progress bar: #E8F0EA track, #315C4A fill
 export interface ProgressBarProps {
   value: number
   max?: number
@@ -12,7 +12,7 @@ export interface ProgressBarProps {
 export function ProgressBar({
   value,
   max = 100,
-  color = 'bg-[#5e6544]',
+  color = 'bg-[#315C4A]',
   size = 'md',
   showLabel = false,
   label,
@@ -26,11 +26,11 @@ export function ProgressBar({
     <div className={`w-full ${className}`}>
       {(showLabel || label) && (
         <div className="flex justify-between items-center mb-1">
-          {label && <span className="text-xs font-bold text-[#8c947d]">{label}</span>}
-          {showLabel && <span className="text-xs font-bold text-[#8c947d]">{Math.round(clampedValue)}%</span>}
+          {label && <span className="text-xs font-bold text-[#718078]">{label}</span>}
+          {showLabel && <span className="text-xs font-bold text-[#718078]">{Math.round(clampedValue)}%</span>}
         </div>
       )}
-      <div className={`w-full bg-[#c4cfbc] rounded-full overflow-hidden ${sizeClasses[size]}`}>
+      <div className={`w-full bg-[#E8F0EA] rounded-full overflow-hidden ${sizeClasses[size]}`}>
         <div
           className={`${color} h-full rounded-full transition-all duration-500 ease-out`}
           style={{ width: `${clampedValue}%` }}

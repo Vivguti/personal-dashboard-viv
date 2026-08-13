@@ -1,39 +1,38 @@
 /* ============================================
    Personal OS — Full Green Palette
-   Canvas        : #eef1eb  very light sage
-   Chip fill     : #dfe8db  sage-green tile
-   Borders       : #c4cfbc  sage-green border
-   Soft accent   : #b7c3a1  olive
-   Sage / logo   : #8c947d  header bar / icons / labels
-   Bark          : #5e6544  dark green CTAs, graph fills
-   Olivewood     : #2e2f22  headings, primary text
+   Canvas        : #F3F7F3  very light sage
+   Chip fill     : #F3F7F3  sage-green tile
+   Borders       : #E8F0EA  sage-green border
+   Soft accent   : #A8BDAF  sage
+   Sage / logo   : #718078  icons / labels
+   Bark          : #315C4A  dark green CTAs, fills
+   Olivewood     : #26352E  headings, primary text
    Cards         : #ffffff
    ============================================ */
 
 @import "tailwindcss";
 
 @theme {
-  --color-canvas:     #eef1eb;
-  --color-chip:       #dfe8db;
-  --color-border:     #c4cfbc;
-  --color-olive:      #b7c3a1;
-  --color-sage:       #8c947d;
-  --color-bark:       #5e6544;
-  --color-olivewood:  #2e2f22;
+  --color-canvas:     #F3F7F3;
+  --color-chip:       #F3F7F3;
+  --color-border:     #E8F0EA;
+  --color-olive:      #A8BDAF;
+  --color-sage:       #718078;
+  --color-bark:       #315C4A;
+  --color-olivewood:  #26352E;
 
-  /* keep legacy names mapped to green equivalents */
-  --color-parchment:  #dfe8db;
-  --color-sand:       #c4cfbc;
+  --color-parchment:  #F3F7F3;
+  --color-sand:       #E8F0EA;
 
-  --color-primary-50:  #eef1eb;
-  --color-primary-100: #dfe8db;
-  --color-primary-200: #c4cfbc;
-  --color-primary-300: #b7c3a1;
-  --color-primary-400: #8c947d;
-  --color-primary-500: #5e6544;
-  --color-primary-700: #2e2f22;
+  --color-primary-50:  #F3F7F3;
+  --color-primary-100: #F3F7F3;
+  --color-primary-200: #E8F0EA;
+  --color-primary-300: #A8BDAF;
+  --color-primary-400: #718078;
+  --color-primary-500: #315C4A;
+  --color-primary-700: #26352E;
 
-  --color-danger-500: #a85d48;
+  --color-danger-500: #26352E;
 
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --spacing-safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -45,7 +44,7 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    background-color: #eef1eb !important;
+    background-color: #F3F7F3 !important;
   }
 
   body {
@@ -53,25 +52,100 @@
     font-feature-settings: 'cv02','cv03','cv04','cv11';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #eef1eb !important;
-    color: #2e2f22;
+    background-color: #F3F7F3 !important;
+    color: #26352E;
   }
 
+  /* ── Scrollbar ──────────────────────────────────────────────────────── */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #c4cfbc; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: #E8F0EA; border-radius: 3px; }
 
-  :focus-visible { outline: 2px solid #8c947d; outline-offset: 2px; }
+  /* ── Global focus: always green, never browser blue ────────────────── */
+  * { box-sizing: border-box; }
+  :focus         { outline: none; }
+  :focus-visible { outline: 2px solid #315C4A !important; outline-offset: 2px; }
+
+  /* ── All text inputs / selects / textareas ──────────────────────────── */
+  input,
+  select,
+  textarea {
+    background-color: #ffffff;
+    border-color: #E8F0EA;
+    color: #26352E;
+    border-radius: 0.75rem;
+    accent-color: #315C4A;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none !important;
+    border-color: #315C4A !important;
+    box-shadow: 0 0 0 2px rgba(49,92,74,0.2) !important;
+  }
+
+  /* ── Checkboxes & radio ─────────────────────────────────────────────── */
+  input[type="checkbox"],
+  input[type="radio"] {
+    accent-color: #315C4A;
+    cursor: pointer;
+  }
+
+  /* ── Date / time picker icon: green tint, not blue ─────────────────── */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(28%) sepia(38%) saturate(500%) hue-rotate(110deg) brightness(80%);
+    cursor: pointer;
+    opacity: 0.7;
+  }
+
+  /* ── Select: custom green chevron, no browser arrow ────────────────── */
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23718078' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.6rem center;
+    background-repeat: no-repeat;
+    background-size: 1.2em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  /* ── Buttons: no blue highlight ─────────────────────────────────────── */
+  button { cursor: pointer; }
+  button:focus-visible {
+    outline: 2px solid #315C4A !important;
+    outline-offset: 2px;
+  }
 }
 
 @layer utilities {
+  /* ── Reusable field class ────────────────────────────────────────────── */
+  .field {
+    display: block;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #E8F0EA;
+    border-radius: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #26352E;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field::placeholder { color: rgba(113,128,120,0.5); }
+  .field:focus {
+    outline: none;
+    border-color: #315C4A;
+    box-shadow: 0 0 0 2px rgba(49,92,74,0.2);
+  }
+
   .glass {
-    background: rgba(238, 241, 235, 0.95);
+    background: rgba(243,247,243,0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
-
-  .glass-sage { background: #8c947d; }
+  .glass-sage { background: #718078; }
 
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -80,7 +154,7 @@
   .pt-safe  { padding-top:    env(safe-area-inset-top,    0px); }
 
   .subtle-shadow {
-    box-shadow: 0 4px 18px -2px rgba(46,47,34,.05), 0 2px 4px -1px rgba(46,47,34,.02);
+    box-shadow: 0 4px 18px -2px rgba(49,92,74,.06), 0 2px 4px -1px rgba(49,92,74,.03);
   }
 }
 
@@ -90,4 +164,4 @@
 .animate-fade-in  { animation: fade-in  0.25s ease-out; }
 .animate-slide-up { animation: slide-up 0.3s cubic-bezier(0.16,1,0.3,1); }
 
-#root { height: 100%; background-color: #eef1eb !important; }
+#root { height: 100%; background-color: #F3F7F3 !important; }
