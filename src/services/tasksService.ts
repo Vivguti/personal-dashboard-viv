@@ -74,7 +74,20 @@ const SAMPLE_DEMO_TASKS: Task[] = [
   },
 ]
 
-let demoTasksMemory: Task[] = [...SAMPLE_DEMO_TASKS]
+const TASKS_CACHE_KEY = 'viv_fallback_tasks'
+let demoTasksMemory: Task[] = []
+try {
+  const cached = localStorage.getItem(TASKS_CACHE_KEY)
+  demoTasksMemory = cached ? JSON.parse(cached) : [...SAMPLE_DEMO_TASKS]
+} catch {
+  demoTasksMemory = [...SAMPLE_DEMO_TASKS]
+}
+
+const saveTasksFallback = () => {
+  try {
+    localStorage.setItem(TASKS_CACHE_KEY, JSON.stringify(demoTasksMemory))
+  } catch {}
+}
 
 export async function getTasks(): Promise<Task[]> {
   try {
@@ -135,6 +148,7 @@ export async function createTask(
   }
 
   demoTasksMemory = [newTask, ...demoTasksMemory]
+  saveTasksFallback()
   return newTask
 }
 
@@ -158,6 +172,7 @@ export async function updateTask(
   demoTasksMemory = demoTasksMemory.map((t) =>
     t.id === id ? { ...t, ...updates, updated_at: new Date().toISOString() } : t
   )
+  saveTasksFallback()
   return demoTasksMemory.find((t) => t.id === id) ?? null
 }
 
@@ -196,6 +211,7 @@ export async function deleteTask(id: string): Promise<boolean> {
   }
 
   demoTasksMemory = demoTasksMemory.filter((t) => t.id !== id)
+  saveTasksFallback()
   return true
 }
 

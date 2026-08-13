@@ -146,7 +146,24 @@ function generateVivClassEvents(): CalendarEvent[] {
   return generated
 }
 
-demoEventsMemory = generateVivClassEvents()
+const CALENDAR_CACHE_KEY = 'viv_fallback_calendar'
+let demoEventsMemory: CalendarEvent[] = []
+try {
+  const cached = localStorage.getItem(CALENDAR_CACHE_KEY)
+  if (cached) {
+    demoEventsMemory = JSON.parse(cached)
+  } else {
+    demoEventsMemory = generateVivClassEvents()
+  }
+} catch {
+  demoEventsMemory = generateVivClassEvents()
+}
+
+const saveCalendarFallback = () => {
+  try {
+    localStorage.setItem(CALENDAR_CACHE_KEY, JSON.stringify(demoEventsMemory))
+  } catch {}
+}
 
 export async function getCalendarEvents(startDate?: Date, endDate?: Date): Promise<CalendarEvent[]> {
   try {
@@ -215,6 +232,7 @@ export async function createCalendarEvent(
   }
 
   demoEventsMemory = [...demoEventsMemory, newEvent]
+  saveCalendarFallback()
   return newEvent
 }
 
@@ -235,9 +253,8 @@ export async function updateCalendarEvent(
     // Fallback
   }
 
-  demoEventsMemory = demoEventsMemory.map(e =>
-    e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e
-  )
+  demoEventsMemory = demoEventsMemory.map(e => e.id === id ? { ...e, ...updates, updated_at: new Date().toISOString() } : e)
+  saveCalendarFallback()
   return demoEventsMemory.find(e => e.id === id) ?? null
 }
 
@@ -253,7 +270,8 @@ export async function deleteCalendarEvent(id: string): Promise<boolean> {
     // Fallback
   }
 
-  demoEventsMemory = demoEventsMemory.filter(e => e.id !== id)
+  demoEventsMemory = demoEventsMemory.filter((e) => e.id !== id)
+  saveCalendarFallback()
   return true
 }
 

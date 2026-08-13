@@ -171,7 +171,20 @@ const DEMO_DEADLINES: StudioDeadline[] = [
 ]
 
 let demoProjects: StudioProject[] = [...DEMO_PROJECTS]
-let demoDeadlines: StudioDeadline[] = [...DEMO_DEADLINES]
+const STUDIO_CACHE_KEY = 'viv_fallback_studio'
+let demoDeadlines: StudioDeadline[] = []
+try {
+  const cached = localStorage.getItem(STUDIO_CACHE_KEY)
+  demoDeadlines = cached ? JSON.parse(cached) : [...DEMO_DEADLINES]
+} catch {
+  demoDeadlines = [...DEMO_DEADLINES]
+}
+
+const saveStudioFallback = () => {
+  try {
+    localStorage.setItem(STUDIO_CACHE_KEY, JSON.stringify(demoDeadlines))
+  } catch {}
+}
 
 // ── Service functions ─────────────────────────────────────────────────────────
 
@@ -197,22 +210,27 @@ export async function createStudioProject(p: Omit<StudioProject, 'id' | 'created
 }
 
 export async function createStudioDeadline(d: Omit<StudioDeadline, 'id'>): Promise<StudioDeadline> {
-  const deadline: StudioDeadline = { ...d, id: `dl-${Date.now()}` }
-  demoDeadlines = [...demoDeadlines, deadline].sort((a, b) => a.dueDate.localeCompare(b.dueDate))
-  return deadline
+  const newDeadline: StudioDeadline = { ...d, id: `dl-${Date.now()}` }
+  demoDeadlines = [newDeadline, ...demoDeadlines].sort((a, b) => a.dueDate.localeCompare(b.dueDate))
+  saveStudioFallback()
+  return newDeadline
 }
 
-export async function toggleDeadlineComplete(id: string): Promise<void> {
+export async function toggleDeadlineComplete(id: string): Promise<StudioDeadline | null> {
   demoDeadlines = demoDeadlines.map(d => d.id === id ? { ...d, completed: !d.completed } : d)
+  saveStudioFallback()
+  return demoDeadlines.find(d => d.id === id) ?? null
 }
 
 export async function deleteStudioProject(id: string): Promise<void> {
   demoProjects  = demoProjects.filter(p => p.id !== id)
   demoDeadlines = demoDeadlines.filter(d => d.projectId !== id)
+  saveStudioFallback()
 }
 
 export async function deleteStudioDeadline(id: string): Promise<void> {
   demoDeadlines = demoDeadlines.filter(d => d.id !== id)
+  saveStudioFallback()
 }
 
 export async function updateProjectPhase(id: string, phase: StudioPhase, progress: number): Promise<void> {

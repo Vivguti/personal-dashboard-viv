@@ -11,8 +11,7 @@ import { Modal } from '@/components/ui/Modal'
 import {
   getCalendarEvents,
   createCalendarEvent,
-  deleteCalendarEvent,
-  generateAIPlan
+  deleteCalendarEvent
 } from '@/services/calendarService'
 import { useAppSync, triggerSync } from '@/lib/sync'
 import {

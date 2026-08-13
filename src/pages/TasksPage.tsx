@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { TaskCard } from '@/components/cards/TaskCard'
 import { TaskModal } from '@/components/forms/TaskModal'
-import { getTasks, toggleTaskComplete, deleteTask, createTask, updateTask } from '@/services/tasksService'
+import { getTasks, toggleTaskComplete, deleteTask } from '@/services/tasksService'
 import { computeWorkloadSummary } from '@/services/workloadService'
 import { useAppSync, triggerSync } from '@/lib/sync'
 
